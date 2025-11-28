@@ -33,3 +33,7 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+
+# Ignore outlook backup files and extracted emails
+*.pst
+/db/seeds/emails/

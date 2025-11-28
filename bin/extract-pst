@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Extract emails from PST files to EML format
+# Usage: bin/extract-pst <pst-file> [output-dir]
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: $0 <pst-file> [output-dir]"
+  echo "Example: $0 backup.pst db/seeds/emails"
+  exit 1
+fi
+
+PST_FILE="$1"
+OUTPUT_DIR="${2:-db/seeds/emails}"
+
+if [[ ! -f "$PST_FILE" ]]; then
+  echo "Error: PST file not found: $PST_FILE"
+  exit 1
+fi
+
+if ! command -v readpst &> /dev/null; then
+  echo "Error: readpst not found. Install with: sudo pacman -S libpst"
+  exit 1
+fi
+
+echo "Extracting: $PST_FILE"
+echo "Output dir: $OUTPUT_DIR"
+
+mkdir -p "$OUTPUT_DIR"
+
+# -j 1: single thread to avoid segfaults
+# -e: output as EML format
+# -S: separate files per email
+readpst -j 1 -e -S -o "$OUTPUT_DIR" "$PST_FILE"
+
+# Add .eml extension to email files (those without extensions)
+echo "Adding .eml extensions..."
+find "$OUTPUT_DIR" -type f ! -name "*.*" -exec sh -c 'mv "$1" "$1.eml"' _ {} \;
+
+# Count results
+EML_COUNT=$(find "$OUTPUT_DIR" -name "*.eml" | wc -l)
+ATTACHMENT_COUNT=$(find "$OUTPUT_DIR" -type f ! -name "*.eml" | wc -l || echo 0)
+
+echo ""
+echo "Done!"
+echo "  EML files:   $EML_COUNT"
+echo "  Attachments: $ATTACHMENT_COUNT"
