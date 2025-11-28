@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e
+
+echo "Running pre-commit checks..."
+
+# Run Rubocop for linting
+echo "=> Running Rubocop..."
+bin/rubocop --force-exclusion
+
+# Run tests
+echo "=> Running tests..."
+bin/rails test
+
+echo "All checks passed!"
