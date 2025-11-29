@@ -10,11 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_28_165740) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_29_102715) do
   create_table "contacts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
+    t.string "job_role"
     t.string "name"
+    t.json "phone_numbers", default: []
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id", "email"], name: "index_contacts_on_user_id_and_email", unique: true

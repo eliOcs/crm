@@ -22,8 +22,9 @@ bin/rubocop               # Lint code
 bin/setup                 # Setup project (installs deps, configures git hooks)
 
 # Import tasks
-bin/rails import:contacts # Import contacts from EML files (prompts for user email)
-bin/extract-pst <file>    # Extract EML files from PST backup
+bin/rails import:contacts         # Import contacts from EML files (prompts for user email)
+bin/rails import:enrich_contacts  # Enrich contacts with LLM (extracts job roles, phones from signatures)
+bin/extract-pst <file>            # Extract EML files from PST backup
 
 # Database
 bin/rails db:migrate      # Run migrations
@@ -47,7 +48,8 @@ app/
 │   └── current.rb                # CurrentAttributes for request context
 ├── services/
 │   ├── eml_reader.rb             # Parse EML files, extract attachments
-│   └── eml_contact_extractor.rb  # Extract contacts from EML headers
+│   ├── eml_contact_extractor.rb  # Extract contacts from EML headers
+│   └── llm_contact_extractor.rb  # LLM-powered contact extraction (Claude 3.5 Haiku)
 └── views/
     ├── shared/_navbar.html.erb   # Navigation (shown when authenticated)
     └── ...
@@ -118,6 +120,8 @@ contacts
 ├── user_id (FK)
 ├── email (unique per user, normalized lowercase)
 ├── name
+├── job_role
+├── phone_numbers (JSON array)
 └── timestamps
 
 sessions
