@@ -63,7 +63,8 @@ namespace :import do
 
     find_company_by_name = ->(name) {
       return nil unless name.present?
-      user.companies.find_by("LOWER(name) = ?", name.downcase)
+      name_lower = name.downcase
+      user.companies.find_by("LOWER(legal_name) = ? OR LOWER(commercial_name) = ?", name_lower, name_lower)
     }
 
     eml_files.each.with_index(1) do |eml_path, index|
@@ -75,28 +76,41 @@ namespace :import do
         # Process companies first so we can link contacts to them
         company_map = {}
         result[:companies].each do |company_data|
+          # Use legal_name or commercial_name for display/lookup
+          display_name = company_data[:commercial_name] || company_data[:legal_name]
+          next unless display_name
+
           # Find by domain first, then by name
           company = find_company_by_domain.call(company_data[:website])
-          company ||= find_company_by_name.call(company_data[:name])
-          company ||= user.companies.new(name: company_data[:name])
+          company ||= find_company_by_name.call(company_data[:legal_name])
+          company ||= find_company_by_name.call(company_data[:commercial_name])
+          company ||= user.companies.new(legal_name: company_data[:legal_name] || display_name)
 
           was_new = company.new_record?
           updates_made = false
 
+          # Fill in commercial_name if missing
+          if company_data[:commercial_name].present? && company.commercial_name.blank?
+            company.commercial_name = company_data[:commercial_name]
+            updates_made = true
+          end
+
           # Web enrich new companies
           if was_new
-            print "\n    Enriching #{company_data[:name]}..."
+            print "\n    Enriching #{display_name}..."
             enriched = CompanyWebEnricher.new(
-              company_data[:name],
+              display_name,
               hint_domain: company_data[:website]
             ).enrich
 
             if enriched.any?
-              company.name = enriched[:name] if enriched[:name].present?
+              company.legal_name = enriched[:legal_name] if enriched[:legal_name].present?
+              company.commercial_name ||= enriched[:commercial_name]
               company.website ||= enriched[:website]
               company.description ||= enriched[:description]
               company.industry ||= enriched[:industry]
               company.location ||= enriched[:location]
+              company.web_enriched_at = Time.current
               stats[:companies_web_enriched] += 1
               print " done"
             else
@@ -132,7 +146,9 @@ namespace :import do
             end
           end
 
-          company_map[company_data[:name]] = company
+          # Map both names to this company for contact linking
+          company_map[company_data[:legal_name]] = company if company_data[:legal_name]
+          company_map[company_data[:commercial_name]] = company if company_data[:commercial_name]
         end
 
         # Process contacts

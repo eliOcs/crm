@@ -17,7 +17,7 @@
         <td><%= contact.email %></td>
         <td>
           <% contact.companies.each do |company| %>
-            <%= link_to company.name, company_path(company) %><%= ", " unless company == contact.companies.last %>
+            <%= link_to company.display_name, company_path(company) %><%= ", " unless company == contact.companies.last %>
           <% end %>
         </td>
       </tr>

@@ -43,7 +43,8 @@ class CompanyWebEnricher
       schema: {
         type: "object",
         properties: {
-          name: { type: "string", description: "The full official/legal company name" },
+          legal_name: { type: "string", description: "The full official/legal registered company name" },
+          commercial_name: { type: "string", description: "The brand or trade name the company is commonly known by" },
           website: { type: "string", description: "The company's official website URL" },
           description: { type: "string", description: "A brief 1-2 sentence description" },
           industry: { type: "string", description: "The industry or sector" },
@@ -60,8 +61,13 @@ class CompanyWebEnricher
     <<~PROMPT
       Search for information about the company "#{@company_name}"#{domain_hint}.
 
-      Find the company's full legal name, official website, a brief description of what they do,
-      their industry/sector, and headquarters location.
+      Find:
+      - legal_name: The full official/legal registered name (e.g., "Industrial Técnica Pecuaria, S.A.")
+      - commercial_name: The brand or trade name commonly used (e.g., "ITPSA")
+      - website: Official website URL
+      - description: Brief description of what they do
+      - industry: Industry or sector
+      - location: Headquarters location (city, country)
 
       Only include fields you find reliable information for.
     PROMPT
@@ -75,7 +81,8 @@ class CompanyWebEnricher
     data = JSON.parse(text_block.text)
 
     {
-      name: data["name"]&.strip.presence,
+      legal_name: data["legal_name"]&.strip.presence,
+      commercial_name: data["commercial_name"]&.strip.presence,
       website: data["website"]&.strip.presence,
       description: data["description"]&.strip.presence,
       industry: data["industry"]&.strip.presence,

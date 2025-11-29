@@ -47,14 +47,18 @@ class LlmEmailExtractor
       - name: Full name
       - job_role: Job title or role (e.g., "Software Engineer", "CEO", "Sales Manager")
       - phone_numbers: Array of phone numbers (include country codes if visible)
-      - company_name: Name of the company they work for (if identifiable)
+      - company_name: Name of the company they work for (use commercial/brand name if available)
 
       Also extract ALL companies mentioned in the email:
       - From email signatures
       - From email domains (e.g., john@acme.com suggests "Acme")
       - From the email body content
 
-      For each company, if any of the attached images appears to be a company logo, include its content_id.
+      For each company, extract:
+      - legal_name: The full official/legal registered name (e.g., "Industrial Técnica Pecuaria, S.A.")
+      - commercial_name: The brand or trade name commonly used (e.g., "ITPSA")
+      - website: The company's official website URL
+      - logo_content_id: If any attached image appears to be a company logo, include its content_id
 
       Return ONLY valid JSON with this structure:
       {
@@ -64,12 +68,13 @@ class LlmEmailExtractor
             "name": "John Doe",
             "job_role": "Senior Developer",
             "phone_numbers": ["+1-555-123-4567"],
-            "company_name": "Acme Inc"
+            "company_name": "Acme"
           }
         ],
         "companies": [
           {
-            "name": "Acme Inc",
+            "legal_name": "Acme Corporation Inc.",
+            "commercial_name": "Acme",
             "website": "https://acme.com",
             "logo_content_id": "image001"
           }
@@ -77,7 +82,7 @@ class LlmEmailExtractor
       }
 
       Guidelines:
-      - The company_name in contacts should match a name in the companies array
+      - The company_name in contacts should match either legal_name or commercial_name in companies
       - For website, infer from email domain if not explicitly stated (e.g., @acme.com -> https://acme.com)
       - Set logo_content_id to null if no logo image is identified
       - If no contacts found, return {"contacts": [], "companies": []}
@@ -207,11 +212,12 @@ class LlmEmailExtractor
 
     companies = Array(data["companies"]).map do |company|
       {
-        name: company["name"]&.strip.presence,
+        legal_name: company["legal_name"]&.strip.presence,
+        commercial_name: company["commercial_name"]&.strip.presence,
         website: company["website"]&.strip.presence,
         logo_content_id: company["logo_content_id"]&.strip.presence
       }
-    end.select { |c| c[:name].present? }
+    end.select { |c| c[:legal_name].present? || c[:commercial_name].present? }
 
     { contacts: contacts, companies: companies, image_data: @image_data }
   rescue JSON::ParserError => e

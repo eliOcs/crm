@@ -2,10 +2,15 @@
   <% if @company.logo.attached? %>
     <%= image_tag @company.logo, style: "max-height: 48px; max-width: 96px; vertical-align: middle;" %>
   <% end %>
-  <%= @company.name %>
+  <%= @company.display_name %>
 </h1>
 
 <dl>
+  <% if @company.commercial_name.present? && @company.legal_name != @company.commercial_name %>
+    <dt><strong>Legal Name</strong></dt>
+    <dd><%= @company.legal_name %></dd>
+  <% end %>
+
   <% if @company.industry.present? %>
     <dt><strong>Industry</strong></dt>
     <dd><%= @company.industry %></dd>
@@ -24,6 +29,11 @@
   <% if @company.description.present? %>
     <dt><strong>Description</strong></dt>
     <dd><%= @company.description %></dd>
+  <% end %>
+
+  <% if @company.web_enriched_at.present? %>
+    <dt><strong>Web Enriched</strong></dt>
+    <dd><%= @company.web_enriched_at.strftime("%B %d, %Y") %></dd>
   <% end %>
 </dl>
 

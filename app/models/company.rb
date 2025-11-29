@@ -3,8 +3,13 @@ class Company < ApplicationRecord
   has_and_belongs_to_many :contacts
   has_one_attached :logo
 
-  validates :name, presence: true
+  validates :legal_name, presence: true
   validates :domain, uniqueness: { scope: :user_id }, allow_nil: true
+
+  # Display name: prefer commercial name, fall back to legal name
+  def display_name
+    commercial_name.presence || legal_name
+  end
 
   before_validation :normalize_domain_from_website
 
