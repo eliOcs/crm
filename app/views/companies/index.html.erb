@@ -1,0 +1,32 @@
+<h1>Companies</h1>
+
+<p><%= @companies.count %> companies</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Logo</th>
+      <th>Name</th>
+      <th>Website</th>
+      <th>Contacts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @companies.each do |company| %>
+      <tr>
+        <td>
+          <% if company.logo.attached? %>
+            <%= image_tag company.logo, style: "max-height: 32px; max-width: 64px;" %>
+          <% end %>
+        </td>
+        <td><%= link_to company.name, company_path(company) %></td>
+        <td>
+          <% if company.website.present? %>
+            <%= link_to company.website, company.website, target: "_blank" %>
+          <% end %>
+        </td>
+        <td><%= company.contacts.count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

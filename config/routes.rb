@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
 
   resources :contacts, only: %i[ index ]
+  resources :companies, only: %i[ index show ]
   resources :emails, only: %i[ index show ] do
     get "attachment/:cid", action: :attachment, as: :attachment, on: :member, cid: /.+/
   end

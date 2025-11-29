@@ -1,0 +1,39 @@
+<h1>
+  <% if @company.logo.attached? %>
+    <%= image_tag @company.logo, style: "max-height: 48px; max-width: 96px; vertical-align: middle;" %>
+  <% end %>
+  <%= @company.name %>
+</h1>
+
+<p>
+  <% if @company.website.present? %>
+    <strong>Website:</strong> <%= link_to @company.website, @company.website, target: "_blank" %>
+  <% end %>
+</p>
+
+<h2>Contacts (<%= @contacts.count %>)</h2>
+
+<% if @contacts.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Job Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contacts.each do |contact| %>
+        <tr>
+          <td><%= contact.name.presence || "(No name)" %></td>
+          <td><%= contact.email %></td>
+          <td><%= contact.job_role %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No contacts linked to this company yet.</p>
+<% end %>
+
+<p><%= link_to "Back to companies", companies_path %></p>
