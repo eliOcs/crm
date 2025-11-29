@@ -11,6 +11,13 @@ CRM application for managing contacts, companies, and emails. Built to help pars
 - **Hotwire** (Turbo + Stimulus) for frontend
 - **Propshaft** for asset pipeline
 - **Importmaps** for JavaScript (no Node.js required)
+- **Anthropic Claude API** for LLM-powered features (via `anthropic` gem)
+
+## Environment Variables
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-...  # Required for LLM features (enrichment, dedup)
+```
 
 ## Key Commands
 
@@ -24,6 +31,7 @@ bin/setup                 # Setup project (installs deps, configures git hooks)
 # Import tasks
 bin/rails import:contacts         # Import contacts from EML files (prompts for user email)
 bin/rails import:enrich_contacts  # Enrich contacts/companies with LLM (extracts job roles, phones, companies, logos)
+bin/rails import:dedup_companies  # LLM-powered company deduplication (finds duplicates by name/logo)
 bin/extract-pst <file>            # Extract EML files from PST backup
 
 # Database
@@ -44,14 +52,16 @@ app/
 │   └── sessions_controller.rb
 ├── models/
 │   ├── user.rb                   # has_many :contacts, :companies, :sessions
-│   ├── company.rb                # belongs_to :user, has_many :contacts, has_one_attached :logo
-│   ├── contact.rb                # belongs_to :user, belongs_to :company (optional)
+│   ├── company.rb                # belongs_to :user, has_and_belongs_to_many :contacts
+│   ├── contact.rb                # belongs_to :user, has_and_belongs_to_many :companies
 │   ├── session.rb                # Auth sessions
 │   └── current.rb                # CurrentAttributes for request context
 ├── services/
 │   ├── eml_reader.rb             # Parse EML files, extract attachments
 │   ├── eml_contact_extractor.rb  # Extract contacts from EML headers
-│   └── llm_email_extractor.rb    # LLM-powered extraction (contacts, companies, logos)
+│   ├── llm_email_extractor.rb    # LLM-powered extraction (contacts, companies, logos)
+│   ├── company_web_enricher.rb   # Web search enrichment for companies (Claude + web search)
+│   └── llm_company_deduplicator.rb # LLM-powered company deduplication
 └── views/
     ├── shared/_navbar.html.erb   # Navigation (shown when authenticated)
     └── ...
@@ -59,7 +69,8 @@ app/
 db/seeds/emails/          # EML files extracted from PST (gitignored)
 lib/tasks/
 ├── import_contacts.rake  # Contact import task
-└── enrich_contacts.rake  # LLM enrichment task
+├── enrich_contacts.rake  # LLM enrichment task (contacts, companies, web search)
+└── dedup_companies.rake  # LLM-powered company deduplication
 ```
 
 ## Authentication
@@ -83,10 +94,20 @@ email = EmlReader.new(path).read
 contacts = EmlContactExtractor.new(path).extract
 # => [{ email:, name: }, ...]
 
-# LLM-powered extraction (contacts + companies + logos)
+# LLM-powered extraction (contacts + companies + logos) - uses Claude 3.5 Haiku
 result = LlmEmailExtractor.new(path).extract
-# => { contacts: [...], companies: [...], image_data: {...} }
+# => { contacts: [{email:, name:, job_role:, phone_numbers:, company_name:}, ...],
+#      companies: [{legal_name:, commercial_name:, website:, logo_content_id:}, ...],
+#      image_data: {content_id => {content_type:, base64_data:, raw_data:}, ...} }
+
+# Web search enrichment for companies - uses Claude Sonnet + web search
+enriched = CompanyWebEnricher.new("ACME", hint_domain: "acme.com").enrich
+# => { legal_name:, commercial_name:, website:, description:, industry:, location: }
 ```
+
+### LLM Models Used
+- **Claude 3.5 Haiku** (`claude-3-5-haiku-latest`): Email extraction (fast, cost-effective)
+- **Claude Sonnet 4.5** (`claude-sonnet-4-5-20250929`): Web enrichment with web search tool, company deduplication
 
 ### File-based Email Storage
 Emails are read directly from EML files on disk (not stored in database):
@@ -125,19 +146,28 @@ users
 
 companies
 ├── user_id (FK)
-├── name
+├── legal_name (required)
+├── commercial_name (brand/trade name)
+├── domain (normalized from website, unique per user)
 ├── website
+├── description
+├── industry
+├── location
+├── web_enriched_at (timestamp when web search enrichment was done)
 ├── logo (Active Storage attachment)
 └── timestamps
 
 contacts
 ├── user_id (FK)
-├── company_id (FK, optional)
 ├── email (unique per user, normalized lowercase)
 ├── name
 ├── job_role
 ├── phone_numbers (JSON array)
 └── timestamps
+
+companies_contacts (join table, many-to-many)
+├── company_id (FK)
+└── contact_id (FK)
 
 sessions
 ├── user_id (FK)
@@ -145,6 +175,11 @@ sessions
 ├── user_agent
 └── timestamps
 ```
+
+### Company Name Fields
+- `legal_name`: Full official/legal registered name (e.g., "Industrial Técnica Pecuaria, S.A.")
+- `commercial_name`: Brand or trade name commonly used (e.g., "ITPSA")
+- `display_name` method: Returns commercial_name if present, otherwise legal_name
 
 ## PST File Extraction
 
