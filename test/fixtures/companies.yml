@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: Acme Inc
+  website: https://acme.com
+  user: one
+
+two:
+  name: Globex Corp
+  website: https://globex.com
+  user: two

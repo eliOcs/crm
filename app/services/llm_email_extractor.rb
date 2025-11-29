@@ -1,16 +1,18 @@
-class LlmContactExtractor
+class LlmEmailExtractor
   MODEL = "claude-3-5-haiku-latest"
   MAX_IMAGES = 5
 
   def initialize(eml_path)
     @eml_path = eml_path
     @client = Anthropic::Client.new
+    @image_data = {}
   end
 
   def extract
     email_data = EmlReader.new(@eml_path).read
-    return [] unless email_data
+    return empty_result unless email_data
 
+    @image_data = extract_inline_images(email_data)
     messages = build_messages(email_data)
     response = @client.messages.create(
       model: MODEL,
@@ -22,14 +24,18 @@ class LlmContactExtractor
     parse_response(response)
   rescue Anthropic::Error => e
     Rails.logger.error("LLM extraction failed: #{e.message}")
-    []
+    empty_result
   end
 
   private
 
+  def empty_result
+    { contacts: [], companies: [], image_data: {} }
+  end
+
   def system_prompt
     <<~PROMPT
-      You are a contact information extractor. Analyze emails and their attachments (especially signature images) to extract contact details.
+      You are a contact and company information extractor. Analyze emails and their attachments (especially signature images) to extract contact and company details.
 
       Extract ALL contacts mentioned in the email, including:
       - Sender and recipients (from headers)
@@ -41,19 +47,41 @@ class LlmContactExtractor
       - name: Full name
       - job_role: Job title or role (e.g., "Software Engineer", "CEO", "Sales Manager")
       - phone_numbers: Array of phone numbers (include country codes if visible)
+      - company_name: Name of the company they work for (if identifiable)
 
-      Return ONLY a valid JSON array of contacts. Example:
-      [
-        {
-          "email": "john.doe@example.com",
-          "name": "John Doe",
-          "job_role": "Senior Developer",
-          "phone_numbers": ["+1-555-123-4567"]
-        }
-      ]
+      Also extract ALL companies mentioned in the email:
+      - From email signatures
+      - From email domains (e.g., john@acme.com suggests "Acme")
+      - From the email body content
 
-      If you cannot find any contacts, return an empty array: []
-      Do not include any text outside the JSON array.
+      For each company, if any of the attached images appears to be a company logo, include its content_id.
+
+      Return ONLY valid JSON with this structure:
+      {
+        "contacts": [
+          {
+            "email": "john.doe@acme.com",
+            "name": "John Doe",
+            "job_role": "Senior Developer",
+            "phone_numbers": ["+1-555-123-4567"],
+            "company_name": "Acme Inc"
+          }
+        ],
+        "companies": [
+          {
+            "name": "Acme Inc",
+            "website": "https://acme.com",
+            "logo_content_id": "image001"
+          }
+        ]
+      }
+
+      Guidelines:
+      - The company_name in contacts should match a name in the companies array
+      - For website, infer from email domain if not explicitly stated (e.g., @acme.com -> https://acme.com)
+      - Set logo_content_id to null if no logo image is identified
+      - If no contacts found, return {"contacts": [], "companies": []}
+      - Do not include any text outside the JSON object.
     PROMPT
   end
 
@@ -66,9 +94,12 @@ class LlmContactExtractor
       text: build_email_text(email_data)
     }
 
-    # Add inline images (signature images often contain contact info)
-    images = extract_inline_images(email_data)
-    images.first(MAX_IMAGES).each do |image|
+    # Add inline images with their content IDs
+    @image_data.first(MAX_IMAGES).each do |content_id, image|
+      content << {
+        type: "text",
+        text: "Image (content_id: #{content_id}):"
+      }
       content << {
         type: "image",
         source: {
@@ -116,7 +147,7 @@ class LlmContactExtractor
   end
 
   def extract_inline_images(email_data)
-    images = []
+    images = {}
     return images unless email_data[:attachments].present?
 
     reader = EmlReader.new(@eml_path)
@@ -130,9 +161,10 @@ class LlmContactExtractor
       attachment_data = reader.attachment(cid)
       next unless attachment_data
 
-      images << {
+      images[cid] = {
         content_type: normalize_content_type(attachment_data[:content_type]),
-        base64_data: Base64.strict_encode64(attachment_data[:data])
+        base64_data: Base64.strict_encode64(attachment_data[:data]),
+        raw_data: attachment_data[:data]
       }
     end
 
@@ -157,21 +189,33 @@ class LlmContactExtractor
 
   def parse_response(response)
     text = response.content.first.text
-    # Extract JSON array from response (in case there's extra text)
-    json_match = text.match(/\[[\s\S]*\]/)
-    return [] unless json_match
+    # Extract JSON object from response (in case there's extra text)
+    json_match = text.match(/\{[\s\S]*\}/)
+    return empty_result unless json_match
 
-    contacts = JSON.parse(json_match[0])
-    contacts.map do |contact|
+    data = JSON.parse(json_match[0])
+
+    contacts = Array(data["contacts"]).map do |contact|
       {
         email: contact["email"]&.strip&.downcase,
         name: contact["name"]&.strip.presence,
         job_role: contact["job_role"]&.strip.presence,
-        phone_numbers: Array(contact["phone_numbers"]).map(&:strip).reject(&:blank?)
+        phone_numbers: Array(contact["phone_numbers"]).map(&:strip).reject(&:blank?),
+        company_name: contact["company_name"]&.strip.presence
       }
     end.select { |c| c[:email].present? }
+
+    companies = Array(data["companies"]).map do |company|
+      {
+        name: company["name"]&.strip.presence,
+        website: company["website"]&.strip.presence,
+        logo_content_id: company["logo_content_id"]&.strip.presence
+      }
+    end.select { |c| c[:name].present? }
+
+    { contacts: contacts, companies: companies, image_data: @image_data }
   rescue JSON::ParserError => e
     Rails.logger.error("Failed to parse LLM response: #{e.message}")
-    []
+    empty_result
   end
 end
