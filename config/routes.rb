@@ -3,6 +3,11 @@ Rails.application.routes.draw do
   resource :registration, only: %i[ new create ]
   resources :passwords, param: :token
 
+  resources :contacts, only: %i[ index ]
+  resources :emails, only: %i[ index show ] do
+    get "attachment/:cid", action: :attachment, as: :attachment, on: :member, cid: /.+/
+  end
+
   root "dashboard#show"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -24,6 +24,9 @@
   </head>
 
   <body>
+    <% if authenticated? %>
+      <%= render "shared/navbar" %>
+    <% end %>
     <%= yield %>
   </body>
 </html>

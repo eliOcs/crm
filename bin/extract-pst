@@ -29,13 +29,18 @@ echo "Output dir: $OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
 # -j 1: single thread to avoid segfaults
-# -e: output as EML format
-# -S: separate files per email
-readpst -j 1 -e -S -o "$OUTPUT_DIR" "$PST_FILE"
+# -e: output as EML format with extensions (includes inline attachments)
+# Note: Do NOT use -S flag - it separates attachments into separate files
+readpst -j 1 -e -o "$OUTPUT_DIR" "$PST_FILE"
 
 # Add .eml extension to email files (those without extensions)
 echo "Adding .eml extensions..."
 find "$OUTPUT_DIR" -type f ! -name "*.*" -exec sh -c 'mv "$1" "$1.eml"' _ {} \;
+
+# Fix Content-ID mismatches (readpst generates UUIDs instead of preserving original CIDs)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+echo "Fixing Content-ID references..."
+"$SCRIPT_DIR/fix-eml-cids" "$OUTPUT_DIR"
 
 # Count results
 EML_COUNT=$(find "$OUTPUT_DIR" -name "*.eml" | wc -l)

@@ -1,0 +1,58 @@
+<p><%= link_to "Back to emails", emails_path %></p>
+
+<h1><%= @email[:subject].presence || "(No subject)" %></h1>
+
+<dl>
+  <dt>From</dt>
+  <dd>
+    <% if @email[:from] %>
+      <%= @email[:from][:name] %> &lt;<%= @email[:from][:email] %>&gt;
+    <% else %>
+      (Unknown)
+    <% end %>
+  </dd>
+
+  <dt>To</dt>
+  <dd>
+    <% if @email[:to].present? %>
+      <% @email[:to].each do |recipient| %>
+        <%= recipient[:name] %> &lt;<%= recipient[:email] %>&gt;<br>
+      <% end %>
+    <% else %>
+      (None)
+    <% end %>
+  </dd>
+
+  <% if @email[:cc].present? %>
+    <dt>CC</dt>
+    <dd>
+      <% @email[:cc].each do |recipient| %>
+        <%= recipient[:name] %> &lt;<%= recipient[:email] %>&gt;<br>
+      <% end %>
+    </dd>
+  <% end %>
+
+  <dt>Date</dt>
+  <dd><%= @email[:date]&.strftime("%Y-%m-%d %H:%M:%S %Z") %></dd>
+</dl>
+
+<hr>
+
+<% if @email[:html_body].present? %>
+  <%
+    html_with_images = @email[:html_body].dup
+    @email[:attachments].each do |att|
+      cid = att[:content_id]
+      filename = cid.split("@").first
+      url = attachment_email_path(@encoded_path, cid: filename)
+      html_with_images.gsub!("cid:#{cid}", url)
+    end
+  %>
+  <div class="email-body">
+    <%= sanitize html_with_images, tags: %w[p br div span a b i u strong em h1 h2 h3 h4 h5 h6 ul ol li table tr td th thead tbody img hr blockquote pre code], attributes: %w[href src alt style class] %>
+  </div>
+<% elsif @email[:body].present? %>
+  <pre><%= @email[:body] %></pre>
+<% else %>
+  <p>(No body)</p>
+<% end %>

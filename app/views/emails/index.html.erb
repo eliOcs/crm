@@ -1,0 +1,36 @@
+<h1>Emails</h1>
+
+<p><%= @total %> emails (page <%= @page %> of <%= @total_pages %>)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>From</th>
+      <th>Subject</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @emails.each do |email| %>
+      <tr>
+        <td>
+          <%= link_to email_path(email[:encoded_path]) do %>
+            <%= email.dig(:from, :name).presence || email.dig(:from, :email) || "(Unknown)" %>
+          <% end %>
+        </td>
+        <td><%= email[:subject].presence || "(No subject)" %></td>
+        <td><%= email[:date]&.strftime("%Y-%m-%d %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<nav>
+  <% if @page > 1 %>
+    <%= link_to "Previous", emails_path(page: @page - 1) %>
+  <% end %>
+
+  <% if @page < @total_pages %>
+    <%= link_to "Next", emails_path(page: @page + 1) %>
+  <% end %>
+</nav>

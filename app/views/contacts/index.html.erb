@@ -1,0 +1,20 @@
+<h1>Contacts</h1>
+
+<p><%= @contacts.count %> contacts</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contacts.each do |contact| %>
+      <tr>
+        <td><%= contact.name.presence || "(No name)" %></td>
+        <td><%= contact.email %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
