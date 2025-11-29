@@ -48,6 +48,7 @@ namespace :import do
       contacts_skipped: 0,
       companies_new: 0,
       companies_enriched: 0,
+      companies_web_enriched: 0,
       logos_attached: 0,
       errors: 0
     }
@@ -81,6 +82,27 @@ namespace :import do
 
           was_new = company.new_record?
           updates_made = false
+
+          # Web enrich new companies
+          if was_new
+            print "\n    Enriching #{company_data[:name]}..."
+            enriched = CompanyWebEnricher.new(
+              company_data[:name],
+              hint_domain: company_data[:website]
+            ).enrich
+
+            if enriched.any?
+              company.name = enriched[:name] if enriched[:name].present?
+              company.website ||= enriched[:website]
+              company.description ||= enriched[:description]
+              company.industry ||= enriched[:industry]
+              company.location ||= enriched[:location]
+              stats[:companies_web_enriched] += 1
+              print " done"
+            else
+              print " no results"
+            end
+          end
 
           # Fill in missing website (only for new companies or those without)
           if company_data[:website].present? && company.website.blank?
@@ -177,6 +199,7 @@ namespace :import do
     puts "  Companies:"
     puts "    New:        #{stats[:companies_new]}"
     puts "    Enriched:   #{stats[:companies_enriched]}"
+    puts "    Web search: #{stats[:companies_web_enriched]}"
     puts "    Logos:      #{stats[:logos_attached]}"
     puts "  Errors:       #{stats[:errors]}"
     puts

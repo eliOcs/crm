@@ -5,11 +5,27 @@
   <%= @company.name %>
 </h1>
 
-<p>
-  <% if @company.website.present? %>
-    <strong>Website:</strong> <%= link_to @company.website, @company.website, target: "_blank" %>
+<dl>
+  <% if @company.industry.present? %>
+    <dt><strong>Industry</strong></dt>
+    <dd><%= @company.industry %></dd>
   <% end %>
-</p>
+
+  <% if @company.location.present? %>
+    <dt><strong>Location</strong></dt>
+    <dd><%= @company.location %></dd>
+  <% end %>
+
+  <% if @company.website.present? %>
+    <dt><strong>Website</strong></dt>
+    <dd><%= link_to @company.website, @company.website, target: "_blank" %></dd>
+  <% end %>
+
+  <% if @company.description.present? %>
+    <dt><strong>Description</strong></dt>
+    <dd><%= @company.description %></dd>
+  <% end %>
+</dl>
 
 <h2>Contacts (<%= @contacts.count %>)</h2>
 
