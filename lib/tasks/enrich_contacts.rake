@@ -52,8 +52,15 @@ namespace :import do
       errors: 0
     }
 
-    # Helper to find company by name (case-insensitive)
-    find_company = ->(name) {
+    # Helper to find company by domain or name
+    find_company_by_domain = ->(website) {
+      return nil unless website.present?
+      domain = Company.normalize_domain(website)
+      return nil unless domain.present?
+      user.companies.find_by(domain: domain)
+    }
+
+    find_company_by_name = ->(name) {
       return nil unless name.present?
       user.companies.find_by("LOWER(name) = ?", name.downcase)
     }
@@ -67,14 +74,15 @@ namespace :import do
         # Process companies first so we can link contacts to them
         company_map = {}
         result[:companies].each do |company_data|
-          # Case-insensitive lookup
-          company = find_company.call(company_data[:name])
+          # Find by domain first, then by name
+          company = find_company_by_domain.call(company_data[:website])
+          company ||= find_company_by_name.call(company_data[:name])
           company ||= user.companies.new(name: company_data[:name])
 
           was_new = company.new_record?
           updates_made = false
 
-          # Fill in missing website
+          # Fill in missing website (only for new companies or those without)
           if company_data[:website].present? && company.website.blank?
             company.website = company_data[:website]
             updates_made = true
@@ -133,8 +141,8 @@ namespace :import do
           if contact.company.nil? && contact_data[:company_name].present?
             # First check company_map from current email
             company = company_map[contact_data[:company_name]]
-            # Then try to find existing company in database
-            company ||= find_company.call(contact_data[:company_name])
+            # Then try to find existing company in database by name
+            company ||= find_company_by_name.call(contact_data[:company_name])
 
             updates[:company] = company if company
           end
