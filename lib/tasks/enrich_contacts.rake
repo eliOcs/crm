@@ -137,16 +137,6 @@ namespace :import do
             updates[:phone_numbers] = new_phones if new_phones != existing_phones
           end
 
-          # Link to company if not already linked
-          if contact.company.nil? && contact_data[:company_name].present?
-            # First check company_map from current email
-            company = company_map[contact_data[:company_name]]
-            # Then try to find existing company in database by name
-            company ||= find_company_by_name.call(contact_data[:company_name])
-
-            updates[:company] = company if company
-          end
-
           if was_new
             contact.assign_attributes(updates)
             contact.save!
@@ -156,6 +146,16 @@ namespace :import do
             stats[:contacts_enriched] += 1
           else
             stats[:contacts_skipped] += 1
+          end
+
+          # Link to company (many-to-many, can have multiple)
+          if contact_data[:company_name].present?
+            company = company_map[contact_data[:company_name]]
+            company ||= find_company_by_name.call(contact_data[:company_name])
+
+            if company && !contact.companies.include?(company)
+              contact.companies << company
+            end
           end
         end
 

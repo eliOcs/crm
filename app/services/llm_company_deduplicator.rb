@@ -36,6 +36,7 @@ class LlmCompanyDeduplicator
       - Typos or accent variations (e.g., "Técnica" vs "Tecnica")
       - Same domain indicating same company
       - Visually similar or identical logos
+      - STRONG SIGNAL: Contacts linked to multiple companies (if the same person works at two "different" companies, they're likely duplicates)
 
       Return ONLY valid JSON with this structure:
       {
@@ -49,6 +50,8 @@ class LlmCompanyDeduplicator
 
       Guidelines:
       - Only group companies you are confident are duplicates
+      - Be conservative: different companies may have similar logos (e.g., both use green colors)
+      - Shared contacts are a VERY strong signal - prioritize this over logo similarity
       - Each company should appear in at most ONE group
       - company_ids should contain 2 or more IDs
       - If no duplicates found, return {"duplicate_groups": []}
@@ -99,7 +102,35 @@ class LlmCompanyDeduplicator
       lines << parts.join(" | ")
     end
 
+    # Add shared contacts info (strong duplicate signal)
+    shared_contacts = find_shared_contacts
+    if shared_contacts.any?
+      lines << ""
+      lines << "IMPORTANT - Contacts linked to multiple companies (strong duplicate signal):"
+      shared_contacts.each do |contact, company_ids|
+        lines << "  #{contact.email} (#{contact.name}) → Company IDs: #{company_ids.join(', ')}"
+      end
+    end
+
     lines.join("\n")
+  end
+
+  def find_shared_contacts
+    # Find contacts that belong to multiple companies in our set
+    company_ids = @companies.map(&:id)
+    shared = {}
+
+    Contact.joins(:companies)
+           .where(companies: { id: company_ids })
+           .group("contacts.id")
+           .having("COUNT(companies.id) > 1")
+           .includes(:companies)
+           .each do |contact|
+      relevant_company_ids = contact.companies.where(id: company_ids).pluck(:id)
+      shared[contact] = relevant_company_ids if relevant_company_ids.size > 1
+    end
+
+    shared
   end
 
   def read_logo(company)

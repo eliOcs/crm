@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_29_151351) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_29_154921) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -50,8 +50,16 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_29_151351) do
     t.index ["user_id"], name: "index_companies_on_user_id"
   end
 
+  create_table "companies_contacts", id: false, force: :cascade do |t|
+    t.integer "company_id", null: false
+    t.integer "contact_id", null: false
+    t.index ["company_id", "contact_id"], name: "index_companies_contacts_on_company_id_and_contact_id", unique: true
+    t.index ["company_id"], name: "index_companies_contacts_on_company_id"
+    t.index ["contact_id", "company_id"], name: "index_companies_contacts_on_contact_id_and_company_id"
+    t.index ["contact_id"], name: "index_companies_contacts_on_contact_id"
+  end
+
   create_table "contacts", force: :cascade do |t|
-    t.integer "company_id"
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "job_role"
@@ -59,7 +67,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_29_151351) do
     t.json "phone_numbers", default: []
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
-    t.index ["company_id"], name: "index_contacts_on_company_id"
     t.index ["user_id", "email"], name: "index_contacts_on_user_id_and_email", unique: true
     t.index ["user_id"], name: "index_contacts_on_user_id"
   end
@@ -84,7 +91,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_29_151351) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "companies", "users"
-  add_foreign_key "contacts", "companies"
+  add_foreign_key "companies_contacts", "companies"
+  add_foreign_key "companies_contacts", "contacts"
   add_foreign_key "contacts", "users"
   add_foreign_key "sessions", "users"
 end

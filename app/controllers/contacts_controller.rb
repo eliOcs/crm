@@ -1,5 +1,5 @@
 class ContactsController < ApplicationController
   def index
-    @contacts = Current.user.contacts.order(:name)
+    @contacts = Current.user.contacts.includes(:companies).order(:name)
   end
 end

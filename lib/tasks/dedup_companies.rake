@@ -54,9 +54,14 @@ namespace :import do
     merges.each do |merge|
       winner = merge[:winner]
       merge[:losers].each do |loser|
-        # Move contacts to winner
-        moved = loser.contacts.update_all(company_id: winner.id)
-        stats[:contacts_moved] += moved
+        # Move contacts to winner (many-to-many)
+        loser.contacts.each do |contact|
+          unless contact.companies.include?(winner)
+            contact.companies << winner
+            stats[:contacts_moved] += 1
+          end
+          contact.companies.delete(loser)
+        end
 
         # Copy missing data from loser to winner
         winner.website ||= loser.website
@@ -75,7 +80,7 @@ namespace :import do
       end
     end
 
-    puts "  Reassigned #{stats[:contacts_moved]} contacts, deleted #{stats[:companies_deleted]} companies"
+    puts "  Moved #{stats[:contacts_moved]} contact links, deleted #{stats[:companies_deleted]} companies"
     puts
     puts "Done! #{user.companies.count} companies remaining."
   end

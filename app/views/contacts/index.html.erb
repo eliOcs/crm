@@ -7,6 +7,7 @@
     <tr>
       <th>Name</th>
       <th>Email</th>
+      <th>Companies</th>
     </tr>
   </thead>
   <tbody>
@@ -14,6 +15,11 @@
       <tr>
         <td><%= contact.name.presence || "(No name)" %></td>
         <td><%= contact.email %></td>
+        <td>
+          <% contact.companies.each do |company| %>
+            <%= link_to company.name, company_path(company) %><%= ", " unless company == contact.companies.last %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
