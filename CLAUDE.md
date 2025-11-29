@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-CRM application for managing contacts and emails. Built to help parse and organize email data from Outlook PST backups, with plans to integrate with Microsoft Exchange in the future.
+CRM application for managing contacts, companies, and emails. Built to help parse and organize email data from Outlook PST backups, with plans to integrate with Microsoft Exchange in the future.
 
 ## Tech Stack
 
@@ -23,7 +23,7 @@ bin/setup                 # Setup project (installs deps, configures git hooks)
 
 # Import tasks
 bin/rails import:contacts         # Import contacts from EML files (prompts for user email)
-bin/rails import:enrich_contacts  # Enrich contacts with LLM (extracts job roles, phones from signatures)
+bin/rails import:enrich_contacts  # Enrich contacts/companies with LLM (extracts job roles, phones, companies, logos)
 bin/extract-pst <file>            # Extract EML files from PST backup
 
 # Database
@@ -36,27 +36,30 @@ bin/rails db:reset        # Reset database
 ```
 app/
 ├── controllers/
+│   ├── companies_controller.rb   # Company list and detail
 │   ├── contacts_controller.rb    # Contact list
 │   ├── dashboard_controller.rb   # Home page (logged in)
 │   ├── emails_controller.rb      # Email list and view
 │   ├── registrations_controller.rb
 │   └── sessions_controller.rb
 ├── models/
-│   ├── user.rb                   # has_many :contacts, :sessions
-│   ├── contact.rb                # belongs_to :user
+│   ├── user.rb                   # has_many :contacts, :companies, :sessions
+│   ├── company.rb                # belongs_to :user, has_many :contacts, has_one_attached :logo
+│   ├── contact.rb                # belongs_to :user, belongs_to :company (optional)
 │   ├── session.rb                # Auth sessions
 │   └── current.rb                # CurrentAttributes for request context
 ├── services/
 │   ├── eml_reader.rb             # Parse EML files, extract attachments
 │   ├── eml_contact_extractor.rb  # Extract contacts from EML headers
-│   └── llm_contact_extractor.rb  # LLM-powered contact extraction (Claude 3.5 Haiku)
+│   └── llm_email_extractor.rb    # LLM-powered extraction (contacts, companies, logos)
 └── views/
     ├── shared/_navbar.html.erb   # Navigation (shown when authenticated)
     └── ...
 
 db/seeds/emails/          # EML files extracted from PST (gitignored)
 lib/tasks/
-└── import_contacts.rake  # Contact import task
+├── import_contacts.rake  # Contact import task
+└── enrich_contacts.rake  # LLM enrichment task
 ```
 
 ## Authentication
@@ -76,9 +79,13 @@ Business logic extracted into service objects in `app/services/`:
 email = EmlReader.new(path).read
 # => { from:, to:, subject:, date:, body:, html_body:, attachments: }
 
-# Extracting contacts
+# Extracting contacts (from headers only)
 contacts = EmlContactExtractor.new(path).extract
 # => [{ email:, name: }, ...]
+
+# LLM-powered extraction (contacts + companies + logos)
+result = LlmEmailExtractor.new(path).extract
+# => { contacts: [...], companies: [...], image_data: {...} }
 ```
 
 ### File-based Email Storage
@@ -116,8 +123,16 @@ users
 ├── password_digest
 └── timestamps
 
+companies
+├── user_id (FK)
+├── name
+├── website
+├── logo (Active Storage attachment)
+└── timestamps
+
 contacts
 ├── user_id (FK)
+├── company_id (FK, optional)
 ├── email (unique per user, normalized lowercase)
 ├── name
 ├── job_role
@@ -150,6 +165,8 @@ bin/extract-pst backup.pst db/seeds/emails
 | `/session/new` | Login |
 | `/registration/new` | Signup |
 | `/contacts` | Contact list |
+| `/companies` | Company list |
+| `/companies/:id` | Company detail with linked contacts |
 | `/emails` | Email list (paginated) |
 | `/emails/:id` | View email |
 | `/emails/:id/attachment/:cid` | Serve inline attachment |
