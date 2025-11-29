@@ -3,9 +3,10 @@ set -e
 
 echo "Running pre-commit checks..."
 
-# Run Rubocop for linting
+# Run Rubocop for linting (auto-fix and re-stage)
 echo "=> Running Rubocop..."
-bin/rubocop --force-exclusion
+bin/rubocop --force-exclusion -A
+git add -u
 
 # Run tests
 echo "=> Running tests..."
