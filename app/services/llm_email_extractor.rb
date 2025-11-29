@@ -17,8 +17,9 @@ class LlmEmailExtractor
     response = @client.messages.create(
       model: MODEL,
       max_tokens: 2048,
+      temperature: 0,  # Deterministic output for consistent extraction
       messages: messages,
-      system: system_prompt
+      system: cached_system_prompt
     )
 
     parse_response(response)
@@ -33,10 +34,22 @@ class LlmEmailExtractor
     { contacts: [], companies: [], image_data: {} }
   end
 
-  def system_prompt
+  # Cached system prompt for API efficiency (90% token savings on repeated calls)
+  def cached_system_prompt
+    [
+      {
+        type: "text",
+        text: system_prompt_text,
+        cache_control: { type: "ephemeral" }
+      }
+    ]
+  end
+
+  def system_prompt_text
     <<~PROMPT
       You are a contact and company information extractor. Analyze emails and their attachments (especially signature images) to extract contact and company details.
 
+      <instructions>
       Extract ALL contacts mentioned in the email, including:
       - Sender and recipients (from headers)
       - People mentioned in email signatures
@@ -59,7 +72,38 @@ class LlmEmailExtractor
       - commercial_name: The brand or trade name commonly used (e.g., "ITPSA")
       - website: The company's official website URL
       - logo_content_id: If any attached image appears to be a company logo, include its content_id
+      </instructions>
 
+      <examples>
+      <example>
+      Input email:
+      From: John Doe <john.doe@acme.com>
+      Subject: Meeting next week
+
+      Best regards,
+      John Doe
+      Senior Developer
+      Acme Corporation Inc.
+      Tel: +1-555-123-4567
+      www.acme.com
+
+      Output:
+      {"contacts": [{"email": "john.doe@acme.com", "name": "John Doe", "job_role": "Senior Developer", "phone_numbers": ["+1-555-123-4567"], "company_name": "Acme"}], "companies": [{"legal_name": "Acme Corporation Inc.", "commercial_name": "Acme", "website": "https://acme.com", "logo_content_id": null}]}
+      </example>
+
+      <example>
+      Input email:
+      From: info@newsletter.com
+      Subject: Weekly digest
+
+      (no signature)
+
+      Output:
+      {"contacts": [{"email": "info@newsletter.com", "name": null, "job_role": null, "phone_numbers": [], "company_name": null}], "companies": []}
+      </example>
+      </examples>
+
+      <output_format>
       Return ONLY valid JSON with this structure:
       {
         "contacts": [
@@ -80,13 +124,16 @@ class LlmEmailExtractor
           }
         ]
       }
+      </output_format>
 
-      Guidelines:
+      <guidelines>
       - The company_name in contacts should match either legal_name or commercial_name in companies
       - For website, infer from email domain if not explicitly stated (e.g., @acme.com -> https://acme.com)
       - Set logo_content_id to null if no logo image is identified
+      - Use null for fields where information is not available - never hallucinate
       - If no contacts found, return {"contacts": [], "companies": []}
-      - Do not include any text outside the JSON object.
+      - Do not include any text outside the JSON object
+      </guidelines>
     PROMPT
   end
 

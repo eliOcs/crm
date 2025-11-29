@@ -1,5 +1,7 @@
 class Company < ApplicationRecord
   belongs_to :user
+  belongs_to :parent_company, class_name: "Company", optional: true
+  has_many :subsidiaries, class_name: "Company", foreign_key: :parent_company_id, dependent: :nullify
   has_and_belongs_to_many :contacts
   has_one_attached :logo
 

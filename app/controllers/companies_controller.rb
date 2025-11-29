@@ -1,6 +1,6 @@
 class CompaniesController < ApplicationController
   def index
-    @companies = Current.user.companies.order(:name)
+    @companies = Current.user.companies.order(Arel.sql("COALESCE(commercial_name, legal_name)"))
   end
 
   def show

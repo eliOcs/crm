@@ -61,6 +61,7 @@ app/
 │   ├── eml_contact_extractor.rb  # Extract contacts from EML headers
 │   ├── llm_email_extractor.rb    # LLM-powered extraction (contacts, companies, logos)
 │   ├── company_web_enricher.rb   # Web search enrichment for companies (Claude + web search)
+│   ├── contact_enrichment_service.rb # Orchestrates contact/company enrichment from emails
 │   └── llm_company_deduplicator.rb # LLM-powered company deduplication
 └── views/
     ├── shared/_navbar.html.erb   # Navigation (shown when authenticated)
@@ -130,6 +131,26 @@ Pre-commit hook runs automatically:
 Hook location: `.githooks/pre-commit` (tracked in git)
 Configured via: `git config core.hooksPath .githooks`
 
+## Testing
+
+### VCR for API Tests
+Tests that call external APIs (Anthropic, web search) use VCR to record and replay HTTP interactions:
+
+```ruby
+# test/services/contact_enrichment_service_test.rb
+VCR.use_cassette("enrichment_company_hierarchy") do
+  service = ContactEnrichmentService.new(@user, logger: @logger)
+  service.process_email(eml_path)
+end
+```
+
+- Cassettes stored in `test/cassettes/` (YAML files with recorded HTTP responses)
+- First run records real API calls, subsequent runs replay from cassettes
+- API keys filtered automatically via `config.filter_sensitive_data`
+- To re-record: delete the cassette file and run tests with `ANTHROPIC_API_KEY` set
+
+Configuration: `test/support/vcr.rb`
+
 ## Important Files
 
 - `doc/best-practices.md` - Rails 7+ conventions and patterns (READ THIS)
@@ -153,6 +174,7 @@ companies
 ├── description
 ├── industry
 ├── location
+├── parent_company_id (FK, self-referential for subsidiaries)
 ├── web_enriched_at (timestamp when web search enrichment was done)
 ├── logo (Active Storage attachment)
 └── timestamps
@@ -180,6 +202,13 @@ sessions
 - `legal_name`: Full official/legal registered name (e.g., "Industrial Técnica Pecuaria, S.A.")
 - `commercial_name`: Brand or trade name commonly used (e.g., "ITPSA")
 - `display_name` method: Returns commercial_name if present, otherwise legal_name
+
+### Company Hierarchy (Parent/Subsidiary)
+Companies can have parent-child relationships via `parent_company_id`:
+- `company.parent_company` - Returns the parent company
+- `company.subsidiaries` - Returns child companies
+- Web enrichment detects parent companies and creates hierarchy automatically
+- Domain mismatch detection: If contact emails don't match enriched domain, creates subsidiary
 
 ## PST File Extraction
 
