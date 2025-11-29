@@ -80,23 +80,14 @@ namespace :import do
           display_name = company_data[:commercial_name] || company_data[:legal_name]
           next unless display_name
 
-          # Find by domain first, then by name
+          # Step 1: Try to find existing company by domain or name from LLM data
           company = find_company_by_domain.call(company_data[:website])
           company ||= find_company_by_name.call(company_data[:legal_name])
           company ||= find_company_by_name.call(company_data[:commercial_name])
-          company ||= user.companies.new(legal_name: company_data[:legal_name] || display_name)
 
-          was_new = company.new_record?
-          updates_made = false
-
-          # Fill in commercial_name if missing
-          if company_data[:commercial_name].present? && company.commercial_name.blank?
-            company.commercial_name = company_data[:commercial_name]
-            updates_made = true
-          end
-
-          # Web enrich new companies
-          if was_new
+          # Step 2: If not found, enrich with web search FIRST to get complete info
+          enriched = {}
+          if company.nil?
             print "\n    Enriching #{display_name}..."
             enriched = CompanyWebEnricher.new(
               display_name,
@@ -104,31 +95,59 @@ namespace :import do
             ).enrich
 
             if enriched.any?
-              company.legal_name = enriched[:legal_name] if enriched[:legal_name].present?
-              company.commercial_name ||= enriched[:commercial_name]
-              company.website ||= enriched[:website]
-              company.description ||= enriched[:description]
-              company.industry ||= enriched[:industry]
-              company.location ||= enriched[:location]
-              company.web_enriched_at = Time.current
               stats[:companies_web_enriched] += 1
               print " done"
+
+              # Step 3: Re-check with enriched data (domain and legal_name)
+              company = find_company_by_domain.call(enriched[:website])
+              company ||= find_company_by_name.call(enriched[:legal_name])
+              company ||= find_company_by_name.call(enriched[:commercial_name])
+
+              if company
+                print " (matched existing)"
+              end
             else
               print " no results"
             end
           end
 
-          # Fill in missing website (only for new companies or those without)
+          # Step 4: Create new company only if still not found
+          was_new = company.nil?
+          if was_new
+            company = user.companies.new(
+              legal_name: enriched[:legal_name] || company_data[:legal_name] || display_name
+            )
+          end
+
+          updates_made = false
+
+          # Fill in fields from enriched data (for new companies)
+          if enriched.any?
+            company.commercial_name ||= enriched[:commercial_name]
+            company.website ||= enriched[:website]
+            company.description ||= enriched[:description]
+            company.industry ||= enriched[:industry]
+            company.location ||= enriched[:location]
+            company.web_enriched_at ||= Time.current if was_new
+          end
+
+          # Fill in commercial_name from LLM if missing
+          if company_data[:commercial_name].present? && company.commercial_name.blank?
+            company.commercial_name = company_data[:commercial_name]
+            updates_made = true
+          end
+
+          # Fill in missing website from LLM data
           if company_data[:website].present? && company.website.blank?
             company.website = company_data[:website]
             updates_made = true
           end
 
-          if was_new || updates_made
+          if was_new || updates_made || company.changed?
             company.save!
             if was_new
               stats[:companies_new] += 1
-            else
+            elsif updates_made || company.saved_changes.any?
               stats[:companies_enriched] += 1
             end
           end
