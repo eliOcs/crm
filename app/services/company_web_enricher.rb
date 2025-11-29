@@ -43,13 +43,12 @@ class CompanyWebEnricher
       schema: {
         type: "object",
         properties: {
-          name: { type: "string", description: "The full official/legal company name, or empty string if unknown" },
-          website: { type: "string", description: "The company's official website URL, or empty string if unknown" },
-          description: { type: "string", description: "A brief 1-2 sentence description, or empty string if unknown" },
-          industry: { type: "string", description: "The industry or sector, or empty string if unknown" },
-          location: { type: "string", description: "Headquarters location (city, country), or empty string if unknown" }
+          name: { type: "string", description: "The full official/legal company name" },
+          website: { type: "string", description: "The company's official website URL" },
+          description: { type: "string", description: "A brief 1-2 sentence description" },
+          industry: { type: "string", description: "The industry or sector" },
+          location: { type: "string", description: "Headquarters location (city, country)" }
         },
-        required: %w[name website description industry location],
         additionalProperties: false
       }
     }
@@ -64,7 +63,7 @@ class CompanyWebEnricher
       Find the company's full legal name, official website, a brief description of what they do,
       their industry/sector, and headquarters location.
 
-      If you cannot find reliable information for a field, use an empty string.
+      Only include fields you find reliable information for.
     PROMPT
   end
 
