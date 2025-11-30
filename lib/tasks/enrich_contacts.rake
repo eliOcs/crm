@@ -26,42 +26,6 @@ namespace :import do
       end
     }
 
-    # Helper to download logo from URL (follows redirects)
-    download_logo = ->(url, max_redirects = 3) do
-      return nil unless url.present?
-      return nil if max_redirects <= 0
-      begin
-        uri = URI.parse(url)
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = (uri.scheme == "https")
-        http.open_timeout = 5
-        http.read_timeout = 10
-
-        request = Net::HTTP::Get.new(uri.request_uri)
-        response = http.request(request)
-
-        case response
-        when Net::HTTPRedirection
-          download_logo.call(response["location"], max_redirects - 1)
-        when Net::HTTPSuccess
-          content_type = response["content-type"]&.split(";")&.first
-          return nil unless content_type&.start_with?("image/")
-
-          {
-            data: response.body,
-            content_type: content_type,
-            filename: "logo#{extension_for.call(content_type)}"
-          }
-        else
-          nil
-        end
-      rescue URI::InvalidURIError, SocketError, Errno::ECONNREFUSED,
-             Net::OpenTimeout, Net::ReadTimeout, OpenSSL::SSL::SSLError => e
-        logger.debug "  Failed to download logo: #{e.message}"
-        nil
-      end
-    end
-
     # Helper to validate website URL via HTTP HEAD request
     validate_website = ->(url, max_redirects = 3) do
       return nil unless url.present?
@@ -429,38 +393,17 @@ namespace :import do
             )
           end
 
-          # Attach logo: prefer web-enriched URL, fall back to email attachment
-          unless company.logo.attached?
-            logo_attached = false
-
-            # First try web-enriched logo URL
-            if enriched[:logo_url].present?
-              logger.debug "  Downloading logo from: #{enriched[:logo_url]}"
-              web_logo = download_logo.call(enriched[:logo_url])
-              if web_logo
-                company.logo.attach(
-                  io: StringIO.new(web_logo[:data]),
-                  filename: web_logo[:filename],
-                  content_type: web_logo[:content_type]
-                )
-                stats[:logos_attached] += 1
-                logger.info "  DB: ATTACH logo company_id=#{company.id} logo_source=web url=#{enriched[:logo_url]} source=#{eml_relative}"
-                logo_attached = true
-              end
-            end
-
-            # Fall back to email attachment logo
-            if !logo_attached && company_data[:logo_content_id].present?
-              image_data = result[:image_data][company_data[:logo_content_id]]
-              if image_data
-                company.logo.attach(
-                  io: StringIO.new(image_data[:raw_data]),
-                  filename: "logo#{extension_for.call(image_data[:content_type])}",
-                  content_type: image_data[:content_type]
-                )
-                stats[:logos_attached] += 1
-                logger.info "  DB: ATTACH logo company_id=#{company.id} logo_source=email cid=#{company_data[:logo_content_id]} source=#{eml_relative}"
-              end
+          # Attach logo from email attachment
+          if !company.logo.attached? && company_data[:logo_content_id].present?
+            image_data = result[:image_data][company_data[:logo_content_id]]
+            if image_data
+              company.logo.attach(
+                io: StringIO.new(image_data[:raw_data]),
+                filename: "logo#{extension_for.call(image_data[:content_type])}",
+                content_type: image_data[:content_type]
+              )
+              stats[:logos_attached] += 1
+              logger.info "  DB: ATTACH logo company_id=#{company.id} cid=#{company_data[:logo_content_id]} source=#{eml_relative}"
             end
           end
 

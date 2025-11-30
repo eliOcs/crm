@@ -48,7 +48,6 @@ class CompanyWebEnricher
           legal_name: { type: "string", description: "The full official/legal registered company name" },
           commercial_name: { type: "string", description: "The brand or trade name the company is commonly known by" },
           website: { type: "string", description: "The company's official website URL" },
-          logo_url: { type: "string", description: "Direct URL to the company's official logo image (PNG, JPG, or SVG)" },
           description: { type: "string", description: "A brief 1-2 sentence description" },
           industry: { type: "string", description: "The industry or sector" },
           location: { type: "string", description: "Headquarters location (city, country)" },
@@ -70,13 +69,11 @@ class CompanyWebEnricher
       - legal_name: The full official/legal registered name (e.g., "Acme Corporation, Inc.")
       - commercial_name: The brand or trade name commonly used (e.g., "Acme")
       - website: Official website URL
-      - logo_url: Direct URL to their official logo image (look for PNG, JPG, or SVG on their website or press kit)
       - description: Brief description of what they do
       - industry: Industry or sector
       - location: Headquarters location (city, country)
       - parent_company_name: If this company is a subsidiary or brand of a larger group, provide the parent company name
 
-      For logo_url, prefer high-quality logos from the company's official website, press/media kit, or about page.
       Only include fields you find reliable information for.
 
       IMPORTANT:
@@ -99,7 +96,6 @@ class CompanyWebEnricher
       legal_name: data["legal_name"]&.strip.presence,
       commercial_name: data["commercial_name"]&.strip.presence,
       website: data["website"]&.strip.presence,
-      logo_url: data["logo_url"]&.strip.presence,
       description: data["description"]&.strip.presence,
       industry: data["industry"]&.strip.presence,
       location: data["location"]&.strip.presence,
