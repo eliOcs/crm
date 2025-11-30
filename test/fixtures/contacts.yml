@@ -2,10 +2,10 @@
 
 one:
   user: one
-  name: MyString
-  email: MyString
+  name: John Doe
+  email: john@example.com
 
 two:
   user: two
-  name: MyString
-  email: MyString
+  name: Jane Smith
+  email: jane@example.com

@@ -1,0 +1,66 @@
+<h1><%= @contact.name.presence || @contact.email %></h1>
+
+<dl>
+  <% if @contact.name.present? %>
+    <dt><strong>Email</strong></dt>
+    <dd><%= @contact.email %></dd>
+  <% end %>
+
+  <% if @contact.job_role.present? %>
+    <dt><strong>Job Role</strong></dt>
+    <dd><%= @contact.job_role %></dd>
+  <% end %>
+
+  <% if @contact.phone_numbers.present? && @contact.phone_numbers.any? %>
+    <dt><strong>Phone Numbers</strong></dt>
+    <dd><%= @contact.phone_numbers.join(", ") %></dd>
+  <% end %>
+
+  <% if @contact.companies.any? %>
+    <dt><strong>Companies</strong></dt>
+    <dd>
+      <ul>
+        <% @contact.companies.each do |company| %>
+          <li><%= link_to company.display_name, company %></li>
+        <% end %>
+      </ul>
+    </dd>
+  <% end %>
+</dl>
+
+<h2>Audit Log</h2>
+
+<% if @contact.audit_logs.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Action</th>
+        <th>Message</th>
+        <th>Changes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contact.audit_logs.order(created_at: :desc).each do |log| %>
+        <tr>
+          <td><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+          <td><%= log.action %></td>
+          <td><%= log.message %></td>
+          <td>
+            <% if log.field_changes.any? %>
+              <ul>
+                <% log.field_changes.each do |field, change| %>
+                  <li><strong><%= field %></strong>: <%= change["from"].presence || "(empty)" %> &rarr; <%= change["to"] %></li>
+                <% end %>
+              </ul>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No audit history yet.</p>
+<% end %>
+
+<p><%= link_to "Back to contacts", contacts_path %></p>

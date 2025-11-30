@@ -1,0 +1,28 @@
+company_create:
+  user: one
+  auditable_type: Company
+  auditable_id: 1
+  action: create
+  message: web search enrichment
+  field_changes:
+    legal_name:
+      from:
+      to: Acme Inc
+  metadata:
+    version: abc123
+    input:
+      company_name: Acme
+
+contact_update:
+  user: one
+  auditable_type: Contact
+  auditable_id: 1
+  action: update
+  message: email extraction
+  field_changes:
+    job_role:
+      from:
+      to: CEO
+  metadata:
+    version: abc123
+    source_email: inbox/test.eml

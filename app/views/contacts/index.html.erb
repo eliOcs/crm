@@ -13,8 +13,8 @@
   <tbody>
     <% @contacts.each do |contact| %>
       <tr>
-        <td><%= contact.name.presence || "(No name)" %></td>
-        <td><%= contact.email %></td>
+        <td><%= link_to contact.name.presence || "(No name)", contact %></td>
+        <td><%= link_to contact.email, contact %></td>
         <td>
           <% contact.companies.each do |company| %>
             <%= link_to company.display_name, company_path(company) %><%= ", " unless company == contact.companies.last %>

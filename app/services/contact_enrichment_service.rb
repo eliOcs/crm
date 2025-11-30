@@ -1,4 +1,6 @@
 class ContactEnrichmentService
+  include Auditable
+
   attr_reader :user, :stats
 
   def initialize(user, logger: Rails.logger)
@@ -17,6 +19,7 @@ class ContactEnrichmentService
   end
 
   def process_email(eml_path)
+    @source_email = eml_path
     result = LlmEmailExtractor.new(eml_path).extract
     @logger.info "  LLM: #{result[:contacts].count} contacts, #{result[:companies].count} companies"
 
@@ -118,6 +121,24 @@ class ContactEnrichmentService
       )
       @stats[:companies_new] += 1
       @logger.info "  DB: CREATE company id=#{company.id} legal_name=#{company.legal_name.inspect}"
+
+      if enriched.any?
+        log_audit(
+          record: company,
+          action: "create",
+          message: "web search enrichment",
+          field_changes: build_field_changes(company),
+          metadata: { input: { company_name: display_name, hint_domain: company_data[:website], contact_domains: contact_domains } }
+        )
+      else
+        log_audit(
+          record: company,
+          action: "create",
+          message: "email extraction",
+          field_changes: build_field_changes(company),
+          metadata: { source_email: @source_email }
+        )
+      end
     end
 
     # Handle parent company
@@ -149,6 +170,14 @@ class ContactEnrichmentService
           )
           @stats[:companies_new] += 1
           @logger.info "  DB: CREATE parent company id=#{parent.id} legal_name=#{parent.legal_name.inspect}"
+
+          log_audit(
+            record: parent,
+            action: "create",
+            message: "web search enrichment",
+            field_changes: build_field_changes(parent),
+            metadata: { input: { company_name: enriched[:parent_company_name] } }
+          )
         else
           @logger.info "  Matched existing parent: #{parent.display_name} (id=#{parent.id})"
         end
@@ -156,6 +185,14 @@ class ContactEnrichmentService
 
       company.update!(parent_company_id: parent.id)
       @logger.info "  DB: SET parent_company company_id=#{company.id} parent_id=#{parent.id}"
+
+      log_audit(
+        record: company,
+        action: "update",
+        message: "parent company link",
+        field_changes: build_field_changes(company),
+        metadata: { source_email: @source_email }
+      )
     end
 
     company
@@ -186,9 +223,25 @@ class ContactEnrichmentService
       contact.save!
       @stats[:contacts_new] += 1
       @logger.info "  DB: CREATE contact id=#{contact.id} email=#{contact.email}"
+
+      log_audit(
+        record: contact,
+        action: "create",
+        message: "email extraction",
+        field_changes: build_field_changes(contact),
+        metadata: { source_email: @source_email }
+      )
     elsif updates.any?
       contact.update!(updates)
       @stats[:contacts_enriched] += 1
+
+      log_audit(
+        record: contact,
+        action: "update",
+        message: "email extraction",
+        field_changes: build_field_changes(contact),
+        metadata: { source_email: @source_email }
+      )
     else
       @stats[:contacts_skipped] += 1
     end
@@ -201,6 +254,14 @@ class ContactEnrichmentService
       if company && !contact.companies.include?(company)
         contact.companies << company
         @logger.info "  DB: LINK contact_id=#{contact.id} company_id=#{company.id}"
+
+        log_audit(
+          record: contact,
+          action: "link",
+          message: "company link",
+          field_changes: { "company_id" => { "from" => nil, "to" => company.id } },
+          metadata: { source_email: @source_email }
+        )
       end
     end
   end
