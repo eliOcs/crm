@@ -73,4 +73,7 @@ group :test do
   # HTTP request stubbing and recording for API tests
   gem "webmock"
   gem "vcr"
+
+  # Code coverage reporting
+  gem "simplecov", require: false
 end

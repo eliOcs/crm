@@ -38,3 +38,6 @@
 # Ignore outlook backup files and extracted emails
 *.pst
 /db/seeds/emails/
+
+# Ignore test coverage reports
+/coverage/
