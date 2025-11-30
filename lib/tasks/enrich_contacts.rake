@@ -304,7 +304,7 @@ namespace :import do
                   action: "create",
                   message: "import: company created via web search",
                   field_changes: build_field_changes.call(company),
-                  metadata: { input: { company_name: display_name, hint_domain: company_data[:website], contact_domains: contact_domains } }
+                  metadata: { source_email: eml_relative, input: { company_name: display_name, hint_domain: company_data[:website], contact_domains: contact_domains } }
                 )
               else
                 log_audit.call(
@@ -375,7 +375,7 @@ namespace :import do
                   action: "create",
                   message: "import: parent company created via web search",
                   field_changes: build_field_changes.call(parent),
-                  metadata: { input: { company_name: enriched[:parent_company_name] } }
+                  metadata: { source_email: eml_relative, input: { company_name: enriched[:parent_company_name] } }
                 )
               else
                 logger.info "  Matched existing parent: #{parent.display_name} (id=#{parent.id})"
@@ -389,7 +389,7 @@ namespace :import do
               action: "link",
               message: "import: company linked to parent",
               field_changes: build_field_changes.call(company),
-              metadata: { parent_company_id: parent.id, parent_company_name: parent.display_name }
+              metadata: { source_email: eml_relative, parent_company_id: parent.id, parent_company_name: parent.display_name }
             )
           end
 
