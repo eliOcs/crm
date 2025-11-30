@@ -16,7 +16,7 @@ CRM application for managing contacts, companies, and emails. Built to help pars
 ## Environment Variables
 
 ```bash
-ANTHROPIC_API_KEY=sk-ant-...  # Required for LLM features (enrichment, dedup)
+ANTHROPIC_API_KEY=sk-ant-...  # Required for LLM features (enrichment)
 ```
 
 ## Key Commands
@@ -31,7 +31,6 @@ bin/setup                 # Setup project (installs deps, configures git hooks)
 # Import tasks
 bin/rails import:contacts         # Import contacts from EML files (prompts for user email)
 bin/rails import:enrich_contacts  # Enrich contacts/companies with LLM (extracts job roles, phones, companies, logos)
-bin/rails import:dedup_companies  # LLM-powered company deduplication (finds duplicates by name/logo)
 bin/extract-pst <file>            # Extract EML files from PST backup
 
 # Database
@@ -61,8 +60,7 @@ app/
 │   ├── eml_contact_extractor.rb  # Extract contacts from EML headers
 │   ├── llm_email_extractor.rb    # LLM-powered extraction (contacts, companies, logos)
 │   ├── company_web_enricher.rb   # Web search enrichment for companies (Claude + web search)
-│   ├── contact_enrichment_service.rb # Orchestrates contact/company enrichment from emails
-│   └── llm_company_deduplicator.rb # LLM-powered company deduplication
+│   └── contact_enrichment_service.rb # Orchestrates contact/company enrichment from emails
 └── views/
     ├── shared/_navbar.html.erb   # Navigation (shown when authenticated)
     └── ...
@@ -70,8 +68,7 @@ app/
 db/seeds/emails/          # EML files extracted from PST (gitignored)
 lib/tasks/
 ├── import_contacts.rake  # Contact import task
-├── enrich_contacts.rake  # LLM enrichment task (contacts, companies, web search)
-└── dedup_companies.rake  # LLM-powered company deduplication
+└── enrich_contacts.rake  # LLM enrichment task (contacts, companies, web search)
 ```
 
 ## Authentication
@@ -108,7 +105,7 @@ enriched = CompanyWebEnricher.new("ACME", hint_domain: "acme.com").enrich
 
 ### LLM Models Used
 - **Claude 3.5 Haiku** (`claude-3-5-haiku-latest`): Email extraction (fast, cost-effective)
-- **Claude Sonnet 4.5** (`claude-sonnet-4-5-20250929`): Web enrichment with web search tool, company deduplication
+- **Claude Sonnet 4.5** (`claude-sonnet-4-5-20250929`): Web enrichment with web search tool
 
 ### File-based Email Storage
 Emails are read directly from EML files on disk (not stored in database):
