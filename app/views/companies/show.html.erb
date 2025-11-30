@@ -87,6 +87,7 @@
         <th>Date</th>
         <th>Action</th>
         <th>Message</th>
+        <th>Source</th>
         <th>Changes</th>
       </tr>
     </thead>
@@ -96,6 +97,7 @@
           <td><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
           <td><%= log.action %></td>
           <td><%= log.message %></td>
+          <td><%= log.metadata["source_email"] %></td>
           <td>
             <% if log.field_changes.any? %>
               <ul>
