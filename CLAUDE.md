@@ -29,7 +29,6 @@ bin/rubocop               # Lint code
 bin/setup                 # Setup project (installs deps, configures git hooks)
 
 # Import tasks
-bin/rails import:contacts         # Import contacts from EML files (prompts for user email)
 bin/rails import:enrich_contacts  # Enrich contacts/companies with LLM (extracts job roles, phones, companies, logos)
 bin/extract-pst <file>            # Extract EML files from PST backup
 
@@ -57,7 +56,6 @@ app/
 │   └── current.rb                # CurrentAttributes for request context
 ├── services/
 │   ├── eml_reader.rb             # Parse EML files, extract attachments
-│   ├── eml_contact_extractor.rb  # Extract contacts from EML headers
 │   ├── llm_email_extractor.rb    # LLM-powered extraction (contacts, companies, logos)
 │   ├── company_web_enricher.rb   # Web search enrichment for companies (Claude + web search)
 │   └── contact_enrichment_service.rb # Orchestrates contact/company enrichment from emails
@@ -67,7 +65,6 @@ app/
 
 db/seeds/emails/          # EML files extracted from PST (gitignored)
 lib/tasks/
-├── import_contacts.rake  # Contact import task
 └── enrich_contacts.rake  # LLM enrichment task (contacts, companies, web search)
 ```
 
@@ -87,10 +84,6 @@ Business logic extracted into service objects in `app/services/`:
 # Reading an email
 email = EmlReader.new(path).read
 # => { from:, to:, subject:, date:, body:, html_body:, attachments: }
-
-# Extracting contacts (from headers only)
-contacts = EmlContactExtractor.new(path).extract
-# => [{ email:, name: }, ...]
 
 # LLM-powered extraction (contacts + companies + logos) - uses Claude 3.5 Haiku
 result = LlmEmailExtractor.new(path).extract
