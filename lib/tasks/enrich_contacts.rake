@@ -62,6 +62,51 @@ namespace :import do
       end
     end
 
+    # Helper to validate website URL via HTTP HEAD request
+    validate_website = ->(url, max_redirects = 3) do
+      return nil unless url.present?
+      return nil if max_redirects <= 0
+      begin
+        # Ensure URL has a scheme
+        url = "https://#{url}" unless url.start_with?("http://", "https://")
+        uri = URI.parse(url)
+        return nil unless uri.host.present?
+
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = (uri.scheme == "https")
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE # Accept self-signed/problematic certs for validation
+        http.open_timeout = 5
+        http.read_timeout = 10
+
+        request = Net::HTTP::Head.new(uri.request_uri.presence || "/")
+        request["User-Agent"] = "Mozilla/5.0 (compatible; CRM/1.0)"
+        response = http.request(request)
+
+        case response
+        when Net::HTTPRedirection
+          redirect_url = response["location"]
+          # Handle relative redirects
+          redirect_url = "#{uri.scheme}://#{uri.host}#{redirect_url}" if redirect_url&.start_with?("/")
+          validate_website.call(redirect_url, max_redirects - 1)
+        when Net::HTTPSuccess
+          url
+        when Net::HTTPMethodNotAllowed
+          # Some servers don't allow HEAD, try GET with minimal data
+          get_request = Net::HTTP::Get.new(uri.request_uri.presence || "/")
+          get_request["User-Agent"] = "Mozilla/5.0 (compatible; CRM/1.0)"
+          get_response = http.request(get_request)
+          get_response.is_a?(Net::HTTPSuccess) ? url : nil
+        else
+          logger.debug "  Website validation failed: #{url} returned #{response.code}"
+          nil
+        end
+      rescue URI::InvalidURIError, SocketError, Errno::ECONNREFUSED, Errno::ECONNRESET,
+             Net::OpenTimeout, Net::ReadTimeout, OpenSSL::SSL::SSLError, Errno::EHOSTUNREACH => e
+        logger.debug "  Website validation failed: #{url} - #{e.message}"
+        nil
+      end
+    end
+
     unless ENV["ANTHROPIC_API_KEY"].present?
       puts "Error: ANTHROPIC_API_KEY environment variable is not set"
       exit 1
@@ -242,10 +287,20 @@ namespace :import do
             company.commercial_name ||= enriched[:commercial_name]
             # If this is a subsidiary (parent_company_name set due to domain mismatch),
             # use contact_domains to set website instead of enriched website (parent's)
-            if enriched[:parent_company_name].present? && contact_domains.any?
-              company.website ||= "https://#{contact_domains.first}"
-            else
-              company.website ||= enriched[:website]
+            if company.website.blank?
+              candidate_url = if enriched[:parent_company_name].present? && contact_domains.any?
+                "https://#{contact_domains.first}"
+              else
+                enriched[:website]
+              end
+              if candidate_url.present?
+                validated_url = validate_website.call(candidate_url)
+                if validated_url
+                  company.website = validated_url
+                else
+                  logger.info "  Website validation failed for: #{candidate_url}"
+                end
+              end
             end
             company.description ||= enriched[:description]
             company.industry ||= enriched[:industry]
@@ -259,10 +314,15 @@ namespace :import do
             updates_made = true
           end
 
-          # Fill in missing website from LLM data
+          # Fill in missing website from LLM data (with validation)
           if company_data[:website].present? && company.website.blank?
-            company.website = company_data[:website]
-            updates_made = true
+            validated_url = validate_website.call(company_data[:website])
+            if validated_url
+              company.website = validated_url
+              updates_made = true
+            else
+              logger.info "  Website validation failed for LLM data: #{company_data[:website]}"
+            end
           end
 
           if was_new || updates_made || company.changed?
@@ -323,10 +383,19 @@ namespace :import do
 
               # Create parent if still not found
               if parent.nil?
+                # Validate parent website before creating
+                validated_parent_website = nil
+                if parent_enriched[:website].present?
+                  validated_parent_website = validate_website.call(parent_enriched[:website])
+                  if validated_parent_website.nil?
+                    logger.info "  Website validation failed for parent: #{parent_enriched[:website]}"
+                  end
+                end
+
                 parent = user.companies.create!(
                   legal_name: parent_enriched[:legal_name] || enriched[:parent_company_name],
                   commercial_name: parent_enriched[:commercial_name],
-                  website: parent_enriched[:website],
+                  website: validated_parent_website,
                   description: parent_enriched[:description],
                   industry: parent_enriched[:industry],
                   location: parent_enriched[:location],
