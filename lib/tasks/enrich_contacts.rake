@@ -111,6 +111,25 @@ namespace :import do
       errors: 0
     }
 
+    # Helper to build field changes hash from saved_changes
+    build_field_changes = ->(record) {
+      record.saved_changes.except("created_at", "updated_at").transform_values do |change|
+        { "from" => change[0], "to" => change[1] }
+      end
+    }
+
+    # Helper to log audit entries
+    log_audit = ->(record:, action:, message:, field_changes: {}, metadata: {}) {
+      AuditLog.create!(
+        user: user,
+        auditable: record,
+        action: action,
+        message: message,
+        field_changes: field_changes,
+        metadata: metadata.merge(version: AuditLog.current_version)
+      )
+    }
+
     # Helper to find company by domain or name
     find_company_by_domain = ->(website) {
       return nil unless website.present?
@@ -252,8 +271,32 @@ namespace :import do
             if was_new
               stats[:companies_new] += 1
               logger.info "  DB: CREATE company id=#{company.id} legal_name=#{company.legal_name.inspect} source=#{eml_relative}"
+              if enriched.any?
+                log_audit.call(
+                  record: company,
+                  action: "create",
+                  message: "web search enrichment",
+                  field_changes: build_field_changes.call(company),
+                  metadata: { input: { company_name: display_name, hint_domain: company_data[:website], contact_domains: contact_domains } }
+                )
+              else
+                log_audit.call(
+                  record: company,
+                  action: "create",
+                  message: "email extraction",
+                  field_changes: build_field_changes.call(company),
+                  metadata: { source_email: eml_relative }
+                )
+              end
             elsif company.saved_changes.any?
               stats[:companies_enriched] += 1
+              log_audit.call(
+                record: company,
+                action: "update",
+                message: "email extraction",
+                field_changes: build_field_changes.call(company),
+                metadata: { source_email: eml_relative }
+              )
               changed_fields = company.saved_changes.keys - %w[updated_at]
               logger.info "  DB: UPDATE company id=#{company.id} fields=#{changed_fields.join(',')} source=#{eml_relative}"
             end
@@ -291,6 +334,13 @@ namespace :import do
                 )
                 stats[:companies_new] += 1
                 logger.info "  DB: CREATE parent company id=#{parent.id} legal_name=#{parent.legal_name.inspect} source=#{eml_relative}"
+                log_audit.call(
+                  record: parent,
+                  action: "create",
+                  message: "web search enrichment",
+                  field_changes: build_field_changes.call(parent),
+                  metadata: { input: { company_name: enriched[:parent_company_name] } }
+                )
               else
                 logger.info "  Matched existing parent: #{parent.display_name} (id=#{parent.id})"
               end
@@ -298,6 +348,13 @@ namespace :import do
 
             company.update!(parent_company_id: parent.id)
             logger.info "  DB: SET parent_company company_id=#{company.id} parent_id=#{parent.id} source=#{eml_relative}"
+            log_audit.call(
+              record: company,
+              action: "link",
+              message: "linked to parent company",
+              field_changes: build_field_changes.call(company),
+              metadata: { parent_company_id: parent.id, parent_company_name: parent.display_name }
+            )
           end
 
           # Attach logo: prefer web-enriched URL, fall back to email attachment
@@ -369,10 +426,24 @@ namespace :import do
             contact.save!
             stats[:contacts_new] += 1
             logger.info "  DB: CREATE contact id=#{contact.id} email=#{contact.email} source=#{eml_relative}"
+            log_audit.call(
+              record: contact,
+              action: "create",
+              message: "email extraction",
+              field_changes: build_field_changes.call(contact),
+              metadata: { source_email: eml_relative }
+            )
           elsif updates.any?
             contact.update!(updates)
             stats[:contacts_enriched] += 1
             logger.info "  DB: UPDATE contact id=#{contact.id} fields=#{updates.keys.join(',')} source=#{eml_relative}"
+            log_audit.call(
+              record: contact,
+              action: "update",
+              message: "email extraction",
+              field_changes: build_field_changes.call(contact),
+              metadata: { source_email: eml_relative }
+            )
           else
             stats[:contacts_skipped] += 1
           end
@@ -385,6 +456,12 @@ namespace :import do
             if company && !contact.companies.include?(company)
               contact.companies << company
               logger.info "  DB: LINK contact_id=#{contact.id} company_id=#{company.id} source=#{eml_relative}"
+              log_audit.call(
+                record: contact,
+                action: "link",
+                message: "linked to company",
+                metadata: { company_id: company.id, company_name: company.display_name, source_email: eml_relative }
+              )
             end
           end
         end
