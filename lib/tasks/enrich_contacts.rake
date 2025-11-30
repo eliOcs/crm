@@ -302,7 +302,7 @@ namespace :import do
                 log_audit.call(
                   record: company,
                   action: "create",
-                  message: "web search enrichment",
+                  message: "import: company created via web search",
                   field_changes: build_field_changes.call(company),
                   metadata: { input: { company_name: display_name, hint_domain: company_data[:website], contact_domains: contact_domains } }
                 )
@@ -310,7 +310,7 @@ namespace :import do
                 log_audit.call(
                   record: company,
                   action: "create",
-                  message: "email extraction",
+                  message: "import: company created via email extraction",
                   field_changes: build_field_changes.call(company),
                   metadata: { source_email: eml_relative }
                 )
@@ -320,7 +320,7 @@ namespace :import do
               log_audit.call(
                 record: company,
                 action: "update",
-                message: "email extraction",
+                message: "import: company enriched via email extraction",
                 field_changes: build_field_changes.call(company),
                 metadata: { source_email: eml_relative }
               )
@@ -373,7 +373,7 @@ namespace :import do
                 log_audit.call(
                   record: parent,
                   action: "create",
-                  message: "web search enrichment",
+                  message: "import: parent company created via web search",
                   field_changes: build_field_changes.call(parent),
                   metadata: { input: { company_name: enriched[:parent_company_name] } }
                 )
@@ -387,7 +387,7 @@ namespace :import do
             log_audit.call(
               record: company,
               action: "link",
-              message: "linked to parent company",
+              message: "import: company linked to parent",
               field_changes: build_field_changes.call(company),
               metadata: { parent_company_id: parent.id, parent_company_name: parent.display_name }
             )
@@ -407,7 +407,7 @@ namespace :import do
               log_audit.call(
                 record: company,
                 action: "update",
-                message: "logo attached",
+                message: "import: company logo attached",
                 field_changes: { "logo" => { "from" => nil, "to" => company_data[:logo_content_id] } },
                 metadata: { source_email: eml_relative }
               )
@@ -451,7 +451,7 @@ namespace :import do
             log_audit.call(
               record: contact,
               action: "create",
-              message: "email extraction",
+              message: "import: contact created via email extraction",
               field_changes: build_field_changes.call(contact),
               metadata: { source_email: eml_relative }
             )
@@ -462,7 +462,7 @@ namespace :import do
             log_audit.call(
               record: contact,
               action: "update",
-              message: "email extraction",
+              message: "import: contact enriched via email extraction",
               field_changes: build_field_changes.call(contact),
               metadata: { source_email: eml_relative }
             )
@@ -481,7 +481,7 @@ namespace :import do
               log_audit.call(
                 record: contact,
                 action: "link",
-                message: "linked to company",
+                message: "import: contact linked to company",
                 metadata: { company_id: company.id, company_name: company.display_name, source_email: eml_relative }
               )
             end
