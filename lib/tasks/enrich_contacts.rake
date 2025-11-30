@@ -404,6 +404,13 @@ namespace :import do
               )
               stats[:logos_attached] += 1
               logger.info "  DB: ATTACH logo company_id=#{company.id} cid=#{company_data[:logo_content_id]} source=#{eml_relative}"
+              log_audit.call(
+                record: company,
+                action: "update",
+                message: "logo attached",
+                field_changes: { "logo" => { "from" => nil, "to" => company_data[:logo_content_id] } },
+                metadata: { source_email: eml_relative }
+              )
             end
           end
 
