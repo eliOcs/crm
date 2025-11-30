@@ -67,8 +67,8 @@ class CompanyWebEnricher
       Search for information about the company "#{@company_name}"#{domain_hint}.#{contact_domains_hint}
 
       Find:
-      - legal_name: The full official/legal registered name (e.g., "Industrial Técnica Pecuaria, S.A.")
-      - commercial_name: The brand or trade name commonly used (e.g., "ITPSA")
+      - legal_name: The full official/legal registered name (e.g., "Acme Corporation, Inc.")
+      - commercial_name: The brand or trade name commonly used (e.g., "Acme")
       - website: Official website URL
       - logo_url: Direct URL to their official logo image (look for PNG, JPG, or SVG on their website or press kit)
       - description: Brief description of what they do
