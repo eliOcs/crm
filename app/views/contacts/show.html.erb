@@ -47,7 +47,12 @@
           <td><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
           <td><%= log.action %></td>
           <td><%= log.message %></td>
-          <td><%= log.metadata["source_email"] %></td>
+          <td>
+            <% if log.metadata["source_email"].present? %>
+              <% full_path = Rails.root.join("db/seeds/emails", log.metadata["source_email"]).to_s %>
+              <%= link_to log.metadata["source_email"], email_path(EmlReader.encode_path(full_path)) %>
+            <% end %>
+          </td>
           <td>
             <% if log.field_changes.any? %>
               <ul>
