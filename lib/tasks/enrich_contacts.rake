@@ -133,23 +133,14 @@ namespace :import do
       exit 1
     end
 
-    # Sort files by email Date header (oldest first)
-    logger.info "Sorting #{eml_files.count} EML files by date (oldest first)..."
-    eml_files = eml_files.sort_by do |path|
-      begin
-        mail = Mail.read(path)
-        mail.date || Time.at(0)
-      rescue => e
-        logger.debug "  Could not parse date from #{path}: #{e.message}"
-        Time.at(0) # Put unparseable files first
-      end
-    end
+    # Sort files numerically by filename (assumes numeric filenames like 59.eml, 60.eml)
+    eml_files = eml_files.sort_by { |path| File.basename(path, ".eml").to_i }
 
     # Optional limit for testing (applied after sorting)
     if ENV["LIMIT"].present?
       limit = ENV["LIMIT"].to_i
       eml_files = eml_files.first(limit)
-      logger.info "Found #{Dir.glob(eml_dir.join('**/*.eml')).count} EML files (limited to #{limit} oldest)"
+      logger.info "Found #{Dir.glob(eml_dir.join('**/*.eml')).count} EML files (limited to #{limit})"
     else
       logger.info "Found #{eml_files.count} EML files"
     end
