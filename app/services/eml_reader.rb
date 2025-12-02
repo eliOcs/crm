@@ -1,13 +1,12 @@
 class EmlReader
   EMAILS_DIR = Rails.root.join("db/seeds/emails")
-  TEST_FIXTURES_DIR = Rails.root.join("test/fixtures/emails")
 
   def initialize(eml_path)
     @eml_path = eml_path
   end
 
   def read
-    return nil unless valid_path?
+    return nil unless File.exist?(@eml_path)
 
     mail = Mail.read(@eml_path)
 
@@ -24,7 +23,7 @@ class EmlReader
   end
 
   def attachment(content_id)
-    return nil unless valid_path?
+    return nil unless File.exist?(@eml_path)
 
     mail = Mail.read(@eml_path)
     find_attachment_by_cid(mail, content_id)
@@ -53,20 +52,12 @@ class EmlReader
   end
 
   def self.decode_path(encoded)
-    decoded = Base64.urlsafe_decode64(encoded)
-    return nil unless decoded.start_with?(EMAILS_DIR.to_s)
-    decoded
+    Base64.urlsafe_decode64(encoded)
   rescue ArgumentError
     nil
   end
 
   private
-
-  def valid_path?
-    path = @eml_path.to_s
-    valid_dirs = [ EMAILS_DIR.to_s, TEST_FIXTURES_DIR.to_s ]
-    valid_dirs.any? { |dir| path.start_with?(dir) } && File.exist?(@eml_path)
-  end
 
   def extract_address(field)
     return nil unless field
