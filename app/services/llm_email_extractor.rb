@@ -13,16 +13,13 @@ class LlmEmailExtractor
     return empty_result unless email_data
 
     @image_data = extract_inline_images(email_data)
-    messages = build_messages(email_data)
-    response = @client.messages.create(
-      model: MODEL,
-      max_tokens: 2048,
-      temperature: 0,  # Deterministic output for consistent extraction
-      messages: messages,
-      system: cached_system_prompt
-    )
+    @email_text = build_email_text(email_data)
 
-    parse_response(response)
+    # Two focused extraction calls for better accuracy
+    contacts = extract_contacts
+    companies = extract_companies
+
+    { contacts: contacts, companies: companies, image_data: @image_data }
   rescue Anthropic::Error => e
     Rails.logger.error("LLM extraction failed: #{e.message}")
     empty_result
@@ -34,137 +31,94 @@ class LlmEmailExtractor
     { contacts: [], companies: [], image_data: {} }
   end
 
-  # Cached system prompt for API efficiency (90% token savings on repeated calls)
-  def cached_system_prompt
-    [
-      {
-        type: "text",
-        text: system_prompt_text,
-        cache_control: { type: "ephemeral" }
-      }
-    ]
+  # === CONTACTS EXTRACTION ===
+
+  def extract_contacts
+    response = @client.messages.create(
+      model: MODEL,
+      max_tokens: 2048,
+      temperature: 0,
+      messages: [ { role: "user", content: @email_text } ],
+      system: contacts_system_prompt
+    )
+    parse_contacts_response(response)
+  rescue Anthropic::Error => e
+    Rails.logger.error("Contact extraction failed: #{e.message}")
+    []
   end
 
-  def system_prompt_text
+  def contacts_system_prompt
     <<~PROMPT
-      You are a contact and company information extractor. Analyze emails and their attachments (especially signature images) to extract contact and company details.
+      You are a contact information extractor. Extract ALL people mentioned in emails.
 
       <instructions>
-      Extract ALL contacts mentioned in the email, including:
-      - Sender and recipients (from headers)
-      - People mentioned in email signatures
-      - People mentioned in the email body
+      Extract ALL contacts from the email:
+      1. From/To/Cc headers - extract every email address
+      2. Email signatures - extract detailed info (name, role, phone, etc.)
+      3. Forwarded email headers - extract sender/recipients from "De:", "From:", "Para:", "To:" lines
+      4. Email body mentions - any person referenced by name or email
 
       For each contact, extract:
-      - email: Email address (required)
-      - name: Full name
-      - job_role: Job title or role (e.g., "Software Engineer", "CEO", "Manager", "Technician")
-      - department: Department or division they work in (e.g., "R & D", "Food Division", "Sales", "Engineering")
-      - phone_numbers: Array of phone numbers (include country codes if visible)
-      - company_name: Name of the company they work for (use commercial/brand name if available)
+      - email: Email address (required, lowercase)
+      - name: Full name (if available)
+      - job_role: Job title (e.g., "Manager", "Technician", "Engineer") - NOT the department
+      - department: Department/division (e.g., "R & D", "Food Division", "Sales")
+      - phone_numbers: Array of phone numbers with country codes
+      - company_name: Company they work for (use brand name if known, e.g., "ITPSA" not "Industrial Técnica Pecuaria")
 
-      Note: job_role and department are different:
+      Distinguishing job_role vs department:
       - "R & D Department" -> department: "R & D", job_role: null
       - "Food Division Manager" -> department: "Food Division", job_role: "Manager"
-      - "Senior Software Engineer" -> department: null, job_role: "Senior Software Engineer"
-
-      Also extract ALL companies mentioned in the email:
-      - From email signatures
-      - From email domains (e.g., john@acme.com suggests "Acme")
-      - From the email body content
-
-      For each company, extract:
-      - legal_name: The full official/legal registered name (e.g., "Industrial Técnica Pecuaria, S.A.")
-      - commercial_name: The brand or trade name commonly used (e.g., "ITPSA")
-      - website: The company's official website URL
-      - location: Physical address from signature (e.g., "C/ Sant Andreu, 85 · 17834 Porqueres (GIRONA) - SPAIN")
-      - logo_content_id: If any attached image appears to be a company logo, include its content_id
-
-      Image references in the email body use markdown format: ![alt text](cid:image_id)
-      The image_id in the markdown reference corresponds to the content_id of the attached images.
-      Look for logo images near company names in signatures to identify which image is the company logo.
+      - "Laboratory Technician" -> department: null, job_role: "Laboratory Technician"
+      - "R+D+s Laboratory Technician" -> department: "R+D+s", job_role: "Laboratory Technician"
       </instructions>
 
-      <examples>
-      <example>
-      Input email:
-      From: John Doe <john.doe@acme.com>
-      Subject: Meeting next week
-
-      Best regards,
-      John Doe
-      Senior Developer
-      Acme Corporation Inc.
-      Tel: +1-555-123-4567
-      www.acme.com
-
-      Output:
-      {"contacts": [{"email": "john.doe@acme.com", "name": "John Doe", "job_role": "Senior Developer", "department": "Engineering", "phone_numbers": ["+1-555-123-4567"], "company_name": "Acme"}], "companies": [{"legal_name": "Acme Corporation Inc.", "commercial_name": "Acme", "website": "https://acme.com", "location": null, "logo_content_id": null}]}
-      </example>
-
-      <example>
-      Input email:
-      From: info@newsletter.com
-      Subject: Weekly digest
-
-      (no signature)
-
-      Output:
-      {"contacts": [{"email": "info@newsletter.com", "name": null, "job_role": null, "department": null, "phone_numbers": [], "company_name": null}], "companies": []}
-      </example>
-      </examples>
-
       <output_format>
-      Return ONLY valid JSON with this structure:
-      {
-        "contacts": [
-          {
-            "email": "john.doe@acme.com",
-            "name": "John Doe",
-            "job_role": "Senior Developer",
-            "department": "Engineering",
-            "phone_numbers": ["+1-555-123-4567"],
-            "company_name": "Acme"
-          }
-        ],
-        "companies": [
-          {
-            "legal_name": "Acme Corporation Inc.",
-            "commercial_name": "Acme",
-            "website": "https://acme.com",
-            "location": "123 Main Street, New York, NY 10001, USA",
-            "logo_content_id": "image001"
-          }
-        ]
-      }
+      Return ONLY a JSON array of contacts:
+      [
+        {"email": "john@acme.com", "name": "John Doe", "job_role": "Manager", "department": "Sales", "phone_numbers": ["+1-555-1234"], "company_name": "Acme"}
+      ]
+
+      If no contacts found, return: []
       </output_format>
 
       <guidelines>
-      - The company_name in contacts should match either legal_name or commercial_name in companies
-      - For website, infer from email domain if not explicitly stated (e.g., @acme.com -> https://acme.com)
-      - Set logo_content_id to null if no logo image is identified
-      - Use null for fields where information is not available - never hallucinate
-      - If no contacts found, return {"contacts": [], "companies": []}
-      - Do not include any text outside the JSON object
+      - Extract EVERY email address mentioned, even if minimal info available
+      - Use null for unknown fields, never hallucinate
+      - Normalize emails to lowercase
+      - Include country codes in phone numbers when visible
       </guidelines>
     PROMPT
   end
 
-  def build_messages(email_data)
-    content = []
+  def parse_contacts_response(response)
+    text = response.content.first.text
+    json_match = text.match(/\[[\s\S]*\]/)
+    return [] unless json_match
 
-    # Add email text content
-    content << {
-      type: "text",
-      text: build_email_text(email_data)
-    }
-
-    # Add inline images with their content IDs
-    @image_data.first(MAX_IMAGES).each do |content_id, image|
-      content << {
-        type: "text",
-        text: "Image (content_id: #{content_id}):"
+    Array(JSON.parse(json_match[0])).map do |contact|
+      {
+        email: contact["email"]&.strip&.downcase,
+        name: contact["name"]&.strip.presence,
+        job_role: contact["job_role"]&.strip.presence,
+        department: contact["department"]&.strip.presence,
+        phone_numbers: Array(contact["phone_numbers"]).map(&:strip).reject(&:blank?),
+        company_name: contact["company_name"]&.strip.presence
       }
+    end.select { |c| c[:email].present? }
+  rescue JSON::ParserError => e
+    Rails.logger.error("Failed to parse contacts response: #{e.message}")
+    []
+  end
+
+  # === COMPANIES EXTRACTION ===
+
+  def extract_companies
+    content = [ { type: "text", text: @email_text } ]
+
+    # Add images for logo identification
+    @image_data.first(MAX_IMAGES).each do |content_id, image|
+      content << { type: "text", text: "Image (content_id: #{content_id}):" }
       content << {
         type: "image",
         source: {
@@ -175,8 +129,79 @@ class LlmEmailExtractor
       }
     end
 
-    [ { role: "user", content: content } ]
+    response = @client.messages.create(
+      model: MODEL,
+      max_tokens: 2048,
+      temperature: 0,
+      messages: [ { role: "user", content: content } ],
+      system: companies_system_prompt
+    )
+    parse_companies_response(response)
+  rescue Anthropic::Error => e
+    Rails.logger.error("Company extraction failed: #{e.message}")
+    []
   end
+
+  def companies_system_prompt
+    <<~PROMPT
+      You are a company information extractor. Extract ALL companies/organizations mentioned in emails.
+
+      <instructions>
+      Extract ALL companies from the email:
+      1. Email signatures - company names, addresses, websites
+      2. Email domains - infer company from domain (e.g., @itpsa.com -> ITPSA)
+      3. Legal notices - often contain full legal company names
+      4. Forwarded emails - companies mentioned in nested signatures
+
+      For each company, extract:
+      - legal_name: Full official/registered name (e.g., "Industrial Técnica Pecuaria, S.A.", "RP ROYAL DISTRIBUTION, S.L")
+      - commercial_name: Brand/trade name commonly used (e.g., "ITPSA", "Royal Protein")
+      - website: Official website URL
+      - location: Physical address from signature
+      - logo_content_id: Content ID of the company's logo image (if visible in signature)
+
+      Image references in the email use markdown: ![alt](cid:image_id)
+      Match logo images to companies by their position near company names in signatures.
+      </instructions>
+
+      <output_format>
+      Return ONLY a JSON array of companies:
+      [
+        {"legal_name": "Acme Corp Inc.", "commercial_name": "Acme", "website": "https://acme.com", "location": "123 Main St, NY", "logo_content_id": "image001.png"}
+      ]
+
+      If no companies found, return: []
+      </output_format>
+
+      <guidelines>
+      - Extract both legal and commercial names when available
+      - Infer website from email domain if not explicit (e.g., @acme.com -> https://acme.com)
+      - Use null for unknown fields, never hallucinate
+      - Only set logo_content_id if you can identify a logo image for that company
+      </guidelines>
+    PROMPT
+  end
+
+  def parse_companies_response(response)
+    text = response.content.first.text
+    json_match = text.match(/\[[\s\S]*\]/)
+    return [] unless json_match
+
+    Array(JSON.parse(json_match[0])).map do |company|
+      {
+        legal_name: company["legal_name"]&.strip.presence,
+        commercial_name: company["commercial_name"]&.strip.presence,
+        website: company["website"]&.strip.presence,
+        location: company["location"]&.strip.presence,
+        logo_content_id: company["logo_content_id"]&.strip.presence
+      }
+    end.select { |c| c[:legal_name].present? || c[:commercial_name].present? }
+  rescue JSON::ParserError => e
+    Rails.logger.error("Failed to parse companies response: #{e.message}")
+    []
+  end
+
+  # === SHARED HELPERS ===
 
   def build_email_text(email_data)
     parts = []
@@ -188,7 +213,6 @@ class LlmEmailExtractor
     parts << ""
 
     if email_data[:html_body].present?
-      # Convert HTML to Markdown - preserves structure, links, and image references
       markdown = HtmlToMarkdown.new(email_data[:html_body]).convert
       parts << "--- Email Body (Markdown) ---"
       parts << markdown.truncate(12000)
@@ -216,7 +240,7 @@ class LlmEmailExtractor
     return images unless email_data[:attachments].present?
 
     reader = EmlReader.new(@eml_path)
-    seen_hashes = {}  # Deduplicate identical images by SHA256
+    seen_hashes = {}
 
     email_data[:attachments].each do |attachment|
       next unless attachment[:content_type]&.start_with?("image/")
@@ -227,14 +251,8 @@ class LlmEmailExtractor
       attachment_data = reader.attachment(cid)
       next unless attachment_data
 
-      # Skip duplicate images (same content, different CID)
       sha = Digest::SHA256.hexdigest(attachment_data[:data])
-      if seen_hashes[sha]
-        # Map this CID to the original one for logo matching
-        @cid_aliases ||= {}
-        @cid_aliases[cid] = seen_hashes[sha]
-        next
-      end
+      next if seen_hashes[sha]
       seen_hashes[sha] = cid
 
       images[cid] = {
@@ -248,53 +266,12 @@ class LlmEmailExtractor
   end
 
   def normalize_content_type(content_type)
-    # Claude accepts: image/jpeg, image/png, image/gif, image/webp
     case content_type&.downcase
-    when "image/jpeg", "image/jpg"
-      "image/jpeg"
-    when "image/png"
-      "image/png"
-    when "image/gif"
-      "image/gif"
-    when "image/webp"
-      "image/webp"
-    else
-      "image/jpeg" # Default fallback
+    when "image/jpeg", "image/jpg" then "image/jpeg"
+    when "image/png" then "image/png"
+    when "image/gif" then "image/gif"
+    when "image/webp" then "image/webp"
+    else "image/jpeg"
     end
-  end
-
-  def parse_response(response)
-    text = response.content.first.text
-    # Extract JSON object from response (in case there's extra text)
-    json_match = text.match(/\{[\s\S]*\}/)
-    return empty_result unless json_match
-
-    data = JSON.parse(json_match[0])
-
-    contacts = Array(data["contacts"]).map do |contact|
-      {
-        email: contact["email"]&.strip&.downcase,
-        name: contact["name"]&.strip.presence,
-        job_role: contact["job_role"]&.strip.presence,
-        department: contact["department"]&.strip.presence,
-        phone_numbers: Array(contact["phone_numbers"]).map(&:strip).reject(&:blank?),
-        company_name: contact["company_name"]&.strip.presence
-      }
-    end.select { |c| c[:email].present? }
-
-    companies = Array(data["companies"]).map do |company|
-      {
-        legal_name: company["legal_name"]&.strip.presence,
-        commercial_name: company["commercial_name"]&.strip.presence,
-        website: company["website"]&.strip.presence,
-        location: company["location"]&.strip.presence,
-        logo_content_id: company["logo_content_id"]&.strip.presence
-      }
-    end.select { |c| c[:legal_name].present? || c[:commercial_name].present? }
-
-    { contacts: contacts, companies: companies, image_data: @image_data }
-  rescue JSON::ParserError => e
-    Rails.logger.error("Failed to parse LLM response: #{e.message}")
-    empty_result
   end
 end
