@@ -131,23 +131,21 @@ http_interactions:
         sender/recipients from \"De:\", \"From:\", \"Para:\", \"To:\" lines\n4. Email
         body mentions - any person referenced by name or email\n\nFor each contact,
         extract:\n- email: Email address (required, lowercase)\n- name: Full name
-        (if available)\n- job_role: Job title (e.g., \"Manager\", \"Technician\",
-        \"Engineer\") - NOT the department\n- department: Department/division (e.g.,
-        \"R & D\", \"Food Division\", \"Sales\")\n- phone_numbers: Array of phone
-        numbers with country codes\n- company_name: Company they work for (use brand
-        name if known, e.g., \"ITPSA\" not \"Industrial Técnica Pecuaria\")\n\nDistinguishing
-        job_role vs department:\n- \"R & D Department\" -> department: \"R & D\",
-        job_role: null\n- \"Food Division Manager\" -> department: \"Food Division\",
-        job_role: \"Manager\"\n- \"Laboratory Technician\" -> department: null, job_role:
-        \"Laboratory Technician\"\n- \"R+D+s Laboratory Technician\" -> department:
-        \"R+D+s\", job_role: \"Laboratory Technician\"\n</instructions>\n\n<output_format>\nReturn
-        ONLY a JSON array of contacts:\n[\n  {\"email\": \"john@acme.com\", \"name\":
+        (if available)\n- job_role: Job title - NOT the department (see examples below)\n-
+        department: Department or division name\n- phone_numbers: Array of phone numbers
+        with country codes\n- company_name: Company they work for (prefer brand name
+        over full legal name)\n\nDistinguishing job_role vs department:\n- \"[Department]
+        Manager\" -> extract the department name, job_role is \"Manager\"\n- \"[Department]
+        Technician\" -> extract the department name, job_role is \"Technician\"\n-
+        \"Senior Engineer\" -> job_role only, no department\n- \"[Division] Director\"
+        -> extract division as department, job_role is \"Director\"\n</instructions>\n\n<output_format>\nReturn
+        ONLY a JSON array of contacts:\n[\n  {\"email\": \"john@example.com\", \"name\":
         \"John Doe\", \"job_role\": \"Manager\", \"department\": \"Sales\", \"phone_numbers\":
-        [\"+1-555-1234\"], \"company_name\": \"Acme\"}\n]\n\nIf no contacts found,
-        return: []\n</output_format>\n\n<guidelines>\n- Extract EVERY email address
-        mentioned, even if minimal info available\n- Use null for unknown fields,
-        never hallucinate\n- Normalize emails to lowercase\n- Include country codes
-        in phone numbers when visible\n</guidelines>\n"}'
+        [\"+1-555-1234\"], \"company_name\": \"Example Corp\"}\n]\n\nIf no contacts
+        found, return: []\n</output_format>\n\n<guidelines>\n- Extract EVERY email
+        address mentioned, even if minimal info available\n- Use null for unknown
+        fields, never hallucinate\n- Normalize emails to lowercase\n- Include country
+        codes in phone numbers when visible\n</guidelines>\n"}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -180,14 +178,14 @@ http_interactions:
       X-Stainless-Timeout:
       - '600.0'
       Content-Length:
-      - '11508'
+      - '11394'
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Tue, 02 Dec 2025 19:30:51 GMT
+      - Tue, 02 Dec 2025 21:10:43 GMT
       Content-Type:
       - application/json
       Transfer-Encoding:
@@ -199,35 +197,35 @@ http_interactions:
       Anthropic-Ratelimit-Input-Tokens-Remaining:
       - '98000'
       Anthropic-Ratelimit-Input-Tokens-Reset:
-      - '2025-12-02T19:30:44Z'
+      - '2025-12-02T21:10:38Z'
       Anthropic-Ratelimit-Output-Tokens-Limit:
       - '20000'
       Anthropic-Ratelimit-Output-Tokens-Remaining:
       - '19000'
       Anthropic-Ratelimit-Output-Tokens-Reset:
-      - '2025-12-02T19:30:52Z'
+      - '2025-12-02T21:10:45Z'
       Anthropic-Ratelimit-Requests-Limit:
       - '1000'
       Anthropic-Ratelimit-Requests-Remaining:
       - '999'
       Anthropic-Ratelimit-Requests-Reset:
-      - '2025-12-02T19:30:42Z'
+      - '2025-12-02T21:10:36Z'
       Retry-After:
-      - '18'
+      - '24'
       Anthropic-Ratelimit-Tokens-Limit:
       - '120000'
       Anthropic-Ratelimit-Tokens-Remaining:
       - '117000'
       Anthropic-Ratelimit-Tokens-Reset:
-      - '2025-12-02T19:30:44Z'
+      - '2025-12-02T21:10:38Z'
       Request-Id:
-      - req_011CViR4aVqgKA3y5noUVb7K
+      - req_011CViYgQacCLvSPYfMivpi5
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains; preload
       Anthropic-Organization-Id:
       - 36f27efe-3e16-4c65-95cd-f21d3225017e
       X-Envoy-Upstream-Service-Time:
-      - '8214'
+      - '7252'
       Cf-Cache-Status:
       - DYNAMIC
       X-Robots-Tag:
@@ -235,12 +233,12 @@ http_interactions:
       Server:
       - cloudflare
       Cf-Ray:
-      - 9a7d3d8958a2033d-MAD
+      - 9a7dcfdeadd51fe8-MAD
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        eyJtb2RlbCI6ImNsYXVkZS0zLTUtaGFpa3UtMjAyNDEwMjIiLCJpZCI6Im1zZ18wMUhkanJwTlFHamNZcVJvZmhTVWdOcG4iLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJCYXNlZCBvbiB0aGUgZW1haWwsIGhlcmUncyB0aGUgZXh0cmFjdGVkIGNvbnRhY3QgaW5mb3JtYXRpb246XG5cbltcbiAge1xuICAgIFwiZW1haWxcIjogXCJhcHVjaGFsQGl0cHNhLmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIkFubmEgUHVjaGFsXCIsXG4gICAgXCJqb2Jfcm9sZVwiOiBcIkZvb2QgRGl2aXNpb24gTWFuYWdlclwiLFxuICAgIFwiZGVwYXJ0bWVudFwiOiBudWxsLFxuICAgIFwicGhvbmVfbnVtYmVyc1wiOiBbXCIrMzQgOTMgNDUyIDAzIDMwXCJdLFxuICAgIFwiY29tcGFueV9uYW1lXCI6IFwiSVRQU0FcIlxuICB9LFxuICB7XG4gICAgXCJlbWFpbFwiOiBcImFhbGNhcmF6QGl0cHNhLmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIkFuYSBBbGNhcmF6IEdhcmPDrWFcIixcbiAgICBcImpvYl9yb2xlXCI6IFwiTGFib3JhdG9yeSBUZWNobmljaWFuXCIsXG4gICAgXCJkZXBhcnRtZW50XCI6IFwiUitEK3NcIixcbiAgICBcInBob25lX251bWJlcnNcIjogW1wiKzM0IDk3NyA2MDAgMDI3XCIsIFwiKzM0IDYwOCA0NzIgNTE4XCJdLFxuICAgIFwiY29tcGFueV9uYW1lXCI6IFwiSVRQU0FcIlxuICB9LFxuICB7XG4gICAgXCJlbWFpbFwiOiBcImplc3RldmV6QGl0cHNhLmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIkphdmllciBFc3RldmV6IE1lZGluYVwiLFxuICAgIFwiam9iX3JvbGVcIjogbnVsbCxcbiAgICBcImRlcGFydG1lbnRcIjogbnVsbCxcbiAgICBcInBob25lX251bWJlcnNcIjogW10sXG4gICAgXCJjb21wYW55X25hbWVcIjogXCJJVFBTQVwiXG4gIH0sXG4gIHtcbiAgICBcImVtYWlsXCI6IFwibW1vcmVub0BpdHBzYS5jb21cIixcbiAgICBcIm5hbWVcIjogXCJNYXJpYSBNb3Jlbm9cIixcbiAgICBcImpvYl9yb2xlXCI6IG51bGwsXG4gICAgXCJkZXBhcnRtZW50XCI6IG51bGwsXG4gICAgXCJwaG9uZV9udW1iZXJzXCI6IFtdLFxuICAgIFwiY29tcGFueV9uYW1lXCI6IFwiSVRQU0FcIlxuICB9LFxuICB7XG4gICAgXCJlbWFpbFwiOiBcImlyZW5lQHJveWFscHJvdGVpbi5jb21cIixcbiAgICBcIm5hbWVcIjogXCJJcmVuZSBUYWJlcm5lciBpIEZlbGlwXCIsXG4gICAgXCJqb2Jfcm9sZVwiOiBudWxsLFxuICAgIFwiZGVwYXJ0bWVudFwiOiBcIlIgJiBEXCIsXG4gICAgXCJwaG9uZV9udW1iZXJzXCI6IFtcIiszNCA5NzIgNTcgMTQgMDRcIiwgXCIrMzQgOTcyIDc4IDk1IDY4XCJdLFxuICAgIFwiY29tcGFueV9uYW1lXCI6IFwiUlAgUm95YWwgRGlzdHJpYnV0aW9uLCBTLkxcIlxuICB9LFxuICB7XG4gICAgXCJlbWFpbFwiOiBcImdsb3JpYUByb3lhbHByb3RlaW4uY29tXCIsXG4gICAgXCJuYW1lXCI6IFwiR2xvcmlhXCIsXG4gICAgXCJqb2Jfcm9sZVwiOiBudWxsLFxuICAgIFwiZGVwYXJ0bWVudFwiOiBudWxsLFxuICAgIFwicGhvbmVfbnVtYmVyc1wiOiBbXSxcbiAgICBcImNvbXBhbnlfbmFtZVwiOiBcIlJveWFsIFByb3RlaW5cIlxuICB9LFxuICB7XG4gICAgXCJlbWFpbFwiOiBcImxhYmRlc2Vudm9sdXBhbWVudEBpdHBzYS5jb21cIixcbiAgICBcIm5hbWVcIjogbnVsbCxcbiAgICBcImpvYl9yb2xlXCI6IG51bGwsXG4gICAgXCJkZXBhcnRtZW50XCI6IFwiTGFiIERlc2Vudm9sdXBhbWVudFwiLFxuICAgIFwicGhvbmVfbnVtYmVyc1wiOiBbXSxcbiAgICBcImNvbXBhbnlfbmFtZVwiOiBcIklUUFNBXCJcbiAgfVxuXSJ9XSwic3RvcF9yZWFzb24iOiJlbmRfdHVybiIsInN0b3Bfc2VxdWVuY2UiOm51bGwsInVzYWdlIjp7ImlucHV0X3Rva2VucyI6MzUwMywiY2FjaGVfY3JlYXRpb25faW5wdXRfdG9rZW5zIjowLCJjYWNoZV9yZWFkX2lucHV0X3Rva2VucyI6MCwiY2FjaGVfY3JlYXRpb24iOnsiZXBoZW1lcmFsXzVtX2lucHV0X3Rva2VucyI6MCwiZXBoZW1lcmFsXzFoX2lucHV0X3Rva2VucyI6MH0sIm91dHB1dF90b2tlbnMiOjU5Mywic2VydmljZV90aWVyIjoic3RhbmRhcmQifX0=
-  recorded_at: Tue, 02 Dec 2025 19:30:51 GMT
+        eyJtb2RlbCI6ImNsYXVkZS0zLTUtaGFpa3UtMjAyNDEwMjIiLCJpZCI6Im1zZ18wMUNtdktXMjlkTkZQUGt1d1dwd0JUU2ciLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJCYXNlZCBvbiB0aGUgZW1haWwsIGhlcmUncyB0aGUgZXh0cmFjdGVkIGNvbnRhY3QgaW5mb3JtYXRpb246XG5cbltcbiAge1xuICAgIFwiZW1haWxcIjogXCJhcHVjaGFsQGl0cHNhLmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIkFubmEgUHVjaGFsXCIsXG4gICAgXCJqb2Jfcm9sZVwiOiBcIk1hbmFnZXJcIixcbiAgICBcImRlcGFydG1lbnRcIjogXCJGb29kIERpdmlzaW9uXCIsXG4gICAgXCJwaG9uZV9udW1iZXJzXCI6IFtcIiszNCA5MyA0NTIgMDMgMzBcIl0sXG4gICAgXCJjb21wYW55X25hbWVcIjogXCJJVFBTQVwiXG4gIH0sXG4gIHtcbiAgICBcImVtYWlsXCI6IFwiYWFsY2FyYXpAaXRwc2EuY29tXCIsXG4gICAgXCJuYW1lXCI6IFwiQW5hIEFsY2FyYXogR2FyY8OtYVwiLFxuICAgIFwiam9iX3JvbGVcIjogXCJUZWNobmljaWFuXCIsXG4gICAgXCJkZXBhcnRtZW50XCI6IFwiUitEK3MgTGFib3JhdG9yeVwiLFxuICAgIFwicGhvbmVfbnVtYmVyc1wiOiBbXCIrMzQgOTc3IDYwMCAwMjdcIiwgXCIrMzQgNjA4IDQ3MiA1MThcIl0sXG4gICAgXCJjb21wYW55X25hbWVcIjogXCJJVFBTQVwiXG4gIH0sXG4gIHtcbiAgICBcImVtYWlsXCI6IFwiamVzdGV2ZXpAaXRwc2EuY29tXCIsXG4gICAgXCJuYW1lXCI6IFwiSmF2aWVyIEVzdGV2ZXogTWVkaW5hXCIsXG4gICAgXCJqb2Jfcm9sZVwiOiBudWxsLFxuICAgIFwiZGVwYXJ0bWVudFwiOiBudWxsLFxuICAgIFwicGhvbmVfbnVtYmVyc1wiOiBbXSxcbiAgICBcImNvbXBhbnlfbmFtZVwiOiBcIklUUFNBXCJcbiAgfSxcbiAge1xuICAgIFwiZW1haWxcIjogXCJtbW9yZW5vQGl0cHNhLmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIk1hcmlhIE1vcmVub1wiLFxuICAgIFwiam9iX3JvbGVcIjogbnVsbCxcbiAgICBcImRlcGFydG1lbnRcIjogbnVsbCxcbiAgICBcInBob25lX251bWJlcnNcIjogW10sXG4gICAgXCJjb21wYW55X25hbWVcIjogXCJJVFBTQVwiXG4gIH0sXG4gIHtcbiAgICBcImVtYWlsXCI6IFwiaXJlbmVAcm95YWxwcm90ZWluLmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIklyZW5lIFRhYmVybmVyIGkgRmVsaXBcIixcbiAgICBcImpvYl9yb2xlXCI6IG51bGwsXG4gICAgXCJkZXBhcnRtZW50XCI6IFwiUiAmIERcIixcbiAgICBcInBob25lX251bWJlcnNcIjogW1wiKzM0IDk3MiA1NyAxNCAwNFwiLCBcIiszNCA5NzIgNzggOTUgNjhcIl0sXG4gICAgXCJjb21wYW55X25hbWVcIjogXCJSUCBSb3lhbCBEaXN0cmlidXRpb24sIFMuTFwiXG4gIH0sXG4gIHtcbiAgICBcImVtYWlsXCI6IFwiZ2xvcmlhQHJveWFscHJvdGVpbi5jb21cIixcbiAgICBcIm5hbWVcIjogXCJHbG9yaWFcIixcbiAgICBcImpvYl9yb2xlXCI6IG51bGwsXG4gICAgXCJkZXBhcnRtZW50XCI6IG51bGwsXG4gICAgXCJwaG9uZV9udW1iZXJzXCI6IFtdLFxuICAgIFwiY29tcGFueV9uYW1lXCI6IFwiUm95YWwgUHJvdGVpblwiXG4gIH1cbl0ifV0sInN0b3BfcmVhc29uIjoiZW5kX3R1cm4iLCJzdG9wX3NlcXVlbmNlIjpudWxsLCJ1c2FnZSI6eyJpbnB1dF90b2tlbnMiOjM0MzUsImNhY2hlX2NyZWF0aW9uX2lucHV0X3Rva2VucyI6MCwiY2FjaGVfcmVhZF9pbnB1dF90b2tlbnMiOjAsImNhY2hlX2NyZWF0aW9uIjp7ImVwaGVtZXJhbF81bV9pbnB1dF90b2tlbnMiOjAsImVwaGVtZXJhbF8xaF9pbnB1dF90b2tlbnMiOjB9LCJvdXRwdXRfdG9rZW5zIjo1MjAsInNlcnZpY2VfdGllciI6InN0YW5kYXJkIn19
+  recorded_at: Tue, 02 Dec 2025 21:10:43 GMT
 - request:
     method: post
     uri: https://api.anthropic.com/v1/messages
@@ -375,23 +373,25 @@ http_interactions:
         are a company information extractor. Extract ALL companies/organizations mentioned
         in emails.\n\n<instructions>\nExtract ALL companies from the email:\n1. Email
         signatures - company names, addresses, websites\n2. Email domains - infer
-        company from domain (e.g., @itpsa.com -> ITPSA)\n3. Legal notices - often
-        contain full legal company names\n4. Forwarded emails - companies mentioned
-        in nested signatures\n\nFor each company, extract:\n- legal_name: Full official/registered
-        name (e.g., \"Industrial Técnica Pecuaria, S.A.\", \"RP ROYAL DISTRIBUTION,
-        S.L\")\n- commercial_name: Brand/trade name commonly used (e.g., \"ITPSA\",
-        \"Royal Protein\")\n- website: Official website URL\n- location: Physical
-        address from signature\n- logo_content_id: Content ID of the company''s logo
-        image (if visible in signature)\n\nImage references in the email use markdown:
-        ![alt](cid:image_id)\nMatch logo images to companies by their position near
-        company names in signatures.\n</instructions>\n\n<output_format>\nReturn ONLY
-        a JSON array of companies:\n[\n  {\"legal_name\": \"Acme Corp Inc.\", \"commercial_name\":
-        \"Acme\", \"website\": \"https://acme.com\", \"location\": \"123 Main St,
-        NY\", \"logo_content_id\": \"image001.png\"}\n]\n\nIf no companies found,
-        return: []\n</output_format>\n\n<guidelines>\n- Extract both legal and commercial
-        names when available\n- Infer website from email domain if not explicit (e.g.,
-        @acme.com -> https://acme.com)\n- Use null for unknown fields, never hallucinate\n-
-        Only set logo_content_id if you can identify a logo image for that company\n</guidelines>\n"}'
+        company from domain\n3. Legal notices/disclaimers - often contain full legal
+        names, addresses, and VAT IDs\n4. Forwarded emails - companies mentioned in
+        nested signatures\n\nFor each company, extract:\n- legal_name: Full official/registered
+        name (includes legal suffix like S.A., S.L., Inc., Ltd., GmbH)\n- commercial_name:
+        Brand/trade name commonly used (shorter, without legal suffix)\n- website:
+        Official website URL\n- location: Physical address from signature or legal
+        notice\n- vat_id: Tax/VAT identification number (C.I.F., NIF, VAT, Tax ID,
+        EIN, etc.)\n- logo_content_id: Content ID of the company''s logo image (if
+        visible in signature)\n\nImage references in the email use markdown: ![alt](cid:image_id)\nMatch
+        logo images to companies by their position near company names in signatures.\n</instructions>\n\n<output_format>\nReturn
+        ONLY a JSON array of companies:\n[\n  {\"legal_name\": \"Example Corporation
+        Inc.\", \"commercial_name\": \"Example\", \"website\": \"https://example.com\",
+        \"location\": \"123 Main St, City, Country\", \"vat_id\": \"XX12345678\",
+        \"logo_content_id\": \"image001.png\"}\n]\n\nIf no companies found, return:
+        []\n</output_format>\n\n<guidelines>\n- Extract both legal and commercial
+        names when available\n- Infer website from email domain if not explicit\n-
+        Look carefully at legal notices/disclaimers at the bottom of emails for VAT
+        IDs\n- Use null for unknown fields, never hallucinate\n- Only set logo_content_id
+        if you can identify a logo image for that company\n</guidelines>\n"}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -424,14 +424,14 @@ http_interactions:
       X-Stainless-Timeout:
       - '600.0'
       Content-Length:
-      - '70347'
+      - '70516'
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Tue, 02 Dec 2025 19:30:55 GMT
+      - Tue, 02 Dec 2025 21:10:48 GMT
       Content-Type:
       - application/json
       Transfer-Encoding:
@@ -443,35 +443,35 @@ http_interactions:
       Anthropic-Ratelimit-Input-Tokens-Remaining:
       - '98000'
       Anthropic-Ratelimit-Input-Tokens-Reset:
-      - '2025-12-02T19:30:53Z'
+      - '2025-12-02T21:10:46Z'
       Anthropic-Ratelimit-Output-Tokens-Limit:
       - '20000'
       Anthropic-Ratelimit-Output-Tokens-Remaining:
       - '20000'
       Anthropic-Ratelimit-Output-Tokens-Reset:
-      - '2025-12-02T19:30:56Z'
+      - '2025-12-02T21:10:49Z'
       Anthropic-Ratelimit-Requests-Limit:
       - '1000'
       Anthropic-Ratelimit-Requests-Remaining:
       - '999'
       Anthropic-Ratelimit-Requests-Reset:
-      - '2025-12-02T19:30:51Z'
+      - '2025-12-02T21:10:44Z'
       Retry-After:
-      - '8'
+      - '15'
       Anthropic-Ratelimit-Tokens-Limit:
       - '120000'
       Anthropic-Ratelimit-Tokens-Remaining:
       - '118000'
       Anthropic-Ratelimit-Tokens-Reset:
-      - '2025-12-02T19:30:53Z'
+      - '2025-12-02T21:10:46Z'
       Request-Id:
-      - req_011CViR5CGPrAJpLEjKknW8E
+      - req_011CViYgx6gCYMCAEkPnkQLm
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains; preload
       Anthropic-Organization-Id:
       - 36f27efe-3e16-4c65-95cd-f21d3225017e
       X-Envoy-Upstream-Service-Time:
-      - '4734'
+      - '4796'
       Cf-Cache-Status:
       - DYNAMIC
       X-Robots-Tag:
@@ -479,10 +479,10 @@ http_interactions:
       Server:
       - cloudflare
       Cf-Ray:
-      - 9a7d3dbd7860033d-MAD
+      - 9a7dd00caf691fe8-MAD
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        eyJtb2RlbCI6ImNsYXVkZS0zLTUtaGFpa3UtMjAyNDEwMjIiLCJpZCI6Im1zZ18wMUhSTjJFZTlVZmN6UUJvVmcxUkR6a3IiLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJCYXNlZCBvbiB0aGUgZW1haWwsIEkndmUgZXh0cmFjdGVkIHRoZSBmb2xsb3dpbmcgY29tcGFuaWVzOlxuXG5bXG4gIHtcbiAgICBcImxlZ2FsX25hbWVcIjogXCJJTkRVU1RSSUFMIFRFQ05JQ0EgUEVDVUFSSUEsIFMuQS5cIixcbiAgICBcImNvbW1lcmNpYWxfbmFtZVwiOiBcIklUUFNBXCIsXG4gICAgXCJ3ZWJzaXRlXCI6IFwiaHR0cHM6Ly9pdHBzYS5jb21cIixcbiAgICBcImxvY2F0aW9uXCI6IFwiQXZkYS4gUm9tYSAxNTcg4oCTIDfCqiBQbGFudGEgMDgwMTEsIEJhcmNlbG9uYSAoU3BhaW4pXCIsXG4gICAgXCJsb2dvX2NvbnRlbnRfaWRcIjogXCJpbWFnZTAwMi5wbmdcIlxuICB9LFxuICB7XG4gICAgXCJsZWdhbF9uYW1lXCI6IFwiUlAgUk9ZQUwgRElTVFJJQlVUSU9OLCBTLkxcIixcbiAgICBcImNvbW1lcmNpYWxfbmFtZVwiOiBcIlJveWFsIFByb3RlaW5cIixcbiAgICBcIndlYnNpdGVcIjogXCJodHRwczovL3d3dy5yb3lhbHByb3RlaW4uY29tXCIsXG4gICAgXCJsb2NhdGlvblwiOiBcIkMvIFNhbnQgQW5kcmV1LCA4NSDCtyAxNzgzNCBQb3JxdWVyZXMgKEdJUk9OQSkgLSBTUEFJTlwiLFxuICAgIFwibG9nb19jb250ZW50X2lkXCI6IFwiaW1hZ2UwMDguanBnXCJcbiAgfVxuXSJ9XSwic3RvcF9yZWFzb24iOiJlbmRfdHVybiIsInN0b3Bfc2VxdWVuY2UiOm51bGwsInVzYWdlIjp7ImlucHV0X3Rva2VucyI6Mzc2OSwiY2FjaGVfY3JlYXRpb25faW5wdXRfdG9rZW5zIjowLCJjYWNoZV9yZWFkX2lucHV0X3Rva2VucyI6MCwiY2FjaGVfY3JlYXRpb24iOnsiZXBoZW1lcmFsXzVtX2lucHV0X3Rva2VucyI6MCwiZXBoZW1lcmFsXzFoX2lucHV0X3Rva2VucyI6MH0sIm91dHB1dF90b2tlbnMiOjIyMiwic2VydmljZV90aWVyIjoic3RhbmRhcmQifX0=
-  recorded_at: Tue, 02 Dec 2025 19:30:55 GMT
+        eyJtb2RlbCI6ImNsYXVkZS0zLTUtaGFpa3UtMjAyNDEwMjIiLCJpZCI6Im1zZ18wMThYRXVxWEpwTk1URXR2U0hlV0M2dksiLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJCYXNlZCBvbiB0aGUgZW1haWwsIEkndmUgZXh0cmFjdGVkIHRoZSBmb2xsb3dpbmcgY29tcGFuaWVzOlxuXG5bXG4gIHtcbiAgICBcImxlZ2FsX25hbWVcIjogXCJJTkRVU1RSSUFMIFRFQ05JQ0EgUEVDVUFSSUEsIFMuQS5cIixcbiAgICBcImNvbW1lcmNpYWxfbmFtZVwiOiBcIklUUFNBXCIsXG4gICAgXCJ3ZWJzaXRlXCI6IFwiaHR0cHM6Ly9pdHBzYS5jb20vXCIsXG4gICAgXCJsb2NhdGlvblwiOiBcIkF2ZGEuIFJvbWEgMTU3IOKAkyA3wqogUGxhbnRhIDA4MDExLCBCYXJjZWxvbmEgKFNwYWluKVwiLFxuICAgIFwidmF0X2lkXCI6IFwiQTA4MjE5NTExXCIsXG4gICAgXCJsb2dvX2NvbnRlbnRfaWRcIjogXCJpbWFnZTAwMi5wbmdcIlxuICB9LFxuICB7XG4gICAgXCJsZWdhbF9uYW1lXCI6IFwiUlAgUk9ZQUwgRElTVFJJQlVUSU9OLCBTLkxcIixcbiAgICBcImNvbW1lcmNpYWxfbmFtZVwiOiBcIlJveWFsIFByb3RlaW5cIixcbiAgICBcIndlYnNpdGVcIjogXCJodHRwczovL3d3dy5yb3lhbHByb3RlaW4uY29tXCIsXG4gICAgXCJsb2NhdGlvblwiOiBcIkMvIFNhbnQgQW5kcmV1LCA4NSDCtyAxNzgzNCBQb3JxdWVyZXMgKEdJUk9OQSkgLSBTUEFJTlwiLFxuICAgIFwidmF0X2lkXCI6IG51bGwsXG4gICAgXCJsb2dvX2NvbnRlbnRfaWRcIjogXCJpbWFnZTAwOC5qcGdcIlxuICB9XG5dIn1dLCJzdG9wX3JlYXNvbiI6ImVuZF90dXJuIiwic3RvcF9zZXF1ZW5jZSI6bnVsbCwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjozNzkzLCJjYWNoZV9jcmVhdGlvbl9pbnB1dF90b2tlbnMiOjAsImNhY2hlX3JlYWRfaW5wdXRfdG9rZW5zIjowLCJjYWNoZV9jcmVhdGlvbiI6eyJlcGhlbWVyYWxfNW1faW5wdXRfdG9rZW5zIjowLCJlcGhlbWVyYWxfMWhfaW5wdXRfdG9rZW5zIjowfSwib3V0cHV0X3Rva2VucyI6MjQ3LCJzZXJ2aWNlX3RpZXIiOiJzdGFuZGFyZCJ9fQ==
+  recorded_at: Tue, 02 Dec 2025 21:10:48 GMT
 recorded_with: VCR 6.3.1

@@ -61,22 +61,22 @@ class LlmEmailExtractor
       For each contact, extract:
       - email: Email address (required, lowercase)
       - name: Full name (if available)
-      - job_role: Job title (e.g., "Manager", "Technician", "Engineer") - NOT the department
-      - department: Department/division (e.g., "R & D", "Food Division", "Sales")
+      - job_role: Job title - NOT the department (see examples below)
+      - department: Department or division name
       - phone_numbers: Array of phone numbers with country codes
-      - company_name: Company they work for (use brand name if known, e.g., "ITPSA" not "Industrial Técnica Pecuaria")
+      - company_name: Company they work for (prefer brand name over full legal name)
 
       Distinguishing job_role vs department:
-      - "R & D Department" -> department: "R & D", job_role: null
-      - "Food Division Manager" -> department: "Food Division", job_role: "Manager"
-      - "Laboratory Technician" -> department: null, job_role: "Laboratory Technician"
-      - "R+D+s Laboratory Technician" -> department: "R+D+s", job_role: "Laboratory Technician"
+      - "[Department] Manager" -> extract the department name, job_role is "Manager"
+      - "[Department] Technician" -> extract the department name, job_role is "Technician"
+      - "Senior Engineer" -> job_role only, no department
+      - "[Division] Director" -> extract division as department, job_role is "Director"
       </instructions>
 
       <output_format>
       Return ONLY a JSON array of contacts:
       [
-        {"email": "john@acme.com", "name": "John Doe", "job_role": "Manager", "department": "Sales", "phone_numbers": ["+1-555-1234"], "company_name": "Acme"}
+        {"email": "john@example.com", "name": "John Doe", "job_role": "Manager", "department": "Sales", "phone_numbers": ["+1-555-1234"], "company_name": "Example Corp"}
       ]
 
       If no contacts found, return: []
@@ -149,15 +149,16 @@ class LlmEmailExtractor
       <instructions>
       Extract ALL companies from the email:
       1. Email signatures - company names, addresses, websites
-      2. Email domains - infer company from domain (e.g., @itpsa.com -> ITPSA)
-      3. Legal notices - often contain full legal company names
+      2. Email domains - infer company from domain
+      3. Legal notices/disclaimers - often contain full legal names, addresses, and VAT IDs
       4. Forwarded emails - companies mentioned in nested signatures
 
       For each company, extract:
-      - legal_name: Full official/registered name (e.g., "Industrial Técnica Pecuaria, S.A.", "RP ROYAL DISTRIBUTION, S.L")
-      - commercial_name: Brand/trade name commonly used (e.g., "ITPSA", "Royal Protein")
+      - legal_name: Full official/registered name (includes legal suffix like S.A., S.L., Inc., Ltd., GmbH)
+      - commercial_name: Brand/trade name commonly used (shorter, without legal suffix)
       - website: Official website URL
-      - location: Physical address from signature
+      - location: Physical address from signature or legal notice
+      - vat_id: Tax/VAT identification number (C.I.F., NIF, VAT, Tax ID, EIN, etc.)
       - logo_content_id: Content ID of the company's logo image (if visible in signature)
 
       Image references in the email use markdown: ![alt](cid:image_id)
@@ -167,7 +168,7 @@ class LlmEmailExtractor
       <output_format>
       Return ONLY a JSON array of companies:
       [
-        {"legal_name": "Acme Corp Inc.", "commercial_name": "Acme", "website": "https://acme.com", "location": "123 Main St, NY", "logo_content_id": "image001.png"}
+        {"legal_name": "Example Corporation Inc.", "commercial_name": "Example", "website": "https://example.com", "location": "123 Main St, City, Country", "vat_id": "XX12345678", "logo_content_id": "image001.png"}
       ]
 
       If no companies found, return: []
@@ -175,7 +176,8 @@ class LlmEmailExtractor
 
       <guidelines>
       - Extract both legal and commercial names when available
-      - Infer website from email domain if not explicit (e.g., @acme.com -> https://acme.com)
+      - Infer website from email domain if not explicit
+      - Look carefully at legal notices/disclaimers at the bottom of emails for VAT IDs
       - Use null for unknown fields, never hallucinate
       - Only set logo_content_id if you can identify a logo image for that company
       </guidelines>
@@ -193,6 +195,7 @@ class LlmEmailExtractor
         commercial_name: company["commercial_name"]&.strip.presence,
         website: company["website"]&.strip.presence,
         location: company["location"]&.strip.presence,
+        vat_id: company["vat_id"]&.strip.presence,
         logo_content_id: company["logo_content_id"]&.strip.presence
       }
     end.select { |c| c[:legal_name].present? || c[:commercial_name].present? }

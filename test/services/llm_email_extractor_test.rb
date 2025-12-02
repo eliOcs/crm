@@ -51,6 +51,7 @@ class LlmEmailExtractorTest < ActiveSupport::TestCase
     assert_match(/Industrial.*Pecuaria/i, itpsa[:legal_name])
     assert_match(/itpsa\.com/, itpsa[:website])
     assert_match(/Barcelona/i, itpsa[:location])
+    assert_equal "A08219511", itpsa[:vat_id], "Should extract VAT ID (C.I.F.) from legal notice"
     assert_equal "image002.png", itpsa[:logo_content_id]
 
     # Check Royal Protein / Royal Distribution

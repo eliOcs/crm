@@ -116,7 +116,8 @@ class ContactEnrichmentService
         website: website_to_use,
         description: enriched[:description],
         industry: enriched[:industry],
-        location: enriched[:location],
+        location: enriched[:location] || company_data[:location],
+        vat_id: company_data[:vat_id],
         web_enriched_at: enriched.any? ? Time.current : nil
       )
       @stats[:companies_new] += 1
