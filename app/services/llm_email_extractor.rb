@@ -1,6 +1,6 @@
 class LlmEmailExtractor
   MODEL = "claude-3-5-haiku-latest"
-  MAX_IMAGES = 5
+  MAX_IMAGES = 10
 
   def initialize(eml_path)
     @eml_path = eml_path
@@ -72,6 +72,10 @@ class LlmEmailExtractor
       - commercial_name: The brand or trade name commonly used (e.g., "ITPSA")
       - website: The company's official website URL
       - logo_content_id: If any attached image appears to be a company logo, include its content_id
+
+      Image references in the email body use markdown format: ![alt text](cid:image_id)
+      The image_id in the markdown reference corresponds to the content_id of the attached images.
+      Look for logo images near company names in signatures to identify which image is the company logo.
       </instructions>
 
       <examples>
@@ -173,17 +177,17 @@ class LlmEmailExtractor
     parts << "Subject: #{email_data[:subject]}" if email_data[:subject]
     parts << "Date: #{email_data[:date]}" if email_data[:date]
     parts << ""
-    parts << "--- Email Body ---"
-    parts << (email_data[:body].presence || "(no text body)")
 
     if email_data[:html_body].present?
-      # Extract text from HTML for additional context
-      plain_from_html = ActionController::Base.helpers.strip_tags(email_data[:html_body])
-      if plain_from_html.present? && plain_from_html != email_data[:body]
-        parts << ""
-        parts << "--- HTML Body (text extracted) ---"
-        parts << plain_from_html.truncate(3000)
-      end
+      # Convert HTML to Markdown - preserves structure, links, and image references
+      markdown = HtmlToMarkdown.new(email_data[:html_body]).convert
+      parts << "--- Email Body (Markdown) ---"
+      parts << markdown.truncate(12000)
+    elsif email_data[:body].present?
+      parts << "--- Email Body ---"
+      parts << email_data[:body]
+    else
+      parts << "(no body)"
     end
 
     parts.join("\n")
@@ -203,6 +207,7 @@ class LlmEmailExtractor
     return images unless email_data[:attachments].present?
 
     reader = EmlReader.new(@eml_path)
+    seen_hashes = {}  # Deduplicate identical images by SHA256
 
     email_data[:attachments].each do |attachment|
       next unless attachment[:content_type]&.start_with?("image/")
@@ -212,6 +217,16 @@ class LlmEmailExtractor
 
       attachment_data = reader.attachment(cid)
       next unless attachment_data
+
+      # Skip duplicate images (same content, different CID)
+      sha = Digest::SHA256.hexdigest(attachment_data[:data])
+      if seen_hashes[sha]
+        # Map this CID to the original one for logo matching
+        @cid_aliases ||= {}
+        @cid_aliases[cid] = seen_hashes[sha]
+        next
+      end
+      seen_hashes[sha] = cid
 
       images[cid] = {
         content_type: normalize_content_type(attachment_data[:content_type]),
