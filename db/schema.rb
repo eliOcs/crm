@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_02_210324) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_02_220503) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -62,13 +62,10 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_210324) do
     t.string "industry"
     t.string "legal_name"
     t.string "location"
-    t.integer "parent_company_id"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.string "vat_id"
-    t.datetime "web_enriched_at"
     t.string "website"
-    t.index ["parent_company_id"], name: "index_companies_on_parent_company_id"
     t.index ["user_id", "domain"], name: "index_companies_on_user_id_and_domain", unique: true
     t.index ["user_id"], name: "index_companies_on_user_id"
   end
@@ -115,7 +112,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_210324) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audit_logs", "users"
-  add_foreign_key "companies", "companies", column: "parent_company_id"
   add_foreign_key "companies", "users"
   add_foreign_key "companies_contacts", "companies"
   add_foreign_key "companies_contacts", "contacts"

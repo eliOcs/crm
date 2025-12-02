@@ -64,7 +64,7 @@ class LlmEmailExtractor
       - job_role: Job title - NOT the department (see examples below)
       - department: Department or division name
       - phone_numbers: Array of phone numbers with country codes
-      - company_name: Company they work for (prefer brand name over full legal name)
+      - company_name: Company name from signature (used to infer company domain)
 
       Distinguishing job_role vs department:
       - "[Department] Manager" -> extract the department name, job_role is "Manager"
@@ -149,13 +149,14 @@ class LlmEmailExtractor
       <instructions>
       Extract ALL companies from the email:
       1. Email signatures - company names, addresses, websites
-      2. Email domains - infer company from domain
+      2. Email domains - infer company from contact email domains
       3. Legal notices/disclaimers - often contain full legal names, addresses, and VAT IDs
       4. Forwarded emails - companies mentioned in nested signatures
 
       For each company, extract:
       - legal_name: Full official/registered name (includes legal suffix like S.A., S.L., Inc., Ltd., GmbH)
       - commercial_name: Brand/trade name commonly used (shorter, without legal suffix)
+      - domain: Email domain for this company (e.g., "example.com" from contacts @example.com)
       - website: Official website URL
       - location: Physical address from signature or legal notice
       - vat_id: Tax/VAT identification number (C.I.F., NIF, VAT, Tax ID, EIN, etc.)
@@ -168,7 +169,7 @@ class LlmEmailExtractor
       <output_format>
       Return ONLY a JSON array of companies:
       [
-        {"legal_name": "Example Corporation Inc.", "commercial_name": "Example", "website": "https://example.com", "location": "123 Main St, City, Country", "vat_id": "XX12345678", "logo_content_id": "image001.png"}
+        {"legal_name": "Example Corporation Inc.", "commercial_name": "Example", "domain": "example.com", "website": "https://example.com", "location": "123 Main St, City, Country", "vat_id": "XX12345678", "logo_content_id": "image001.png"}
       ]
 
       If no companies found, return: []
@@ -176,7 +177,8 @@ class LlmEmailExtractor
 
       <guidelines>
       - Extract both legal and commercial names when available
-      - Infer website from email domain if not explicit
+      - IMPORTANT: Always extract domain from contact emails associated with this company
+      - Infer website from domain if not explicit (e.g., domain "example.com" -> website "https://example.com")
       - Look carefully at legal notices/disclaimers at the bottom of emails for VAT IDs
       - Use null for unknown fields, never hallucinate
       - Only set logo_content_id if you can identify a logo image for that company
@@ -193,6 +195,7 @@ class LlmEmailExtractor
       {
         legal_name: company["legal_name"]&.strip.presence,
         commercial_name: company["commercial_name"]&.strip.presence,
+        domain: company["domain"]&.strip&.downcase.presence,
         website: company["website"]&.strip.presence,
         location: company["location"]&.strip.presence,
         vat_id: company["vat_id"]&.strip.presence,

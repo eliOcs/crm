@@ -31,26 +31,6 @@
     <dd><%= @company.description %></dd>
   <% end %>
 
-  <% if @company.parent_company.present? %>
-    <dt><strong>Parent Company</strong></dt>
-    <dd><%= link_to @company.parent_company.display_name, @company.parent_company %></dd>
-  <% end %>
-
-  <% if @company.subsidiaries.any? %>
-    <dt><strong>Subsidiaries</strong></dt>
-    <dd>
-      <ul>
-        <% @company.subsidiaries.each do |subsidiary| %>
-          <li><%= link_to subsidiary.display_name, subsidiary %></li>
-        <% end %>
-      </ul>
-    </dd>
-  <% end %>
-
-  <% if @company.web_enriched_at.present? %>
-    <dt><strong>Web Enriched</strong></dt>
-    <dd><%= @company.web_enriched_at.strftime("%B %d, %Y") %></dd>
-  <% end %>
 </dl>
 
 <h2>Contacts (<%= @contacts.count %>)</h2>

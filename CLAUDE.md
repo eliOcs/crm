@@ -57,7 +57,6 @@ app/
 ├── services/
 │   ├── eml_reader.rb             # Parse EML files, extract attachments
 │   ├── llm_email_extractor.rb    # LLM-powered extraction (contacts, companies, logos)
-│   ├── company_web_enricher.rb   # Web search enrichment for companies (Claude + web search)
 │   └── contact_enrichment_service.rb # Orchestrates contact/company enrichment from emails
 └── views/
     ├── shared/_navbar.html.erb   # Navigation (shown when authenticated)
@@ -65,7 +64,7 @@ app/
 
 db/seeds/emails/          # EML files extracted from PST (gitignored)
 lib/tasks/
-└── enrich_contacts.rake  # LLM enrichment task (contacts, companies, web search)
+└── enrich_contacts.rake  # LLM enrichment task (contacts, companies from emails)
 ```
 
 ## Authentication
@@ -87,18 +86,13 @@ email = EmlReader.new(path).read
 
 # LLM-powered extraction (contacts + companies + logos) - uses Claude 3.5 Haiku
 result = LlmEmailExtractor.new(path).extract
-# => { contacts: [{email:, name:, job_role:, phone_numbers:, company_name:}, ...],
-#      companies: [{legal_name:, commercial_name:, website:, logo_content_id:}, ...],
+# => { contacts: [{email:, name:, job_role:, department:, phone_numbers:}, ...],
+#      companies: [{legal_name:, commercial_name:, domain:, website:, location:, vat_id:, logo_content_id:}, ...],
 #      image_data: {content_id => {content_type:, base64_data:, raw_data:}, ...} }
-
-# Web search enrichment for companies - uses Claude Sonnet + web search
-enriched = CompanyWebEnricher.new("ACME", hint_domain: "acme.com").enrich
-# => { legal_name:, commercial_name:, website:, description:, industry:, location: }
 ```
 
 ### LLM Models Used
 - **Claude 3.5 Haiku** (`claude-3-5-haiku-latest`): Email extraction (fast, cost-effective)
-- **Claude Sonnet 4.5** (`claude-sonnet-4-5-20250929`): Web enrichment with web search tool
 
 ### File-based Email Storage
 Emails are read directly from EML files on disk (not stored in database):
@@ -159,13 +153,10 @@ companies
 ├── user_id (FK)
 ├── legal_name (required)
 ├── commercial_name (brand/trade name)
-├── domain (normalized from website, unique per user)
+├── domain (extracted from contact emails, unique per user)
 ├── website
-├── description
-├── industry
 ├── location
-├── parent_company_id (FK, self-referential for subsidiaries)
-├── web_enriched_at (timestamp when web search enrichment was done)
+├── vat_id (tax ID extracted from legal notices)
 ├── logo (Active Storage attachment)
 └── timestamps
 
@@ -192,13 +183,6 @@ sessions
 - `legal_name`: Full official/legal registered name (e.g., "Industrial Técnica Pecuaria, S.A.")
 - `commercial_name`: Brand or trade name commonly used (e.g., "ITPSA")
 - `display_name` method: Returns commercial_name if present, otherwise legal_name
-
-### Company Hierarchy (Parent/Subsidiary)
-Companies can have parent-child relationships via `parent_company_id`:
-- `company.parent_company` - Returns the parent company
-- `company.subsidiaries` - Returns child companies
-- Web enrichment detects parent companies and creates hierarchy automatically
-- Domain mismatch detection: If contact emails don't match enriched domain, creates subsidiary
 
 ## PST File Extraction
 

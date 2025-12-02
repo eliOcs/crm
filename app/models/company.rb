@@ -1,7 +1,5 @@
 class Company < ApplicationRecord
   belongs_to :user
-  belongs_to :parent_company, class_name: "Company", optional: true
-  has_many :subsidiaries, class_name: "Company", foreign_key: :parent_company_id, dependent: :nullify
   has_many :audit_logs, as: :auditable, dependent: :destroy
   has_and_belongs_to_many :contacts
   has_one_attached :logo
@@ -12,25 +10,5 @@ class Company < ApplicationRecord
   # Display name: prefer commercial name, fall back to legal name
   def display_name
     commercial_name.presence || legal_name
-  end
-
-  before_validation :normalize_domain_from_website
-
-  def self.normalize_domain(url)
-    return nil if url.blank?
-    url = url.downcase.strip
-    # Add scheme if missing for URI parsing
-    url = "https://#{url}" unless url.start_with?("http://", "https://")
-    uri = URI.parse(url)
-    host = uri.host
-    host&.gsub(/^www\./, "")
-  rescue URI::InvalidURIError
-    nil
-  end
-
-  private
-
-  def normalize_domain_from_website
-    self.domain ||= self.class.normalize_domain(website) if website.present? && domain.blank?
   end
 end

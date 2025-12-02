@@ -1,0 +1,268 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.anthropic.com/v1/messages
+    body:
+      encoding: UTF-8
+      string: '{"model":"claude-3-5-haiku-latest","max_tokens":2048,"temperature":0,"messages":[{"role":"user","content":"From:
+        Monica Paraira <moparaira@itpsa.com>\nTo: Maria Moreno <mmoreno@itpsa.com>\nSubject:
+        Aceptada: Revision TDS aromas veganos\nDate: 2024-11-29T07:39:48+00:00\n\n---
+        Email Body (Markdown) ---\n"}],"system":"You are a contact information extractor.
+        Extract ALL people mentioned in emails.\n\n<instructions>\nExtract ALL contacts
+        from the email:\n1. From/To/Cc headers - extract every email address\n2. Email
+        signatures - extract detailed info (name, role, phone, etc.)\n3. Forwarded
+        email headers - extract sender/recipients from \"De:\", \"From:\", \"Para:\",
+        \"To:\" lines\n4. Email body mentions - any person referenced by name or email\n\nFor
+        each contact, extract:\n- email: Email address (required, lowercase)\n- name:
+        Full name (if available)\n- job_role: Job title - NOT the department (see
+        examples below)\n- department: Department or division name\n- phone_numbers:
+        Array of phone numbers with country codes\n- company_name: Company name from
+        signature (used to infer company domain)\n\nDistinguishing job_role vs department:\n-
+        \"[Department] Manager\" -> extract the department name, job_role is \"Manager\"\n-
+        \"[Department] Technician\" -> extract the department name, job_role is \"Technician\"\n-
+        \"Senior Engineer\" -> job_role only, no department\n- \"[Division] Director\"
+        -> extract division as department, job_role is \"Director\"\n</instructions>\n\n<output_format>\nReturn
+        ONLY a JSON array of contacts:\n[\n  {\"email\": \"john@example.com\", \"name\":
+        \"John Doe\", \"job_role\": \"Manager\", \"department\": \"Sales\", \"phone_numbers\":
+        [\"+1-555-1234\"], \"company_name\": \"Example Corp\"}\n]\n\nIf no contacts
+        found, return: []\n</output_format>\n\n<guidelines>\n- Extract EVERY email
+        address mentioned, even if minimal info available\n- Use null for unknown
+        fields, never hallucinate\n- Normalize emails to lowercase\n- Include country
+        codes in phone numbers when visible\n</guidelines>\n"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Anthropic::Client/Ruby 1.16.0
+      Host:
+      - api.anthropic.com
+      X-Stainless-Arch:
+      - x64
+      X-Stainless-Lang:
+      - ruby
+      X-Stainless-Os:
+      - Linux
+      X-Stainless-Package-Version:
+      - 1.16.0
+      X-Stainless-Runtime:
+      - ruby
+      X-Stainless-Runtime-Version:
+      - 3.4.7
+      Content-Type:
+      - application/json
+      Anthropic-Version:
+      - '2023-06-01'
+      X-Api-Key:
+      - "<ANTHROPIC_API_KEY>"
+      X-Stainless-Retry-Count:
+      - '0'
+      X-Stainless-Timeout:
+      - '600.0'
+      Content-Length:
+      - '2030'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 02 Dec 2025 21:55:53 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Anthropic-Ratelimit-Input-Tokens-Limit:
+      - '100000'
+      Anthropic-Ratelimit-Input-Tokens-Remaining:
+      - '100000'
+      Anthropic-Ratelimit-Input-Tokens-Reset:
+      - '2025-12-02T21:55:50Z'
+      Anthropic-Ratelimit-Output-Tokens-Limit:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Remaining:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Reset:
+      - '2025-12-02T21:55:54Z'
+      Anthropic-Ratelimit-Requests-Limit:
+      - '1000'
+      Anthropic-Ratelimit-Requests-Remaining:
+      - '999'
+      Anthropic-Ratelimit-Requests-Reset:
+      - '2025-12-02T21:55:49Z'
+      Retry-After:
+      - '10'
+      Anthropic-Ratelimit-Tokens-Limit:
+      - '120000'
+      Anthropic-Ratelimit-Tokens-Remaining:
+      - '120000'
+      Anthropic-Ratelimit-Tokens-Reset:
+      - '2025-12-02T21:55:50Z'
+      Request-Id:
+      - req_011CVic8PAbX3TSp8pTzj1rX
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Anthropic-Organization-Id:
+      - 36f27efe-3e16-4c65-95cd-f21d3225017e
+      X-Envoy-Upstream-Service-Time:
+      - '4128'
+      Cf-Cache-Status:
+      - DYNAMIC
+      X-Robots-Tag:
+      - none
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 9a7e1219eda52919-MAD
+    body:
+      encoding: ASCII-8BIT
+      string: '{"model":"claude-3-5-haiku-20241022","id":"msg_01DFxhVAMXbDoavaRv2KE3NY","type":"message","role":"assistant","content":[{"type":"text","text":"Based
+        on the email headers, I''ll extract the contacts:\n\n```json\n[\n  {\n    \"email\":
+        \"moparaira@itpsa.com\",\n    \"name\": \"Monica Paraira\",\n    \"job_role\":
+        null,\n    \"department\": null,\n    \"phone_numbers\": [],\n    \"company_name\":
+        \"ITPSA\"\n  },\n  {\n    \"email\": \"mmoreno@itpsa.com\", \n    \"name\":
+        \"Maria Moreno\",\n    \"job_role\": null,\n    \"department\": null,\n    \"phone_numbers\":
+        [],\n    \"company_name\": \"ITPSA\"\n  }\n]\n```\n\nKey observations:\n-
+        Extracted both sender (Monica Paraira) and recipient (Maria Moreno)\n- Used
+        the company domain (itpsa.com) to infer company name\n- Left job_role, department,
+        and phone_numbers as null due to lack of information\n- Ensured emails are
+        lowercase\n- Included full names from email headers"}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":508,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":245,"service_tier":"standard"}}'
+  recorded_at: Tue, 02 Dec 2025 21:55:53 GMT
+- request:
+    method: post
+    uri: https://api.anthropic.com/v1/messages
+    body:
+      encoding: UTF-8
+      string: '{"model":"claude-3-5-haiku-latest","max_tokens":2048,"temperature":0,"messages":[{"role":"user","content":[{"type":"text","text":"From:
+        Monica Paraira <moparaira@itpsa.com>\nTo: Maria Moreno <mmoreno@itpsa.com>\nSubject:
+        Aceptada: Revision TDS aromas veganos\nDate: 2024-11-29T07:39:48+00:00\n\n---
+        Email Body (Markdown) ---\n"}]}],"system":"You are a company information extractor.
+        Extract ALL companies/organizations mentioned in emails.\n\n<instructions>\nExtract
+        ALL companies from the email:\n1. Email signatures - company names, addresses,
+        websites\n2. Email domains - infer company from contact email domains\n3.
+        Legal notices/disclaimers - often contain full legal names, addresses, and
+        VAT IDs\n4. Forwarded emails - companies mentioned in nested signatures\n\nFor
+        each company, extract:\n- legal_name: Full official/registered name (includes
+        legal suffix like S.A., S.L., Inc., Ltd., GmbH)\n- commercial_name: Brand/trade
+        name commonly used (shorter, without legal suffix)\n- domain: Email domain
+        for this company (e.g., \"example.com\" from contacts @example.com)\n- website:
+        Official website URL\n- location: Physical address from signature or legal
+        notice\n- vat_id: Tax/VAT identification number (C.I.F., NIF, VAT, Tax ID,
+        EIN, etc.)\n- logo_content_id: Content ID of the company''s logo image (if
+        visible in signature)\n\nImage references in the email use markdown: ![alt](cid:image_id)\nMatch
+        logo images to companies by their position near company names in signatures.\n</instructions>\n\n<output_format>\nReturn
+        ONLY a JSON array of companies:\n[\n  {\"legal_name\": \"Example Corporation
+        Inc.\", \"commercial_name\": \"Example\", \"domain\": \"example.com\", \"website\":
+        \"https://example.com\", \"location\": \"123 Main St, City, Country\", \"vat_id\":
+        \"XX12345678\", \"logo_content_id\": \"image001.png\"}\n]\n\nIf no companies
+        found, return: []\n</output_format>\n\n<guidelines>\n- Extract both legal
+        and commercial names when available\n- IMPORTANT: Always extract domain from
+        contact emails associated with this company\n- Infer website from domain if
+        not explicit (e.g., domain \"example.com\" -> website \"https://example.com\")\n-
+        Look carefully at legal notices/disclaimers at the bottom of emails for VAT
+        IDs\n- Use null for unknown fields, never hallucinate\n- Only set logo_content_id
+        if you can identify a logo image for that company\n</guidelines>\n"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Anthropic::Client/Ruby 1.16.0
+      Host:
+      - api.anthropic.com
+      X-Stainless-Arch:
+      - x64
+      X-Stainless-Lang:
+      - ruby
+      X-Stainless-Os:
+      - Linux
+      X-Stainless-Package-Version:
+      - 1.16.0
+      X-Stainless-Runtime:
+      - ruby
+      X-Stainless-Runtime-Version:
+      - 3.4.7
+      Content-Type:
+      - application/json
+      Anthropic-Version:
+      - '2023-06-01'
+      X-Api-Key:
+      - "<ANTHROPIC_API_KEY>"
+      X-Stainless-Retry-Count:
+      - '0'
+      X-Stainless-Timeout:
+      - '600.0'
+      Content-Length:
+      - '2385'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 02 Dec 2025 21:55:56 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Anthropic-Ratelimit-Input-Tokens-Limit:
+      - '100000'
+      Anthropic-Ratelimit-Input-Tokens-Remaining:
+      - '100000'
+      Anthropic-Ratelimit-Input-Tokens-Reset:
+      - '2025-12-02T21:55:54Z'
+      Anthropic-Ratelimit-Output-Tokens-Limit:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Remaining:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Reset:
+      - '2025-12-02T21:55:57Z'
+      Anthropic-Ratelimit-Requests-Limit:
+      - '1000'
+      Anthropic-Ratelimit-Requests-Remaining:
+      - '999'
+      Anthropic-Ratelimit-Requests-Reset:
+      - '2025-12-02T21:55:53Z'
+      Retry-After:
+      - '6'
+      Anthropic-Ratelimit-Tokens-Limit:
+      - '120000'
+      Anthropic-Ratelimit-Tokens-Remaining:
+      - '120000'
+      Anthropic-Ratelimit-Tokens-Reset:
+      - '2025-12-02T21:55:54Z'
+      Request-Id:
+      - req_011CVic8hLF9t6p9PTxQDzZe
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Anthropic-Organization-Id:
+      - 36f27efe-3e16-4c65-95cd-f21d3225017e
+      X-Envoy-Upstream-Service-Time:
+      - '3177'
+      Cf-Cache-Status:
+      - DYNAMIC
+      X-Robots-Tag:
+      - none
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 9a7e12347d482919-MAD
+    body:
+      encoding: ASCII-8BIT
+      string: '{"model":"claude-3-5-haiku-20241022","id":"msg_01J8o6NqEiEGAe8FJLmPp2Rn","type":"message","role":"assistant","content":[{"type":"text","text":"Based
+        on the email details, I''ll extract the company information:\n\n```json\n[\n  {\n    \"legal_name\":
+        \"ITP S.A.\",\n    \"commercial_name\": \"ITP\",\n    \"domain\": \"itpsa.com\",\n    \"website\":
+        \"https://itpsa.com\",\n    \"location\": null,\n    \"vat_id\": null,\n    \"logo_content_id\":
+        null\n  }\n]\n```\n\nKey observations:\n- Company name derived from email
+        domain @itpsa.com\n- Used \"ITP S.A.\" as the legal name, with \"ITP\" as
+        the commercial name\n- Inferred website by converting domain to HTTPS URL\n-
+        Other fields are null due to lack of additional information in the email"}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":601,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":179,"service_tier":"standard"}}'
+  recorded_at: Tue, 02 Dec 2025 21:55:56 GMT
+recorded_with: VCR 6.3.1
