@@ -71,6 +71,7 @@ class LlmEmailExtractor
       - legal_name: The full official/legal registered name (e.g., "Industrial Técnica Pecuaria, S.A.")
       - commercial_name: The brand or trade name commonly used (e.g., "ITPSA")
       - website: The company's official website URL
+      - location: Physical address from signature (e.g., "C/ Sant Andreu, 85 · 17834 Porqueres (GIRONA) - SPAIN")
       - logo_content_id: If any attached image appears to be a company logo, include its content_id
 
       Image references in the email body use markdown format: ![alt text](cid:image_id)
@@ -92,7 +93,7 @@ class LlmEmailExtractor
       www.acme.com
 
       Output:
-      {"contacts": [{"email": "john.doe@acme.com", "name": "John Doe", "job_role": "Senior Developer", "phone_numbers": ["+1-555-123-4567"], "company_name": "Acme"}], "companies": [{"legal_name": "Acme Corporation Inc.", "commercial_name": "Acme", "website": "https://acme.com", "logo_content_id": null}]}
+      {"contacts": [{"email": "john.doe@acme.com", "name": "John Doe", "job_role": "Senior Developer", "phone_numbers": ["+1-555-123-4567"], "company_name": "Acme"}], "companies": [{"legal_name": "Acme Corporation Inc.", "commercial_name": "Acme", "website": "https://acme.com", "location": null, "logo_content_id": null}]}
       </example>
 
       <example>
@@ -124,6 +125,7 @@ class LlmEmailExtractor
             "legal_name": "Acme Corporation Inc.",
             "commercial_name": "Acme",
             "website": "https://acme.com",
+            "location": "123 Main Street, New York, NY 10001, USA",
             "logo_content_id": "image001"
           }
         ]
@@ -277,6 +279,7 @@ class LlmEmailExtractor
         legal_name: company["legal_name"]&.strip.presence,
         commercial_name: company["commercial_name"]&.strip.presence,
         website: company["website"]&.strip.presence,
+        location: company["location"]&.strip.presence,
         logo_content_id: company["logo_content_id"]&.strip.presence
       }
     end.select { |c| c[:legal_name].present? || c[:commercial_name].present? }

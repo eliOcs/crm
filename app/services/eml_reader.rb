@@ -1,5 +1,6 @@
 class EmlReader
   EMAILS_DIR = Rails.root.join("db/seeds/emails")
+  TEST_FIXTURES_DIR = Rails.root.join("test/fixtures/emails")
 
   def initialize(eml_path)
     @eml_path = eml_path
@@ -62,7 +63,9 @@ class EmlReader
   private
 
   def valid_path?
-    @eml_path.to_s.start_with?(EMAILS_DIR.to_s) && File.exist?(@eml_path)
+    path = @eml_path.to_s
+    valid_dirs = [ EMAILS_DIR.to_s, TEST_FIXTURES_DIR.to_s ]
+    valid_dirs.any? { |dir| path.start_with?(dir) } && File.exist?(@eml_path)
   end
 
   def extract_address(field)

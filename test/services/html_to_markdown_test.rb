@@ -2,9 +2,7 @@ require "test_helper"
 
 class HtmlToMarkdownTest < ActiveSupport::TestCase
   setup do
-    @eml_path = Rails.root.join("db/seeds/emails/Archivo de datos de Outlook/Bandeja de entrada/Webmail/1.eml")
-    skip "Test email not found" unless File.exist?(@eml_path)
-
+    @eml_path = Rails.root.join("test/fixtures/emails/itpsa_royal_protein_thread.eml")
     email_data = EmlReader.new(@eml_path).read
     @html = email_data[:html_body]
     @markdown = HtmlToMarkdown.new(@html).convert
