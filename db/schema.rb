@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_30_122521) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_02_191805) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -75,6 +75,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_122521) do
   create_table "companies_contacts", id: false, force: :cascade do |t|
     t.integer "company_id", null: false
     t.integer "contact_id", null: false
+    t.string "department"
     t.index ["company_id", "contact_id"], name: "index_companies_contacts_on_company_id_and_contact_id", unique: true
     t.index ["company_id"], name: "index_companies_contacts_on_company_id"
     t.index ["contact_id", "company_id"], name: "index_companies_contacts_on_contact_id_and_company_id"

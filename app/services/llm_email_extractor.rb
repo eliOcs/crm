@@ -58,9 +58,15 @@ class LlmEmailExtractor
       For each contact, extract:
       - email: Email address (required)
       - name: Full name
-      - job_role: Job title or role (e.g., "Software Engineer", "CEO", "Sales Manager")
+      - job_role: Job title or role (e.g., "Software Engineer", "CEO", "Manager", "Technician")
+      - department: Department or division they work in (e.g., "R & D", "Food Division", "Sales", "Engineering")
       - phone_numbers: Array of phone numbers (include country codes if visible)
       - company_name: Name of the company they work for (use commercial/brand name if available)
+
+      Note: job_role and department are different:
+      - "R & D Department" -> department: "R & D", job_role: null
+      - "Food Division Manager" -> department: "Food Division", job_role: "Manager"
+      - "Senior Software Engineer" -> department: null, job_role: "Senior Software Engineer"
 
       Also extract ALL companies mentioned in the email:
       - From email signatures
@@ -93,7 +99,7 @@ class LlmEmailExtractor
       www.acme.com
 
       Output:
-      {"contacts": [{"email": "john.doe@acme.com", "name": "John Doe", "job_role": "Senior Developer", "phone_numbers": ["+1-555-123-4567"], "company_name": "Acme"}], "companies": [{"legal_name": "Acme Corporation Inc.", "commercial_name": "Acme", "website": "https://acme.com", "location": null, "logo_content_id": null}]}
+      {"contacts": [{"email": "john.doe@acme.com", "name": "John Doe", "job_role": "Senior Developer", "department": "Engineering", "phone_numbers": ["+1-555-123-4567"], "company_name": "Acme"}], "companies": [{"legal_name": "Acme Corporation Inc.", "commercial_name": "Acme", "website": "https://acme.com", "location": null, "logo_content_id": null}]}
       </example>
 
       <example>
@@ -104,7 +110,7 @@ class LlmEmailExtractor
       (no signature)
 
       Output:
-      {"contacts": [{"email": "info@newsletter.com", "name": null, "job_role": null, "phone_numbers": [], "company_name": null}], "companies": []}
+      {"contacts": [{"email": "info@newsletter.com", "name": null, "job_role": null, "department": null, "phone_numbers": [], "company_name": null}], "companies": []}
       </example>
       </examples>
 
@@ -116,6 +122,7 @@ class LlmEmailExtractor
             "email": "john.doe@acme.com",
             "name": "John Doe",
             "job_role": "Senior Developer",
+            "department": "Engineering",
             "phone_numbers": ["+1-555-123-4567"],
             "company_name": "Acme"
           }
@@ -269,6 +276,7 @@ class LlmEmailExtractor
         email: contact["email"]&.strip&.downcase,
         name: contact["name"]&.strip.presence,
         job_role: contact["job_role"]&.strip.presence,
+        department: contact["department"]&.strip.presence,
         phone_numbers: Array(contact["phone_numbers"]).map(&:strip).reject(&:blank?),
         company_name: contact["company_name"]&.strip.presence
       }

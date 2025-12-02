@@ -137,34 +137,40 @@ http_interactions:
         headers)\n- People mentioned in email signatures\n- People mentioned in the
         email body\n\nFor each contact, extract:\n- email: Email address (required)\n-
         name: Full name\n- job_role: Job title or role (e.g., \"Software Engineer\",
-        \"CEO\", \"Sales Manager\")\n- phone_numbers: Array of phone numbers (include
-        country codes if visible)\n- company_name: Name of the company they work for
-        (use commercial/brand name if available)\n\nAlso extract ALL companies mentioned
-        in the email:\n- From email signatures\n- From email domains (e.g., john@acme.com
-        suggests \"Acme\")\n- From the email body content\n\nFor each company, extract:\n-
-        legal_name: The full official/legal registered name (e.g., \"Industrial Técnica
-        Pecuaria, S.A.\")\n- commercial_name: The brand or trade name commonly used
-        (e.g., \"ITPSA\")\n- website: The company''s official website URL\n- location:
-        Physical address from signature (e.g., \"C/ Sant Andreu, 85 · 17834 Porqueres
-        (GIRONA) - SPAIN\")\n- logo_content_id: If any attached image appears to be
-        a company logo, include its content_id\n\nImage references in the email body
-        use markdown format: ![alt text](cid:image_id)\nThe image_id in the markdown
-        reference corresponds to the content_id of the attached images.\nLook for
-        logo images near company names in signatures to identify which image is the
-        company logo.\n</instructions>\n\n<examples>\n<example>\nInput email:\nFrom:
-        John Doe <john.doe@acme.com>\nSubject: Meeting next week\n\nBest regards,\nJohn
-        Doe\nSenior Developer\nAcme Corporation Inc.\nTel: +1-555-123-4567\nwww.acme.com\n\nOutput:\n{\"contacts\":
+        \"CEO\", \"Manager\", \"Technician\")\n- department: Department or division
+        they work in (e.g., \"R & D\", \"Food Division\", \"Sales\", \"Engineering\")\n-
+        phone_numbers: Array of phone numbers (include country codes if visible)\n-
+        company_name: Name of the company they work for (use commercial/brand name
+        if available)\n\nNote: job_role and department are different:\n- \"R & D Department\"
+        -> department: \"R & D\", job_role: null\n- \"Food Division Manager\" -> department:
+        \"Food Division\", job_role: \"Manager\"\n- \"Senior Software Engineer\" ->
+        department: null, job_role: \"Senior Software Engineer\"\n\nAlso extract ALL
+        companies mentioned in the email:\n- From email signatures\n- From email domains
+        (e.g., john@acme.com suggests \"Acme\")\n- From the email body content\n\nFor
+        each company, extract:\n- legal_name: The full official/legal registered name
+        (e.g., \"Industrial Técnica Pecuaria, S.A.\")\n- commercial_name: The brand
+        or trade name commonly used (e.g., \"ITPSA\")\n- website: The company''s official
+        website URL\n- location: Physical address from signature (e.g., \"C/ Sant
+        Andreu, 85 · 17834 Porqueres (GIRONA) - SPAIN\")\n- logo_content_id: If any
+        attached image appears to be a company logo, include its content_id\n\nImage
+        references in the email body use markdown format: ![alt text](cid:image_id)\nThe
+        image_id in the markdown reference corresponds to the content_id of the attached
+        images.\nLook for logo images near company names in signatures to identify
+        which image is the company logo.\n</instructions>\n\n<examples>\n<example>\nInput
+        email:\nFrom: John Doe <john.doe@acme.com>\nSubject: Meeting next week\n\nBest
+        regards,\nJohn Doe\nSenior Developer\nAcme Corporation Inc.\nTel: +1-555-123-4567\nwww.acme.com\n\nOutput:\n{\"contacts\":
         [{\"email\": \"john.doe@acme.com\", \"name\": \"John Doe\", \"job_role\":
-        \"Senior Developer\", \"phone_numbers\": [\"+1-555-123-4567\"], \"company_name\":
-        \"Acme\"}], \"companies\": [{\"legal_name\": \"Acme Corporation Inc.\", \"commercial_name\":
-        \"Acme\", \"website\": \"https://acme.com\", \"location\": null, \"logo_content_id\":
-        null}]}\n</example>\n\n<example>\nInput email:\nFrom: info@newsletter.com\nSubject:
-        Weekly digest\n\n(no signature)\n\nOutput:\n{\"contacts\": [{\"email\": \"info@newsletter.com\",
-        \"name\": null, \"job_role\": null, \"phone_numbers\": [], \"company_name\":
-        null}], \"companies\": []}\n</example>\n</examples>\n\n<output_format>\nReturn
-        ONLY valid JSON with this structure:\n{\n  \"contacts\": [\n    {\n      \"email\":
-        \"john.doe@acme.com\",\n      \"name\": \"John Doe\",\n      \"job_role\":
-        \"Senior Developer\",\n      \"phone_numbers\": [\"+1-555-123-4567\"],\n      \"company_name\":
+        \"Senior Developer\", \"department\": \"Engineering\", \"phone_numbers\":
+        [\"+1-555-123-4567\"], \"company_name\": \"Acme\"}], \"companies\": [{\"legal_name\":
+        \"Acme Corporation Inc.\", \"commercial_name\": \"Acme\", \"website\": \"https://acme.com\",
+        \"location\": null, \"logo_content_id\": null}]}\n</example>\n\n<example>\nInput
+        email:\nFrom: info@newsletter.com\nSubject: Weekly digest\n\n(no signature)\n\nOutput:\n{\"contacts\":
+        [{\"email\": \"info@newsletter.com\", \"name\": null, \"job_role\": null,
+        \"department\": null, \"phone_numbers\": [], \"company_name\": null}], \"companies\":
+        []}\n</example>\n</examples>\n\n<output_format>\nReturn ONLY valid JSON with
+        this structure:\n{\n  \"contacts\": [\n    {\n      \"email\": \"john.doe@acme.com\",\n      \"name\":
+        \"John Doe\",\n      \"job_role\": \"Senior Developer\",\n      \"department\":
+        \"Engineering\",\n      \"phone_numbers\": [\"+1-555-123-4567\"],\n      \"company_name\":
         \"Acme\"\n    }\n  ],\n  \"companies\": [\n    {\n      \"legal_name\": \"Acme
         Corporation Inc.\",\n      \"commercial_name\": \"Acme\",\n      \"website\":
         \"https://acme.com\",\n      \"location\": \"123 Main Street, New York, NY
@@ -207,14 +213,14 @@ http_interactions:
       X-Stainless-Timeout:
       - '600.0'
       Content-Length:
-      - '72414'
+      - '72925'
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Tue, 02 Dec 2025 19:10:48 GMT
+      - Tue, 02 Dec 2025 19:20:02 GMT
       Content-Type:
       - application/json
       Transfer-Encoding:
@@ -226,35 +232,35 @@ http_interactions:
       Anthropic-Ratelimit-Input-Tokens-Remaining:
       - '98000'
       Anthropic-Ratelimit-Input-Tokens-Reset:
-      - '2025-12-02T19:10:41Z'
+      - '2025-12-02T19:19:56Z'
       Anthropic-Ratelimit-Output-Tokens-Limit:
       - '20000'
       Anthropic-Ratelimit-Output-Tokens-Remaining:
       - '19000'
       Anthropic-Ratelimit-Output-Tokens-Reset:
-      - '2025-12-02T19:10:50Z'
+      - '2025-12-02T19:20:03Z'
       Anthropic-Ratelimit-Requests-Limit:
       - '1000'
       Anthropic-Ratelimit-Requests-Remaining:
       - '999'
       Anthropic-Ratelimit-Requests-Reset:
-      - '2025-12-02T19:10:38Z'
+      - '2025-12-02T19:19:54Z'
       Retry-After:
-      - '21'
+      - '5'
       Anthropic-Ratelimit-Tokens-Limit:
       - '120000'
       Anthropic-Ratelimit-Tokens-Remaining:
       - '117000'
       Anthropic-Ratelimit-Tokens-Reset:
-      - '2025-12-02T19:10:41Z'
+      - '2025-12-02T19:19:56Z'
       Request-Id:
-      - req_011CViPXoxyaDG4wVcxQXDRW
+      - req_011CViQEk5DS9b5z2TkT3xsE
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains; preload
       Anthropic-Organization-Id:
       - 36f27efe-3e16-4c65-95cd-f21d3225017e
       X-Envoy-Upstream-Service-Time:
-      - '9802'
+      - '8125'
       Cf-Cache-Status:
       - DYNAMIC
       X-Robots-Tag:
@@ -262,10 +268,10 @@ http_interactions:
       Server:
       - cloudflare
       Cf-Ray:
-      - 9a7d20230e8255d9-MAD
+      - 9a7d2db169539bdb-MAD
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        eyJtb2RlbCI6ImNsYXVkZS0zLTUtaGFpa3UtMjAyNDEwMjIiLCJpZCI6Im1zZ18wMTlyOVBQYU01R2FGRHozdXlEcUhUdHgiLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJ7XG4gICAgXCJjb250YWN0c1wiOiBbXG4gICAgICAgIHtcbiAgICAgICAgICAgIFwiZW1haWxcIjogXCJBUHVjaGFsQGl0cHNhLmNvbVwiLFxuICAgICAgICAgICAgXCJuYW1lXCI6IFwiQW5uYSBQdWNoYWxcIixcbiAgICAgICAgICAgIFwiam9iX3JvbGVcIjogXCJGb29kIERpdmlzaW9uIE1hbmFnZXJcIixcbiAgICAgICAgICAgIFwicGhvbmVfbnVtYmVyc1wiOiBbXCIrMzQgOTMgNDUyIDAzIDMwXCJdLFxuICAgICAgICAgICAgXCJjb21wYW55X25hbWVcIjogXCJJVFBTQVwiXG4gICAgICAgIH0sXG4gICAgICAgIHtcbiAgICAgICAgICAgIFwiZW1haWxcIjogXCJBQWxjYXJhekBpdHBzYS5jb21cIiwgXG4gICAgICAgICAgICBcIm5hbWVcIjogXCJBbmEgQWxjYXJheiBHYXJjw61hXCIsXG4gICAgICAgICAgICBcImpvYl9yb2xlXCI6IFwiUitEK3MgTGFib3JhdG9yeSBUZWNobmljaWFuXCIsXG4gICAgICAgICAgICBcInBob25lX251bWJlcnNcIjogW1wiKzM0IDk3NyA2MDAgMDI3XCIsIFwiNjA4IDQ3MiA1MThcIl0sXG4gICAgICAgICAgICBcImNvbXBhbnlfbmFtZVwiOiBcIklUUFNBXCJcbiAgICAgICAgfSxcbiAgICAgICAge1xuICAgICAgICAgICAgXCJlbWFpbFwiOiBcImlyZW5lQHJveWFscHJvdGVpbi5jb21cIixcbiAgICAgICAgICAgIFwibmFtZVwiOiBcIklyZW5lIFRhYmVybmVyIGkgRmVsaXBcIixcbiAgICAgICAgICAgIFwiam9iX3JvbGVcIjogXCJSICYgRCBEZXBhcnRtZW50XCIsXG4gICAgICAgICAgICBcInBob25lX251bWJlcnNcIjogW1wiKzM0IDk3MiA1NyAxNCAwNFwiLCBcIiszNCA5NzIgNzggOTUgNjhcIl0sXG4gICAgICAgICAgICBcImNvbXBhbnlfbmFtZVwiOiBcIlJveWFsIERpc3RyaWJ1dGlvblwiXG4gICAgICAgIH0sXG4gICAgICAgIHtcbiAgICAgICAgICAgIFwiZW1haWxcIjogXCJKRXN0ZXZlekBpdHBzYS5jb21cIixcbiAgICAgICAgICAgIFwibmFtZVwiOiBcIkphdmllciBFc3RldmV6IE1lZGluYVwiLFxuICAgICAgICAgICAgXCJqb2Jfcm9sZVwiOiBudWxsLFxuICAgICAgICAgICAgXCJwaG9uZV9udW1iZXJzXCI6IFtdLFxuICAgICAgICAgICAgXCJjb21wYW55X25hbWVcIjogXCJJVFBTQVwiXG4gICAgICAgIH0sXG4gICAgICAgIHtcbiAgICAgICAgICAgIFwiZW1haWxcIjogXCJtbW9yZW5vQGl0cHNhLmNvbVwiLFxuICAgICAgICAgICAgXCJuYW1lXCI6IFwiTWFyaWEgTW9yZW5vXCIsXG4gICAgICAgICAgICBcImpvYl9yb2xlXCI6IG51bGwsXG4gICAgICAgICAgICBcInBob25lX251bWJlcnNcIjogW10sXG4gICAgICAgICAgICBcImNvbXBhbnlfbmFtZVwiOiBcIklUUFNBXCJcbiAgICAgICAgfSxcbiAgICAgICAge1xuICAgICAgICAgICAgXCJlbWFpbFwiOiBcImdsb3JpYUByb3lhbHByb3RlaW4uY29tXCIsXG4gICAgICAgICAgICBcIm5hbWVcIjogXCJHbG9yaWFcIixcbiAgICAgICAgICAgIFwiam9iX3JvbGVcIjogbnVsbCxcbiAgICAgICAgICAgIFwicGhvbmVfbnVtYmVyc1wiOiBbXSxcbiAgICAgICAgICAgIFwiY29tcGFueV9uYW1lXCI6IFwiUm95YWwgRGlzdHJpYnV0aW9uXCJcbiAgICAgICAgfVxuICAgIF0sXG4gICAgXCJjb21wYW5pZXNcIjogW1xuICAgICAgICB7XG4gICAgICAgICAgICBcImxlZ2FsX25hbWVcIjogXCJJTkRVU1RSSUFMIFRFQ05JQ0EgUEVDVUFSSUEsIFMuQS5cIixcbiAgICAgICAgICAgIFwiY29tbWVyY2lhbF9uYW1lXCI6IFwiSVRQU0FcIixcbiAgICAgICAgICAgIFwid2Vic2l0ZVwiOiBcImh0dHBzOi8vaXRwc2EuY29tL1wiLFxuICAgICAgICAgICAgXCJsb2NhdGlvblwiOiBcIkF2ZGEuIFJvbWEgMTU3IOKAkyA3wqogUGxhbnRhIDA4MDExLCBCYXJjZWxvbmEgKFNwYWluKVwiLFxuICAgICAgICAgICAgXCJsb2dvX2NvbnRlbnRfaWRcIjogXCJpbWFnZTAwMi5wbmdcIlxuICAgICAgICB9LFxuICAgICAgICB7XG4gICAgICAgICAgICBcImxlZ2FsX25hbWVcIjogXCJSUCBST1lBTCBESVNUUklCVVRJT04sIFMuTFwiLFxuICAgICAgICAgICAgXCJjb21tZXJjaWFsX25hbWVcIjogXCJSb3lhbCBEaXN0cmlidXRpb25cIixcbiAgICAgICAgICAgIFwid2Vic2l0ZVwiOiBcImh0dHBzOi8vcm95YWxwcm90ZWluLmNvbS9cIixcbiAgICAgICAgICAgIFwibG9jYXRpb25cIjogXCJDLyBTYW50IEFuZHJldSwgODUgwrcgMTc4MzQgUG9ycXVlcmVzIChHSVJPTkEpIC0gU1BBSU5cIixcbiAgICAgICAgICAgIFwibG9nb19jb250ZW50X2lkXCI6IFwiaW1hZ2UwMDguanBnXCJcbiAgICAgICAgfVxuICAgIF1cbn0ifV0sInN0b3BfcmVhc29uIjoiZW5kX3R1cm4iLCJzdG9wX3NlcXVlbmNlIjpudWxsLCJ1c2FnZSI6eyJpbnB1dF90b2tlbnMiOjQzNDQsImNhY2hlX2NyZWF0aW9uX2lucHV0X3Rva2VucyI6MCwiY2FjaGVfcmVhZF9pbnB1dF90b2tlbnMiOjAsImNhY2hlX2NyZWF0aW9uIjp7ImVwaGVtZXJhbF81bV9pbnB1dF90b2tlbnMiOjAsImVwaGVtZXJhbF8xaF9pbnB1dF90b2tlbnMiOjB9LCJvdXRwdXRfdG9rZW5zIjo2NzksInNlcnZpY2VfdGllciI6InN0YW5kYXJkIn19
-  recorded_at: Tue, 02 Dec 2025 19:10:48 GMT
+        eyJtb2RlbCI6ImNsYXVkZS0zLTUtaGFpa3UtMjAyNDEwMjIiLCJpZCI6Im1zZ18wMU5Zc205UDdkNnN4NU5tTjYxYlZ3ZHAiLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJ7XG4gICAgXCJjb250YWN0c1wiOiBbXG4gICAgICAgIHtcbiAgICAgICAgICAgIFwiZW1haWxcIjogXCJBUHVjaGFsQGl0cHNhLmNvbVwiLFxuICAgICAgICAgICAgXCJuYW1lXCI6IFwiQW5uYSBQdWNoYWxcIixcbiAgICAgICAgICAgIFwiam9iX3JvbGVcIjogXCJGb29kIERpdmlzaW9uIE1hbmFnZXJcIixcbiAgICAgICAgICAgIFwiZGVwYXJ0bWVudFwiOiBcIkZvb2QgRGl2aXNpb25cIixcbiAgICAgICAgICAgIFwicGhvbmVfbnVtYmVyc1wiOiBbXCIrMzQgOTMgNDUyIDAzIDMwXCJdLFxuICAgICAgICAgICAgXCJjb21wYW55X25hbWVcIjogXCJJVFBTQVwiXG4gICAgICAgIH0sXG4gICAgICAgIHtcbiAgICAgICAgICAgIFwiZW1haWxcIjogXCJBQWxjYXJhekBpdHBzYS5jb21cIiwgXG4gICAgICAgICAgICBcIm5hbWVcIjogXCJBbmEgQWxjYXJheiBHYXJjw61hXCIsXG4gICAgICAgICAgICBcImpvYl9yb2xlXCI6IFwiTGFib3JhdG9yeSBUZWNobmljaWFuXCIsXG4gICAgICAgICAgICBcImRlcGFydG1lbnRcIjogXCJSK0Qrc1wiLFxuICAgICAgICAgICAgXCJwaG9uZV9udW1iZXJzXCI6IFtcIiszNCA5NzcgNjAwIDAyN1wiLCBcIjYwOCA0NzIgNTE4XCJdLFxuICAgICAgICAgICAgXCJjb21wYW55X25hbWVcIjogXCJJVFBTQVwiXG4gICAgICAgIH0sXG4gICAgICAgIHtcbiAgICAgICAgICAgIFwiZW1haWxcIjogXCJpcmVuZUByb3lhbHByb3RlaW4uY29tXCIsXG4gICAgICAgICAgICBcIm5hbWVcIjogXCJJcmVuZSBUYWJlcm5lciBpIEZlbGlwXCIsXG4gICAgICAgICAgICBcImpvYl9yb2xlXCI6IG51bGwsXG4gICAgICAgICAgICBcImRlcGFydG1lbnRcIjogXCJSICYgRCBEZXBhcnRtZW50XCIsXG4gICAgICAgICAgICBcInBob25lX251bWJlcnNcIjogW1wiKzM0IDk3MiA1NyAxNCAwNFwiLCBcIiszNCA5NzIgNzggOTUgNjhcIl0sXG4gICAgICAgICAgICBcImNvbXBhbnlfbmFtZVwiOiBcIlJveWFsIERpc3RyaWJ1dGlvblwiXG4gICAgICAgIH1cbiAgICBdLFxuICAgIFwiY29tcGFuaWVzXCI6IFtcbiAgICAgICAge1xuICAgICAgICAgICAgXCJsZWdhbF9uYW1lXCI6IFwiSW5kdXN0cmlhbCBUw6ljbmljYSBQZWN1YXJpYSwgUy5BLlwiLFxuICAgICAgICAgICAgXCJjb21tZXJjaWFsX25hbWVcIjogXCJJVFBTQVwiLFxuICAgICAgICAgICAgXCJ3ZWJzaXRlXCI6IFwiaHR0cHM6Ly9pdHBzYS5jb20vXCIsXG4gICAgICAgICAgICBcImxvY2F0aW9uXCI6IFwiQXZkYS4gUm9tYSAxNTcg4oCTIDfCqiBQbGFudGEgMDgwMTEsIEJhcmNlbG9uYSAoU3BhaW4pXCIsXG4gICAgICAgICAgICBcImxvZ29fY29udGVudF9pZFwiOiBcImltYWdlMDAyLnBuZ1wiXG4gICAgICAgIH0sXG4gICAgICAgIHtcbiAgICAgICAgICAgIFwibGVnYWxfbmFtZVwiOiBcIlJQIFJveWFsIERpc3RyaWJ1dGlvbiwgUy5MLlwiLFxuICAgICAgICAgICAgXCJjb21tZXJjaWFsX25hbWVcIjogXCJSb3lhbCBQcm90ZWluXCIsXG4gICAgICAgICAgICBcIndlYnNpdGVcIjogXCJodHRwczovL3JveWFscHJvdGVpbi5jb20vXCIsXG4gICAgICAgICAgICBcImxvY2F0aW9uXCI6IFwiQy8gU2FudCBBbmRyZXUsIDg1IMK3IDE3ODM0IFBvcnF1ZXJlcyAoR0lST05BKSAtIFNQQUlOXCIsXG4gICAgICAgICAgICBcImxvZ29fY29udGVudF9pZFwiOiBcImltYWdlMDA4LmpwZ1wiXG4gICAgICAgIH1cbiAgICBdXG59In1dLCJzdG9wX3JlYXNvbiI6ImVuZF90dXJuIiwic3RvcF9zZXF1ZW5jZSI6bnVsbCwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjo0NDcxLCJjYWNoZV9jcmVhdGlvbl9pbnB1dF90b2tlbnMiOjAsImNhY2hlX3JlYWRfaW5wdXRfdG9rZW5zIjowLCJjYWNoZV9jcmVhdGlvbiI6eyJlcGhlbWVyYWxfNW1faW5wdXRfdG9rZW5zIjowLCJlcGhlbWVyYWxfMWhfaW5wdXRfdG9rZW5zIjowfSwib3V0cHV0X3Rva2VucyI6NTEwLCJzZXJ2aWNlX3RpZXIiOiJzdGFuZGFyZCJ9fQ==
+  recorded_at: Tue, 02 Dec 2025 19:20:02 GMT
 recorded_with: VCR 6.3.1
