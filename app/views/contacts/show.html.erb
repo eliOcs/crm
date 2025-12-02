@@ -11,6 +11,11 @@
     <dd><%= @contact.job_role %></dd>
   <% end %>
 
+  <% if @contact.department.present? %>
+    <dt><strong>Department</strong></dt>
+    <dd><%= @contact.department %></dd>
+  <% end %>
+
   <% if @contact.phone_numbers.present? && @contact.phone_numbers.any? %>
     <dt><strong>Phone Numbers</strong></dt>
     <dd><%= @contact.phone_numbers.join(", ") %></dd>

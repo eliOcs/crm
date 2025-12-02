@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_02_220503) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_02_221207) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -57,9 +57,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_220503) do
   create_table "companies", force: :cascade do |t|
     t.string "commercial_name"
     t.datetime "created_at", null: false
-    t.text "description"
     t.string "domain"
-    t.string "industry"
     t.string "legal_name"
     t.string "location"
     t.datetime "updated_at", null: false
@@ -73,7 +71,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_220503) do
   create_table "companies_contacts", id: false, force: :cascade do |t|
     t.integer "company_id", null: false
     t.integer "contact_id", null: false
-    t.string "department"
     t.index ["company_id", "contact_id"], name: "index_companies_contacts_on_company_id_and_contact_id", unique: true
     t.index ["company_id"], name: "index_companies_contacts_on_company_id"
     t.index ["contact_id", "company_id"], name: "index_companies_contacts_on_contact_id_and_company_id"
@@ -82,6 +79,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_220503) do
 
   create_table "contacts", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "department"
     t.string "email", null: false
     t.string "job_role"
     t.string "name"

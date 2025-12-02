@@ -165,6 +165,7 @@ contacts
 ├── email (unique per user, normalized lowercase)
 ├── name
 ├── job_role
+├── department
 ├── phone_numbers (JSON array)
 └── timestamps
 

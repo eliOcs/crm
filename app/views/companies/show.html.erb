@@ -11,11 +11,6 @@
     <dd><%= @company.legal_name %></dd>
   <% end %>
 
-  <% if @company.industry.present? %>
-    <dt><strong>Industry</strong></dt>
-    <dd><%= @company.industry %></dd>
-  <% end %>
-
   <% if @company.location.present? %>
     <dt><strong>Location</strong></dt>
     <dd><%= @company.location %></dd>
@@ -24,11 +19,6 @@
   <% if @company.website.present? %>
     <dt><strong>Website</strong></dt>
     <dd><%= link_to @company.website, @company.website, target: "_blank" %></dd>
-  <% end %>
-
-  <% if @company.description.present? %>
-    <dt><strong>Description</strong></dt>
-    <dd><%= @company.description %></dd>
   <% end %>
 
 </dl>

@@ -112,6 +112,10 @@ class ContactEnrichmentService
       updates[:job_role] = contact_data[:job_role]
     end
 
+    if contact_data[:department].present? && contact.department.blank?
+      updates[:department] = contact_data[:department]
+    end
+
     if contact_data[:phone_numbers].present?
       existing_phones = contact.phone_numbers || []
       new_phones = (existing_phones + contact_data[:phone_numbers]).uniq

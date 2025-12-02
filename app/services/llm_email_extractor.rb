@@ -64,7 +64,6 @@ class LlmEmailExtractor
       - job_role: Job title - NOT the department (see examples below)
       - department: Department or division name
       - phone_numbers: Array of phone numbers with country codes
-      - company_name: Company name from signature (used to infer company domain)
 
       Distinguishing job_role vs department:
       - "[Department] Manager" -> extract the department name, job_role is "Manager"
@@ -76,7 +75,7 @@ class LlmEmailExtractor
       <output_format>
       Return ONLY a JSON array of contacts:
       [
-        {"email": "john@example.com", "name": "John Doe", "job_role": "Manager", "department": "Sales", "phone_numbers": ["+1-555-1234"], "company_name": "Example Corp"}
+        {"email": "john@example.com", "name": "John Doe", "job_role": "Manager", "department": "Sales", "phone_numbers": ["+1-555-1234"]}
       ]
 
       If no contacts found, return: []
@@ -102,8 +101,7 @@ class LlmEmailExtractor
         name: contact["name"]&.strip.presence,
         job_role: contact["job_role"]&.strip.presence,
         department: contact["department"]&.strip.presence,
-        phone_numbers: Array(contact["phone_numbers"]).map(&:strip).reject(&:blank?),
-        company_name: contact["company_name"]&.strip.presence
+        phone_numbers: Array(contact["phone_numbers"]).map(&:strip).reject(&:blank?)
       }
     end.select { |c| c[:email].present? }
   rescue JSON::ParserError => e
