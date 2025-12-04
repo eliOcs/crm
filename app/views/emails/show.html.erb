@@ -56,6 +56,8 @@
 <% if @email[:html_body].present? %>
   <%
     html_with_images = @email[:html_body].dup
+    # Strip <style> tags and their content
+    html_with_images.gsub!(/<style[^>]*>.*?<\/style>/mi, "")
     @email[:attachments].each do |att|
       next unless att[:content_id]
       cid = att[:content_id]
