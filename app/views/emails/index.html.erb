@@ -8,6 +8,7 @@
       <th>From</th>
       <th>Subject</th>
       <th>Date</th>
+      <th>Attachments</th>
     </tr>
   </thead>
   <tbody>
@@ -20,6 +21,7 @@
         </td>
         <td><%= email[:subject].presence || "(No subject)" %></td>
         <td><%= email[:date]&.strftime("%Y-%m-%d %H:%M") %></td>
+        <td><%= email[:attachments].any? { |a| !a[:inline] } %></td>
       </tr>
     <% end %>
   </tbody>

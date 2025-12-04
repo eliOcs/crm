@@ -29,6 +29,13 @@ class EmlReader
     find_attachment_by_cid(mail, content_id)
   end
 
+  def attachment_by_index(index)
+    return nil unless File.exist?(@eml_path)
+
+    mail = Mail.read(@eml_path)
+    find_attachment_at_index(mail, index, counter: [ 0 ])
+  end
+
   def self.all_paths
     Dir.glob(EMAILS_DIR.join("**/*.eml")).sort
   end
@@ -112,9 +119,19 @@ class EmlReader
       elsif part.content_id.present?
         cid = part.content_id.gsub(/[<>]/, "")
         attachments << {
+          index: attachments.size,
           content_id: cid,
           filename: part.filename,
-          content_type: part.content_type&.split(";")&.first
+          content_type: part.content_type&.split(";")&.first,
+          inline: true
+        }
+      elsif part.attachment? || part.content_disposition&.start_with?("attachment")
+        attachments << {
+          index: attachments.size,
+          filename: part.filename || "unnamed",
+          content_type: part.content_type&.split(";")&.first,
+          size: part.body.decoded.bytesize,
+          inline: false
         }
       end
     end
@@ -139,6 +156,28 @@ class EmlReader
             filename: part.filename
           }
         end
+      end
+    end
+    nil
+  rescue => e
+    nil
+  end
+
+  def find_attachment_at_index(mail, target_index, counter:)
+    mail.parts.each do |part|
+      if part.content_type&.start_with?("message/rfc822")
+        inner_mail = Mail.new(part.body.decoded)
+        result = find_attachment_at_index(inner_mail, target_index, counter: counter)
+        return result if result
+      elsif part.content_id.present? || part.attachment? || part.content_disposition&.start_with?("attachment")
+        if counter[0] == target_index
+          return {
+            data: part.body.decoded,
+            content_type: part.content_type&.split(";")&.first || "application/octet-stream",
+            filename: part.filename || "attachment"
+          }
+        end
+        counter[0] += 1
       end
     end
     nil

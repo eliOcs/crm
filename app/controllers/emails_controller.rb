@@ -50,4 +50,26 @@ class EmailsController < ApplicationController
               disposition: "inline",
               filename: attachment[:filename]
   end
+
+  def download
+    path = EmlReader.decode_path(params[:id])
+    index = params[:index].to_i
+
+    if path.nil?
+      head :not_found
+      return
+    end
+
+    attachment = EmlReader.new(path).attachment_by_index(index)
+
+    if attachment.nil?
+      head :not_found
+      return
+    end
+
+    send_data attachment[:data],
+              type: attachment[:content_type],
+              disposition: "attachment",
+              filename: attachment[:filename]
+  end
 end

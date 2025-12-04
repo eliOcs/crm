@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :companies, only: %i[ index show ]
   resources :emails, only: %i[ index show ] do
     get "attachment/:cid", action: :attachment, as: :attachment, on: :member, cid: /.+/
+    get "download/:index", action: :download, as: :download, on: :member
   end
 
   root "dashboard#show"
