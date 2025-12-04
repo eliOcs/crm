@@ -37,7 +37,9 @@ class EmlReader
   end
 
   def self.all_paths
-    Dir.glob(EMAILS_DIR.join("**/*.eml")).sort
+    Dir.glob(EMAILS_DIR.join("**/*.eml")).sort_by do |path|
+      File.basename(path, ".eml").to_i
+    end
   end
 
   def self.paginate(page:, per_page: 50)
@@ -126,10 +128,11 @@ class EmlReader
           inline: true
         }
       elsif part.attachment? || part.content_disposition&.start_with?("attachment")
+        filename = extract_filename(part) || "unnamed"
         attachments << {
           index: attachments.size,
-          filename: part.filename || "unnamed",
-          content_type: part.content_type&.split(";")&.first,
+          filename: filename,
+          content_type: detect_content_type(part, filename),
           size: part.body.decoded.bytesize,
           inline: false
         }
@@ -171,10 +174,11 @@ class EmlReader
         return result if result
       elsif part.content_id.present? || part.attachment? || part.content_disposition&.start_with?("attachment")
         if counter[0] == target_index
+          filename = extract_filename(part) || "attachment"
           return {
             data: part.body.decoded,
-            content_type: part.content_type&.split(";")&.first || "application/octet-stream",
-            filename: part.filename || "attachment"
+            content_type: detect_content_type(part, filename),
+            filename: filename
           }
         end
         counter[0] += 1
@@ -183,5 +187,35 @@ class EmlReader
     nil
   rescue => e
     nil
+  end
+
+  def extract_filename(part)
+    return part.filename if part.filename.present?
+
+    # Parse RFC 2231 encoded filename from content_disposition
+    disposition = part.content_disposition
+    return nil unless disposition
+
+    # Try filename*=utf-8''encoded_name
+    if disposition =~ /filename\*=utf-8''([^;\s]+)/i
+      return URI.decode_www_form_component($1)
+    end
+
+    # Try filename="name"
+    if disposition =~ /filename="([^"]+)"/i
+      return $1
+    end
+
+    nil
+  end
+
+  def detect_content_type(part, filename)
+    declared_type = part.content_type&.split(";")&.first
+
+    # Trust declared type if it's specific (not octet-stream)
+    return declared_type if declared_type && declared_type != "application/octet-stream"
+
+    # Infer from filename extension
+    Rack::Mime.mime_type(File.extname(filename.to_s).downcase, "application/octet-stream")
   end
 end
