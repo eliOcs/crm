@@ -1,0 +1,151 @@
+Received: from AM0P195MB0721.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:164::13)
+ by PR3P195MB0732.EURP195.PROD.OUTLOOK.COM with HTTPS; Tue, 1 Apr 2025
+ 05:36:59 +0000
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=itpsa.com;
+Received: from AM0P195MB0610.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:16e::14)
+ by AM0P195MB0721.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:164::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Tue, 1 Apr
+ 2025 05:36:58 +0000
+Received: from AM0P195MB0610.EURP195.PROD.OUTLOOK.COM
+ ([fe80::f91d:8b3b:d967:a8cd]) by AM0P195MB0610.EURP195.PROD.OUTLOOK.COM
+ ([fe80::f91d:8b3b:d967:a8cd%3]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
+ 05:36:57 +0000
+From: Ana Alcaraz <AAlcaraz@itpsa.com>
+To: Maria Moreno <mmoreno@itpsa.com>
+Subject: =?utf-8?B?QWNlcHRhZGE6IFJlY2xhbWFjacOzbiBCZWxhZ3JvbGV4?=
+Thread-Topic: =?utf-8?B?UmVjbGFtYWNpw7NuIEJlbGFncm9sZXg=?=
+Thread-Index:
+ Adue8ZU26cOnxD3jSGGUDv9AwhWcyQABmH9QADH9dCAAlF5hgAAAoxVAAAq2HsAAAPHz8AAg7cxwAAAFIrAAAG2xTQ==
+Date: Tue, 1 Apr 2025 05:36:57 +0000
+Message-ID:
+ <AM0P195MB0610886674F7EBBE3DE332ACCDAC2@AM0P195MB0610.EURP195.PROD.OUTLOOK.COM>
+Accept-Language: es-ES, en-US
+Content-Language: es-ES
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-SCL: 1
+X-MS-TNEF-Correlator:
+ <AM0P195MB0610886674F7EBBE3DE332ACCDAC2@AM0P195MB0610.EURP195.PROD.OUTLOOK.COM>
+msip_labels:
+X-MS-Exchange-Organization-MessageDirectionality: Originating
+X-MS-Exchange-Organization-AuthSource: AM0P195MB0610.EURP195.PROD.OUTLOOK.COM
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-Network-Message-Id:
+ 76958b02-788e-45af-cd7a-08dd70df381a
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic:
+ AM0P195MB0610:EE_|AM0P195MB0721:EE_|PR3P195MB0732:EE_
+Return-Path: AAlcaraz@itpsa.com
+X-MS-Exchange-Organization-ExpirationStartTime: 01 Apr 2025 05:36:58.1235
+ (UTC)
+X-MS-Exchange-Organization-ExpirationStartTimeReason: OriginalSubmit
+X-MS-Exchange-Organization-ExpirationInterval: 1:00:00:00.0000000
+X-MS-Exchange-Organization-ExpirationIntervalReason: OriginalSubmit
+X-MS-Office365-Filtering-Correlation-Id: 76958b02-788e-45af-cd7a-08dd70df381a
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|8096899003|41050700001;
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:es;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0P195MB0610.EURP195.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(8096899003)(41050700001);DIR:INT;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 05:36:57.7712
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3d32edda-431c-47d7-9947-76e9c2f4e742
+X-MS-Exchange-CrossTenant-AuthSource: AM0P195MB0610.EURP195.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76958b02-788e-45af-cd7a-08dd70df381a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rbOohubT8OaYa/DNxD7slsg4tZ2rSZhorz4FvshHUkyw/tEVv8P0VLXVehIs3N7sfIFeVWx6x4mkvCA9fXu2TA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0P195MB0721
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:01.5750326
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.8534.033
+X-Microsoft-Antispam-Mailbox-Delivery:
+	ucf:0;jmr:0;auth:0;dest:I;ENG:(910005)(944506478)(944626604)(920097)(425001)(930097)(140003);
+X-Microsoft-Antispam-Message-Info:
+	hq0ra8oBeSVK9rFuCcgL+yofbcPeEzx4yKmqcpBQz1RWx0hc0Nc4diBpMPiYBv4yhZ8dJn7LMsdrIrYxwW9shzrmFYYY2dCz9D+Sm69G2sYFawS46WbbYEz8ctRoWqcdgmle94D+SJFERD4dJbZt354vUWCHQeXh+yQRjZigEXq3oMOwkSAQy+ahALu8stavvgj0EsOY+YpfHaesQ0lopVvG5WJZ4R+q+ZhhrOTiRQyLynXplKxj8qicntS1Y8NZo3Dn7sq8jvE+8swd45SeuE57shF7xPvbioeA2Bp8TbdvkNT2LGzUnGYmLgz4T7Z1IkQKQ1SJt+teanTJwx9EFanu0B7Pb6hePOkzX+PZ+tAaeDNnfl+Llgvd/N7vyMPGiMrhqLIifHfjqxZ5cDoe+RR8E1vjK6qAPj7VZBf7zOceExLhwHpCQEPnPXEVzzmDobrpjqCEgV0Pv4E0ceWTVQhxuMk10yWFAoDhiIvkNLXAWV/IaW/i94bStoPrW81p4pbdX+0eB4dqbiP7etRW/dZoDSAx5iTP501knCMjfpY=
+Status: RO
+X-libpst-forensic-sender: /O=EXCHANGELABS/OU=EXCHANGE ADMINISTRATIVE GROUP (FYDIBOHF23SPDLT)/CN=RECIPIENTS/CN=9451256B5FD44D3CA52DD03FF9E2AEAB-ANA ALCARAZ
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="--boundary-LibPST-iamunique-162155802_-_-"
+
+
+----boundary-LibPST-iamunique-162155802_-_-
+Content-Type: text/html; charset="iso-8859-1"
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/12/omml" xmlns="http://www.w3.org/TR/REC-html40"><head><meta name="Generator" content="Microsoft Word 15 (filtered medium)"><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Aptos;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	font-size:11.0pt;
+	font-family:"Aptos",sans-serif;
+	mso-ligatures:standardcontextual;
+	mso-fareast-language:EN-US;}
+span.EstiloCorreo17
+	{mso-style-type:personal-compose;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:11.0pt;
+	mso-fareast-language:EN-US;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:70.85pt 3.0cm 70.85pt 3.0cm;}
+div.WordSection1
+	{page:WordSection1;}
+--></style></head><body lang="ES" link="#467886" vlink="#96607D" style="word-wrap:break-word"><div class="WordSection1"><p class="MsoNormal"><o:p>&nbsp;</o:p></p></div></body></html>
+----boundary-LibPST-iamunique-162155802_-_-
+Content-Type: text/calendar; method="REQUEST"; charset="utf-8"
+
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:LibPST v0.6.76
+METHOD:REQUEST
+BEGIN:VEVENT
+ORGANIZER;CN="Ana Alcaraz":MAILTO:AAlcaraz@itpsa.com
+UID:0x730
+DTSTAMP:20251129T100717Z
+CREATED:20250401T053659Z
+LAST-MOD:20250401T053700Z
+SUMMARY:Aceptada: Reclamación Belagrolex
+DTSTART;VALUE=DATE-TIME:20250401T083000Z
+DTEND;VALUE=DATE-TIME:20250401T090000Z
+LOCATION:Reunión de Microsoft Teams
+STATUS:CONFIRMED
+CATEGORIES:NONE
+END:VEVENT
+END:VCALENDAR
+
+
+----boundary-LibPST-iamunique-162155802_-_-
+Content-Type: text/calendar; charset="utf-8"; name="i1353512360.ics"
+Content-Disposition: attachment; filename="i1353512360.ics"
+
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:LibPST v0.6.76
+METHOD:REQUEST
+BEGIN:VEVENT
+ORGANIZER;CN="Ana Alcaraz":MAILTO:AAlcaraz@itpsa.com
+UID:0x730
+DTSTAMP:20251129T100717Z
+CREATED:20250401T053659Z
+LAST-MOD:20250401T053700Z
+SUMMARY:Aceptada: Reclamación Belagrolex
+DTSTART;VALUE=DATE-TIME:20250401T083000Z
+DTEND;VALUE=DATE-TIME:20250401T090000Z
+LOCATION:Reunión de Microsoft Teams
+STATUS:CONFIRMED
+CATEGORIES:NONE
+END:VEVENT
+END:VCALENDAR
+
+
+----boundary-LibPST-iamunique-162155802_-_---
+

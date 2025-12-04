@@ -45,6 +45,8 @@ class ContactEnrichmentService
 
     domain = company_data[:domain]
     company = @user.companies.find_by(domain: domain) if domain.present?
+    company ||= @user.companies.find_by(legal_name: company_data[:legal_name]) if company_data[:legal_name].present?
+    company ||= @user.companies.find_by(commercial_name: company_data[:commercial_name]) if company_data[:commercial_name].present?
 
     if company
       @logger.info "  Found existing: #{company.display_name} (id=#{company.id})"

@@ -42,4 +42,23 @@ class ContactEnrichmentServiceTest < ActiveSupport::TestCase
       assert contact.companies.include?(itpsa), "#{contact.email} should be linked to ITPSA"
     end
   end
+
+  test "name matching prevents duplicate companies without domain" do
+    fixtures_dir = Rails.root.join("test/fixtures/files/emails")
+
+    VCR.use_cassette("enrichment_name_matching") do
+      service = ContactEnrichmentService.new(@user, logger: @logger)
+
+      # Process first email - should create Belagrolex company
+      service.process_email(fixtures_dir.join("belagrolex_1.eml").to_s)
+
+      # Process second email - should find existing Belagrolex by name, not create duplicate
+      service.process_email(fixtures_dir.join("belagrolex_2.eml").to_s)
+    end
+
+    # Should have only one Belagrolex company (matched by name since no domain)
+    belagrolex_companies = @user.companies.where(legal_name: "Belagrolex")
+                                          .or(@user.companies.where(commercial_name: "Belagrolex"))
+    assert_equal 1, belagrolex_companies.count, "Should not create duplicate companies - name matching should work"
+  end
 end
