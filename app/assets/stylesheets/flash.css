@@ -1,0 +1,43 @@
+@layer components {
+  .flash {
+    padding: var(--block-space) var(--inline-space);
+    border-radius: var(--input-radius);
+    font-size: var(--text-sm);
+    margin-block-end: var(--block-space);
+  }
+
+  .flash--notice,
+  .flash--success {
+    background-color: var(--color-positive-light);
+    color: var(--color-positive);
+    border: 1px solid oklch(var(--lch-positive) / 30%);
+  }
+
+  .flash--alert,
+  .flash--error {
+    background-color: var(--color-negative-light);
+    color: var(--color-negative);
+    border: 1px solid oklch(var(--lch-negative) / 30%);
+  }
+
+  .flash--warning {
+    background-color: oklch(var(--lch-orange-light));
+    color: oklch(60% 0.12 55);
+    border: 1px solid oklch(var(--lch-orange) / 30%);
+  }
+
+  .flash--info {
+    background-color: oklch(var(--lch-beige));
+    color: var(--color-ink);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Flash container for stacking multiple flashes */
+  .flash-container {
+    margin-block-end: var(--block-space);
+
+    &:empty {
+      display: none;
+    }
+  }
+}

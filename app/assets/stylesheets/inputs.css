@@ -1,0 +1,182 @@
+@layer components {
+  /* -------------------------------------------------------------------------
+     Text inputs, textareas, selects
+     ------------------------------------------------------------------------- */
+  .input,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  input[type="date"],
+  textarea,
+  select {
+    display: block;
+    inline-size: 100%;
+    padding-block: var(--input-padding-block);
+    padding-inline: var(--input-padding-inline);
+
+    font-family: inherit;
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-ink);
+
+    background-color: oklch(var(--lch-white));
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--input-radius);
+
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
+
+    &::placeholder {
+      color: var(--color-ink-muted);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-link);
+      box-shadow: 0 0 0 3px oklch(var(--lch-link) / 15%);
+    }
+
+    &:disabled {
+      background-color: var(--color-canvas-alt);
+      color: var(--color-ink-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  /* Textarea specific */
+  textarea {
+    min-block-size: 6rem;
+    resize: vertical;
+  }
+
+  /* Select specific */
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-inline-end: 2.5rem;
+  }
+
+  /* -------------------------------------------------------------------------
+     Labels
+     ------------------------------------------------------------------------- */
+  label,
+  .label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-ink);
+    margin-block-end: var(--block-space-half);
+  }
+
+  /* -------------------------------------------------------------------------
+     Field groups
+     ------------------------------------------------------------------------- */
+  .field {
+    margin-block-end: var(--block-space);
+
+    &:last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  .field__hint {
+    font-size: var(--text-sm);
+    color: var(--color-ink-subtle);
+    margin-block-start: var(--block-space-half);
+  }
+
+  .field__error {
+    font-size: var(--text-sm);
+    color: var(--color-negative);
+    margin-block-start: var(--block-space-half);
+  }
+
+  /* Error state for inputs */
+  .input--error,
+  .field--error input,
+  .field--error textarea,
+  .field--error select {
+    border-color: var(--color-negative);
+
+    &:focus {
+      border-color: var(--color-negative);
+      box-shadow: 0 0 0 3px oklch(var(--lch-negative) / 15%);
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Checkbox and Radio
+     ------------------------------------------------------------------------- */
+  .checkbox,
+  .radio {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--inline-space-half);
+    cursor: pointer;
+
+    & input {
+      inline-size: 1.25em;
+      block-size: 1.25em;
+      margin: 0;
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Form layout
+     ------------------------------------------------------------------------- */
+  .form {
+    max-inline-size: 28rem;
+  }
+
+  .form--centered {
+    margin-inline: auto;
+  }
+
+  .form__actions {
+    display: flex;
+    gap: var(--inline-space);
+    margin-block-start: var(--block-space-double);
+  }
+
+  /* -------------------------------------------------------------------------
+     Error explanation block (Rails style)
+     ------------------------------------------------------------------------- */
+  #error_explanation {
+    background-color: var(--color-negative-light);
+    border: 1px solid oklch(var(--lch-negative) / 30%);
+    border-radius: var(--input-radius);
+    padding: var(--block-space) var(--inline-space);
+    margin-block-end: var(--block-space);
+
+    & h2 {
+      font-size: var(--text-base);
+      font-weight: 600;
+      color: var(--color-negative);
+      margin: 0 0 var(--block-space-half) 0;
+    }
+
+    & ul {
+      margin: 0;
+      padding-inline-start: var(--inline-space);
+      color: var(--color-negative);
+      font-size: var(--text-sm);
+    }
+
+    & li {
+      margin-block-end: var(--block-space-half);
+
+      &:last-child {
+        margin-block-end: 0;
+      }
+    }
+  }
+}

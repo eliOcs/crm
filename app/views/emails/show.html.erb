@@ -1,76 +1,79 @@
-<p><%= link_to "Back to emails", emails_path %></p>
+<%= link_to "Back to emails", emails_path, class: "back-link" %>
 
-<h1><%= @email[:subject].presence || "(No subject)" %></h1>
+<div class="page-header">
+  <h1 class="page-header__title"><%= @email[:subject].presence || "(No subject)" %></h1>
+</div>
 
-<dl>
-  <dt>From</dt>
-  <dd>
-    <% if @email[:from] %>
-      <%= @email[:from][:name] %> &lt;<%= @email[:from][:email] %>&gt;
-    <% else %>
-      (Unknown)
-    <% end %>
-  </dd>
-
-  <dt>To</dt>
-  <dd>
-    <% if @email[:to].present? %>
-      <% @email[:to].each do |recipient| %>
-        <%= recipient[:name] %> &lt;<%= recipient[:email] %>&gt;<br>
-      <% end %>
-    <% else %>
-      (None)
-    <% end %>
-  </dd>
-
-  <% if @email[:cc].present? %>
-    <dt>CC</dt>
-    <dd>
-      <% @email[:cc].each do |recipient| %>
-        <%= recipient[:name] %> &lt;<%= recipient[:email] %>&gt;<br>
-      <% end %>
-    </dd>
-  <% end %>
-
-  <dt>Date</dt>
-  <dd><%= @email[:date]&.strftime("%Y-%m-%d %H:%M:%S %Z") %></dd>
-
-  <% file_attachments = @email[:attachments].select { |a| !a[:inline] } %>
-  <% if file_attachments.any? %>
-    <dt>Attachments</dt>
-    <dd>
-      <ul>
-        <% file_attachments.each do |att| %>
-          <li>
-            <%= link_to att[:filename], download_email_path(@encoded_path, index: att[:index]), data: { turbo: false } %>
-            <small>(<%= att[:content_type] %>, <%= number_to_human_size(att[:size]) %>)</small>
-          </li>
+<div class="email-card">
+  <div class="email-card__meta">
+    <dl>
+      <dt>From</dt>
+      <dd>
+        <% if @email[:from] %>
+          <%= @email[:from][:name] %> &lt;<%= @email[:from][:email] %>&gt;
+        <% else %>
+          (Unknown)
         <% end %>
-      </ul>
-    </dd>
-  <% end %>
-</dl>
+      </dd>
 
-<hr>
+      <dt>To</dt>
+      <dd>
+        <% if @email[:to].present? %>
+          <% @email[:to].each do |recipient| %>
+            <%= recipient[:name] %> &lt;<%= recipient[:email] %>&gt;<br>
+          <% end %>
+        <% else %>
+          (None)
+        <% end %>
+      </dd>
 
-<% if @email[:html_body].present? %>
-  <%
-    html_with_images = @email[:html_body].dup
-    # Strip <style> tags and their content
-    html_with_images.gsub!(/<style[^>]*>.*?<\/style>/mi, "")
-    @email[:attachments].each do |att|
-      next unless att[:content_id]
-      cid = att[:content_id]
-      filename = cid.split("@").first
-      url = attachment_email_path(@encoded_path, cid: filename)
-      html_with_images.gsub!("cid:#{cid}", url)
-    end
-  %>
-  <div class="email-body">
-    <%= sanitize html_with_images, tags: %w[p br div span a b i u strong em h1 h2 h3 h4 h5 h6 ul ol li table tr td th thead tbody img hr blockquote pre code], attributes: %w[href src alt style class] %>
+      <% if @email[:cc].present? %>
+        <dt>CC</dt>
+        <dd>
+          <% @email[:cc].each do |recipient| %>
+            <%= recipient[:name] %> &lt;<%= recipient[:email] %>&gt;<br>
+          <% end %>
+        </dd>
+      <% end %>
+
+      <dt>Date</dt>
+      <dd><%= @email[:date]&.strftime("%Y-%m-%d %H:%M:%S %Z") %></dd>
+
+      <% file_attachments = @email[:attachments].select { |a| !a[:inline] } %>
+      <% if file_attachments.any? %>
+        <dt>Attachments</dt>
+        <dd>
+          <ul>
+            <% file_attachments.each do |att| %>
+              <li>
+                <%= link_to att[:filename], download_email_path(@encoded_path, index: att[:index]), data: { turbo: false } %>
+                <small class="txt-muted">(<%= att[:content_type] %>, <%= number_to_human_size(att[:size]) %>)</small>
+              </li>
+            <% end %>
+          </ul>
+        </dd>
+      <% end %>
+    </dl>
   </div>
-<% elsif @email[:body].present? %>
-  <pre><%= @email[:body] %></pre>
-<% else %>
-  <p>(No body)</p>
-<% end %>
+
+  <div class="email-card__body">
+    <% if @email[:html_body].present? %>
+      <%
+        html_with_images = @email[:html_body].dup
+        html_with_images.gsub!(/<style[^>]*>.*?<\/style>/mi, "")
+        @email[:attachments].each do |att|
+          next unless att[:content_id]
+          cid = att[:content_id]
+          filename = cid.split("@").first
+          url = attachment_email_path(@encoded_path, cid: filename)
+          html_with_images.gsub!("cid:#{cid}", url)
+        end
+      %>
+      <%= sanitize html_with_images, tags: %w[p br div span a b i u strong em h1 h2 h3 h4 h5 h6 ul ol li table tr td th thead tbody img hr blockquote pre code], attributes: %w[href src alt style class] %>
+    <% elsif @email[:body].present? %>
+      <pre><%= @email[:body] %></pre>
+    <% else %>
+      <p class="txt-subtle">(No body)</p>
+    <% end %>
+  </div>
+</div>

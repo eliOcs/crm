@@ -1,78 +1,88 @@
-<h1><%= @contact.name.presence || @contact.email %></h1>
+<%= link_to "Back to contacts", contacts_path, class: "back-link" %>
 
-<dl>
-  <% if @contact.name.present? %>
-    <dt><strong>Email</strong></dt>
-    <dd><%= @contact.email %></dd>
-  <% end %>
+<div class="page-header">
+  <h1 class="page-header__title"><%= @contact.name.presence || @contact.email %></h1>
+</div>
 
-  <% if @contact.job_role.present? %>
-    <dt><strong>Job Role</strong></dt>
-    <dd><%= @contact.job_role %></dd>
-  <% end %>
+<div class="info-card margin-block-end-double">
+  <dl>
+    <% if @contact.name.present? %>
+      <dt>Email</dt>
+      <dd><%= @contact.email %></dd>
+    <% end %>
 
-  <% if @contact.department.present? %>
-    <dt><strong>Department</strong></dt>
-    <dd><%= @contact.department %></dd>
-  <% end %>
+    <% if @contact.job_role.present? %>
+      <dt>Job Role</dt>
+      <dd><%= @contact.job_role %></dd>
+    <% end %>
 
-  <% if @contact.phone_numbers.present? && @contact.phone_numbers.any? %>
-    <dt><strong>Phone Numbers</strong></dt>
-    <dd><%= @contact.phone_numbers.join(", ") %></dd>
-  <% end %>
+    <% if @contact.department.present? %>
+      <dt>Department</dt>
+      <dd><%= @contact.department %></dd>
+    <% end %>
 
-  <% if @contact.companies.any? %>
-    <dt><strong>Companies</strong></dt>
-    <dd>
-      <ul>
-        <% @contact.companies.each do |company| %>
-          <li><%= link_to company.display_name, company %></li>
-        <% end %>
-      </ul>
-    </dd>
-  <% end %>
-</dl>
+    <% if @contact.phone_numbers.present? && @contact.phone_numbers.any? %>
+      <dt>Phone Numbers</dt>
+      <dd><%= @contact.phone_numbers.join(", ") %></dd>
+    <% end %>
 
-<h2>Audit Log</h2>
+    <% if @contact.companies.any? %>
+      <dt>Companies</dt>
+      <dd>
+        <ul>
+          <% @contact.companies.each do |company| %>
+            <li><%= link_to company.display_name, company %></li>
+          <% end %>
+        </ul>
+      </dd>
+    <% end %>
+  </dl>
+</div>
 
-<% if @contact.audit_logs.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Action</th>
-        <th>Message</th>
-        <th>Source</th>
-        <th>Changes</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @contact.audit_logs.order(created_at: :desc).each do |log| %>
-        <tr>
-          <td><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
-          <td><%= log.action %></td>
-          <td><%= log.message %></td>
-          <td>
-            <% if log.metadata["source_email"].present? %>
-              <% full_path = Rails.root.join("db/seeds/emails", log.metadata["source_email"]).to_s %>
-              <%= link_to log.metadata["source_email"], email_path(EmlReader.encode_path(full_path)) %>
-            <% end %>
-          </td>
-          <td>
-            <% if log.field_changes.any? %>
-              <ul>
-                <% log.field_changes.each do |field, change| %>
-                  <li><strong><%= field %></strong>: <%= change["from"].presence || "(empty)" %> &rarr; <%= change["to"] %></li>
+<section class="section">
+  <div class="section__header">
+    <h2 class="section__title">Audit Log</h2>
+  </div>
+
+  <% if @contact.audit_logs.any? %>
+    <div class="table-responsive">
+      <table class="table table--compact">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Message</th>
+            <th>Source</th>
+            <th>Changes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @contact.audit_logs.order(created_at: :desc).each do |log| %>
+            <tr>
+              <td class="txt-nowrap"><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+              <td><%= log.action %></td>
+              <td><%= log.message %></td>
+              <td>
+                <% if log.metadata["source_email"].present? %>
+                  <% full_path = Rails.root.join("db/seeds/emails", log.metadata["source_email"]).to_s %>
+                  <%= link_to log.metadata["source_email"], email_path(EmlReader.encode_path(full_path)), class: "txt-sm" %>
                 <% end %>
-              </ul>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>No audit history yet.</p>
-<% end %>
-
-<p><%= link_to "Back to contacts", contacts_path %></p>
+              </td>
+              <td>
+                <% if log.field_changes.any? %>
+                  <ul class="txt-sm">
+                    <% log.field_changes.each do |field, change| %>
+                      <li><strong><%= field %></strong>: <%= change["from"].presence || "(empty)" %> &rarr; <%= change["to"] %></li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="txt-subtle">No audit history yet.</p>
+  <% end %>
+</section>

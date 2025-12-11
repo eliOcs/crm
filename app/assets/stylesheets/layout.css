@@ -1,0 +1,179 @@
+@layer components {
+  /* -------------------------------------------------------------------------
+     Container
+     ------------------------------------------------------------------------- */
+  .container {
+    inline-size: 100%;
+    max-inline-size: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  .container--narrow {
+    max-inline-size: 42rem;
+  }
+
+  .container--wide {
+    max-inline-size: 90rem;
+  }
+
+  /* -------------------------------------------------------------------------
+     Main content area
+     ------------------------------------------------------------------------- */
+  .main {
+    padding-block: var(--block-space-double);
+    min-block-size: calc(100dvh - 4rem); /* Account for navbar */
+  }
+
+  /* -------------------------------------------------------------------------
+     Page header
+     ------------------------------------------------------------------------- */
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: var(--inline-space);
+    margin-block-end: var(--block-space-double);
+  }
+
+  .page-header__title {
+    margin: 0;
+    flex: 1;
+  }
+
+  .page-header__subtitle {
+    font-size: var(--text-lg);
+    color: var(--color-ink-subtle);
+    font-weight: 400;
+    margin-inline-start: var(--inline-space);
+  }
+
+  .page-header__actions {
+    display: flex;
+    gap: var(--inline-space-half);
+  }
+
+  /* Title with logo/icon */
+  .page-header--with-logo {
+    & .page-header__logo {
+      max-block-size: 3rem;
+      max-inline-size: 6rem;
+      object-fit: contain;
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Section
+     ------------------------------------------------------------------------- */
+  .section {
+    margin-block-end: var(--block-space-double);
+
+    &:last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  .section__header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--inline-space);
+    margin-block-end: var(--block-space);
+    border-block-end: 1px solid var(--color-border);
+    padding-block-end: var(--block-space-half);
+  }
+
+  .section__title {
+    margin: 0;
+    font-size: var(--text-xl);
+  }
+
+  .section__count {
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+    font-weight: 400;
+  }
+
+  /* -------------------------------------------------------------------------
+     Auth layout (centered form)
+     ------------------------------------------------------------------------- */
+  .auth-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 100dvh;
+    padding: var(--block-space-double) var(--container-padding);
+  }
+
+  .auth-layout__card {
+    inline-size: 100%;
+    max-inline-size: 24rem;
+    background-color: oklch(var(--lch-white));
+    border: 1px solid var(--color-border);
+    border-radius: var(--card-radius);
+    padding: var(--block-space-double) var(--inline-space-double);
+  }
+
+  .auth-layout__logo {
+    display: block;
+    block-size: 3rem;
+    margin-inline: auto;
+    margin-block-end: var(--block-space-double);
+  }
+
+  .auth-layout__title {
+    text-align: center;
+    margin-block-end: var(--block-space-double);
+  }
+
+  .auth-layout__footer {
+    text-align: center;
+    margin-block-start: var(--block-space);
+    font-size: var(--text-sm);
+    color: var(--color-ink-subtle);
+
+    & a {
+      color: var(--color-link);
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Back link
+     ------------------------------------------------------------------------- */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--inline-space-half);
+    font-size: var(--text-sm);
+    color: var(--color-ink-subtle);
+    text-decoration: none;
+    margin-block-end: var(--block-space);
+
+    &::before {
+      content: "\2190"; /* Left arrow */
+    }
+
+    &:hover {
+      color: var(--color-link);
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Empty state
+     ------------------------------------------------------------------------- */
+  .empty-state {
+    text-align: center;
+    padding: var(--block-space-triple) var(--inline-space);
+    color: var(--color-ink-subtle);
+  }
+
+  .empty-state__icon {
+    font-size: var(--text-3xl);
+    margin-block-end: var(--block-space);
+    opacity: 0.5;
+  }
+
+  .empty-state__message {
+    font-size: var(--text-lg);
+    margin-block-end: var(--block-space);
+  }
+}

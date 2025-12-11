@@ -137,9 +137,42 @@ Configuration: `test/support/vcr.rb`
 
 ## Important Files
 
+- `doc/ui.md` - Design style guide (Swiss Style, blue-grey palette, pill buttons)
+- `doc/css-best-practices.md` - CSS architecture patterns
 - `doc/best-practices.md` - Rails 7+ conventions and patterns (READ THIS)
 - `.gitignore` - Ignores `db/seeds/emails/` and `*.pst` files
 - `config/routes.rb` - All routes defined here
+
+## CSS Architecture
+
+Pure modern CSS (no preprocessors). Uses `@layer` for cascade control and OKLCH colors.
+
+### File Structure
+```
+app/assets/stylesheets/
+├── _global.css      # Layer declarations + design tokens (colors, spacing, typography)
+├── reset.css        # Browser normalization
+├── base.css         # Element defaults (body, headings, links)
+├── utilities.css    # Helper classes (txt-*, pad-*, flex-*)
+├── buttons.css      # .btn component (pill-shaped)
+├── inputs.css       # Form inputs and field groups
+├── tables.css       # Data tables
+├── navbar.css       # Navigation bar
+├── layout.css       # Container, page headers, auth layout
+├── cards.css        # Info cards, email cards
+├── pagination.css   # Pagination links
+└── flash.css        # Alert/notice messages
+```
+
+### Key Patterns
+- **BEM naming**: `.component`, `.component__element`, `.component--modifier`
+- **Utility prefixes**: `txt-*`, `pad-*`, `flex-*`, `fill-*`
+- **OKLCH colors**: `--lch-primary`, `--color-primary` for perceptually uniform palette
+- **Logical properties**: `inline-size`, `block-size`, `margin-inline-start` (RTL-ready)
+- **CSS variables**: Override component internals via `--btn-bg`, `--btn-color`, etc.
+
+### Design Tokens
+Primary color is blue-grey derived from logo (`oklch(50% 0.06 230)`). See `_global.css` for full palette.
 
 ## Database Schema
 

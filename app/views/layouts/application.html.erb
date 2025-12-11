@@ -26,7 +26,21 @@
   <body>
     <% if authenticated? %>
       <%= render "shared/navbar" %>
+      <main class="main">
+        <div class="container">
+          <div class="flash-container">
+            <% if flash[:notice] %>
+              <div class="flash flash--notice"><%= flash[:notice] %></div>
+            <% end %>
+            <% if flash[:alert] %>
+              <div class="flash flash--alert"><%= flash[:alert] %></div>
+            <% end %>
+          </div>
+          <%= yield %>
+        </div>
+      </main>
+    <% else %>
+      <%= yield %>
     <% end %>
-    <%= yield %>
   </body>
 </html>

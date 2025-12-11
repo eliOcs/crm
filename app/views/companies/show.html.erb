@@ -1,93 +1,107 @@
-<h1>
+<%= link_to "Back to companies", companies_path, class: "back-link" %>
+
+<div class="page-header page-header--with-logo">
   <% if @company.logo.attached? %>
-    <%= image_tag @company.logo, style: "max-height: 48px; max-width: 96px; vertical-align: middle;" %>
+    <%= image_tag @company.logo, class: "page-header__logo" %>
   <% end %>
-  <%= @company.display_name %>
-</h1>
+  <h1 class="page-header__title"><%= @company.display_name %></h1>
+</div>
 
-<dl>
-  <% if @company.commercial_name.present? && @company.legal_name != @company.commercial_name %>
-    <dt><strong>Legal Name</strong></dt>
-    <dd><%= @company.legal_name %></dd>
+<div class="info-card margin-block-end-double">
+  <dl>
+    <% if @company.commercial_name.present? && @company.legal_name != @company.commercial_name %>
+      <dt>Legal Name</dt>
+      <dd><%= @company.legal_name %></dd>
+    <% end %>
+
+    <% if @company.location.present? %>
+      <dt>Location</dt>
+      <dd><%= @company.location %></dd>
+    <% end %>
+
+    <% if @company.website.present? %>
+      <dt>Website</dt>
+      <dd><%= link_to @company.website, @company.website, target: "_blank" %></dd>
+    <% end %>
+  </dl>
+</div>
+
+<section class="section">
+  <div class="section__header">
+    <h2 class="section__title">Contacts</h2>
+    <span class="section__count"><%= @contacts.count %></span>
+  </div>
+
+  <% if @contacts.any? %>
+    <div class="table-responsive">
+      <table class="table table--hover">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Job Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @contacts.each do |contact| %>
+            <tr>
+              <td><%= link_to contact.name.presence || "(No name)", contact %></td>
+              <td class="txt-sm"><%= contact.email %></td>
+              <td class="txt-sm txt-subtle"><%= contact.job_role %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="txt-subtle">No contacts linked to this company yet.</p>
   <% end %>
+</section>
 
-  <% if @company.location.present? %>
-    <dt><strong>Location</strong></dt>
-    <dd><%= @company.location %></dd>
-  <% end %>
+<section class="section">
+  <div class="section__header">
+    <h2 class="section__title">Audit Log</h2>
+  </div>
 
-  <% if @company.website.present? %>
-    <dt><strong>Website</strong></dt>
-    <dd><%= link_to @company.website, @company.website, target: "_blank" %></dd>
-  <% end %>
-
-</dl>
-
-<h2>Contacts (<%= @contacts.count %>)</h2>
-
-<% if @contacts.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Job Role</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @contacts.each do |contact| %>
-        <tr>
-          <td><%= contact.name.presence || "(No name)" %></td>
-          <td><%= contact.email %></td>
-          <td><%= contact.job_role %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>No contacts linked to this company yet.</p>
-<% end %>
-
-<h2>Audit Log</h2>
-
-<% if @company.audit_logs.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Action</th>
-        <th>Message</th>
-        <th>Source</th>
-        <th>Changes</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @company.audit_logs.order(created_at: :desc).each do |log| %>
-        <tr>
-          <td><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
-          <td><%= log.action %></td>
-          <td><%= log.message %></td>
-          <td>
-            <% if log.metadata["source_email"].present? %>
-              <% full_path = Rails.root.join("db/seeds/emails", log.metadata["source_email"]).to_s %>
-              <%= link_to log.metadata["source_email"], email_path(EmlReader.encode_path(full_path)) %>
-            <% end %>
-          </td>
-          <td>
-            <% if log.field_changes.any? %>
-              <ul>
-                <% log.field_changes.each do |field, change| %>
-                  <li><strong><%= field %></strong>: <%= change["from"].presence || "(empty)" %> &rarr; <%= change["to"] %></li>
+  <% if @company.audit_logs.any? %>
+    <div class="table-responsive">
+      <table class="table table--compact">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Message</th>
+            <th>Source</th>
+            <th>Changes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @company.audit_logs.order(created_at: :desc).each do |log| %>
+            <tr>
+              <td class="txt-nowrap"><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+              <td><%= log.action %></td>
+              <td><%= log.message %></td>
+              <td>
+                <% if log.metadata["source_email"].present? %>
+                  <% full_path = Rails.root.join("db/seeds/emails", log.metadata["source_email"]).to_s %>
+                  <%= link_to log.metadata["source_email"], email_path(EmlReader.encode_path(full_path)), class: "txt-sm" %>
                 <% end %>
-              </ul>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>No audit history yet.</p>
-<% end %>
-
-<p><%= link_to "Back to companies", companies_path %></p>
+              </td>
+              <td>
+                <% if log.field_changes.any? %>
+                  <ul class="txt-sm">
+                    <% log.field_changes.each do |field, change| %>
+                      <li><strong><%= field %></strong>: <%= change["from"].presence || "(empty)" %> &rarr; <%= change["to"] %></li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="txt-subtle">No audit history yet.</p>
+  <% end %>
+</section>

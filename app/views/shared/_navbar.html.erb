@@ -1,8 +1,17 @@
-<nav>
-  <%= link_to "Home", root_path %> |
-  <%= link_to "Contacts", contacts_path %> |
-  <%= link_to "Companies", companies_path %> |
-  <%= link_to "Emails", emails_path %> |
-  <%= button_to "Sign out", session_path, method: :delete %>
+<nav class="navbar">
+  <%= link_to root_path, class: "navbar__brand" do %>
+    <%= image_tag "logo.svg", class: "navbar__logo", alt: "CRM" %>
+  <% end %>
+
+  <div class="navbar__nav">
+    <%= link_to "Contacts", contacts_path, class: "navbar__link #{'is-active' if request.path.start_with?('/contacts')}" %>
+    <%= link_to "Companies", companies_path, class: "navbar__link #{'is-active' if request.path.start_with?('/companies')}" %>
+    <%= link_to "Emails", emails_path, class: "navbar__link #{'is-active' if request.path.start_with?('/emails')}" %>
+  </div>
+
+  <div class="navbar__actions">
+    <div class="navbar__signout">
+      <%= button_to "Sign out", session_path, method: :delete %>
+    </div>
+  </div>
 </nav>
-<hr>

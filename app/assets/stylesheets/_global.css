@@ -1,0 +1,146 @@
+/* Layer order declaration - controls cascade priority */
+@layer reset, base, components, utilities;
+
+/* ==========================================================================
+   Design Tokens
+   ========================================================================== */
+
+:root {
+  /* -------------------------------------------------------------------------
+     Color Palette (OKLCH)
+     Pastel palette: salmon, beige, muted orange for a calm B2B aesthetic
+     ------------------------------------------------------------------------- */
+
+  /* Raw OKLCH values (lightness chroma hue) */
+  --lch-primary: 50% 0.06 230;
+  --lch-primary-light: 92% 0.02 230;
+  --lch-beige: 92% 0.03 85;
+  --lch-orange: 78% 0.06 55;
+  --lch-orange-light: 94% 0.02 55;
+
+  /* Neutrals */
+  --lch-white: 99% 0 0;
+  --lch-canvas: 98% 0.005 90;
+  --lch-canvas-alt: 96% 0.008 90;
+  --lch-border: 90% 0.01 260;
+  --lch-border-strong: 82% 0.01 260;
+  --lch-ink: 25% 0.02 260;
+  --lch-ink-subtle: 45% 0.02 260;
+  --lch-ink-muted: 60% 0.015 260;
+
+  /* Semantic colors */
+  --lch-positive: 65% 0.15 145;
+  --lch-positive-light: 92% 0.04 145;
+  --lch-negative: 65% 0.15 25;
+  --lch-negative-light: 92% 0.04 25;
+  --lch-link: 50% 0.12 260;
+
+  /* Named color abstractions */
+  --color-canvas: oklch(var(--lch-canvas));
+  --color-canvas-alt: oklch(var(--lch-canvas-alt));
+  --color-ink: oklch(var(--lch-ink));
+  --color-ink-subtle: oklch(var(--lch-ink-subtle));
+  --color-ink-muted: oklch(var(--lch-ink-muted));
+  --color-border: oklch(var(--lch-border));
+  --color-border-strong: oklch(var(--lch-border-strong));
+  --color-link: oklch(var(--lch-link));
+  --color-primary: oklch(var(--lch-primary));
+  --color-primary-light: oklch(var(--lch-primary-light));
+  --color-positive: oklch(var(--lch-positive));
+  --color-positive-light: oklch(var(--lch-positive-light));
+  --color-negative: oklch(var(--lch-negative));
+  --color-negative-light: oklch(var(--lch-negative-light));
+
+  /* -------------------------------------------------------------------------
+     Spacing Scale
+     Using ch for horizontal (character-based) and rem for vertical
+     ------------------------------------------------------------------------- */
+  --inline-space: 1ch;
+  --inline-space-half: calc(var(--inline-space) / 2);
+  --inline-space-double: calc(var(--inline-space) * 2);
+  --inline-space-triple: calc(var(--inline-space) * 3);
+
+  --block-space: 1rem;
+  --block-space-half: calc(var(--block-space) / 2);
+  --block-space-double: calc(var(--block-space) * 2);
+  --block-space-triple: calc(var(--block-space) * 3);
+
+  /* -------------------------------------------------------------------------
+     Typography
+     Swiss Style: clean sans-serif, high readability
+     ------------------------------------------------------------------------- */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+
+  /* -------------------------------------------------------------------------
+     Layout
+     ------------------------------------------------------------------------- */
+  --container-max: 72rem;
+  --container-padding: clamp(var(--inline-space), 4vw, var(--inline-space-triple));
+
+  /* -------------------------------------------------------------------------
+     Components
+     ------------------------------------------------------------------------- */
+
+  /* Buttons */
+  --btn-padding-block: 0.625em;
+  --btn-padding-inline: 1.5em;
+  --btn-radius: 99rem; /* Pill shape */
+  --btn-hover-brightness: 0.95;
+
+  /* Inputs */
+  --input-padding-block: 0.625em;
+  --input-padding-inline: 1em;
+  --input-radius: 0.375rem;
+
+  /* Cards */
+  --card-radius: 0.5rem;
+  --card-padding: var(--block-space) var(--inline-space-double);
+
+  /* Tables */
+  --table-cell-padding: var(--block-space-half) var(--inline-space);
+
+  /* -------------------------------------------------------------------------
+     Effects
+     ------------------------------------------------------------------------- */
+
+  /* Focus rings */
+  --focus-ring-color: var(--color-link);
+  --focus-ring-offset: 2px;
+  --focus-ring-size: 2px;
+
+  /* Shadows - subtle for flat design */
+  --shadow-sm: 0 1px 2px oklch(var(--lch-ink) / 5%);
+  --shadow-md: 0 2px 4px oklch(var(--lch-ink) / 5%),
+               0 4px 8px oklch(var(--lch-ink) / 5%);
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+
+  /* -------------------------------------------------------------------------
+     Z-index scale
+     ------------------------------------------------------------------------- */
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-nav: 30;
+  --z-modal: 40;
+  --z-toast: 50;
+}

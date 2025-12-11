@@ -1,0 +1,139 @@
+@layer components {
+  .card {
+    background-color: oklch(var(--lch-white));
+    border: 1px solid var(--color-border);
+    border-radius: var(--card-radius);
+    padding: var(--card-padding);
+  }
+
+  .card--flat {
+    background-color: var(--color-canvas-alt);
+    border: none;
+  }
+
+  .card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--inline-space);
+    margin-block-end: var(--block-space);
+    padding-block-end: var(--block-space);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .card__title {
+    margin: 0;
+    font-size: var(--text-lg);
+    flex: 1;
+  }
+
+  .card__body {
+    /* Default body styles */
+  }
+
+  .card__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--inline-space);
+    margin-block-start: var(--block-space);
+    padding-block-start: var(--block-space);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  /* -------------------------------------------------------------------------
+     Detail card (for show pages)
+     ------------------------------------------------------------------------- */
+  .detail {
+    display: grid;
+    gap: var(--block-space-double);
+
+    @media (min-width: 640px) {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+
+  .detail__sidebar {
+    /* Sidebar content */
+  }
+
+  .detail__main {
+    /* Main content */
+  }
+
+  /* -------------------------------------------------------------------------
+     Info card (company/contact details)
+     ------------------------------------------------------------------------- */
+  .info-card {
+    background-color: oklch(var(--lch-white));
+    border: 1px solid var(--color-border);
+    border-radius: var(--card-radius);
+    padding: var(--card-padding);
+  }
+
+  .info-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--inline-space);
+    margin-block-end: var(--block-space);
+  }
+
+  .info-card__logo {
+    max-block-size: 3rem;
+    max-inline-size: 6rem;
+    object-fit: contain;
+  }
+
+  .info-card__title {
+    margin: 0;
+    font-size: var(--text-xl);
+    flex: 1;
+  }
+
+  /* Definition list inside card */
+  .info-card dl {
+    margin: 0;
+  }
+
+  .info-card dt {
+    font-size: var(--text-xs);
+    margin-block-start: var(--block-space);
+
+    &:first-child {
+      margin-block-start: 0;
+    }
+  }
+
+  .info-card dd {
+    font-size: var(--text-base);
+  }
+
+  /* -------------------------------------------------------------------------
+     Email body card
+     ------------------------------------------------------------------------- */
+  .email-card {
+    background-color: oklch(var(--lch-white));
+    border: 1px solid var(--color-border);
+    border-radius: var(--card-radius);
+    padding: var(--block-space-double) var(--inline-space-double);
+  }
+
+  .email-card__meta {
+    margin-block-end: var(--block-space);
+    padding-block-end: var(--block-space);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .email-card__body {
+    /* Email HTML content */
+    line-height: var(--leading-relaxed);
+
+    & img {
+      max-inline-size: 100%;
+      block-size: auto;
+    }
+
+    & table {
+      max-inline-size: 100%;
+      overflow-x: auto;
+    }
+  }
+}

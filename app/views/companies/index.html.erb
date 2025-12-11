@@ -1,32 +1,41 @@
-<h1>Companies</h1>
+<div class="page-header">
+  <h1 class="page-header__title">Companies</h1>
+  <span class="page-header__subtitle txt-muted"><%= @companies.count %> total</span>
+</div>
 
-<p><%= @companies.count %> companies</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Logo</th>
-      <th>Name</th>
-      <th>Website</th>
-      <th>Contacts</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @companies.each do |company| %>
-      <tr>
-        <td>
-          <% if company.logo.attached? %>
-            <%= image_tag company.logo, style: "max-height: 32px; max-width: 64px;" %>
-          <% end %>
-        </td>
-        <td><%= link_to company.display_name, company_path(company) %></td>
-        <td>
-          <% if company.website.present? %>
-            <%= link_to company.website, company.website, target: "_blank" %>
-          <% end %>
-        </td>
-        <td><%= company.contacts.count %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% if @companies.any? %>
+  <div class="table-responsive">
+    <table class="table table--hover">
+      <thead>
+        <tr>
+          <th class="table__logo">Logo</th>
+          <th>Name</th>
+          <th>Website</th>
+          <th class="txt-end">Contacts</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @companies.each do |company| %>
+          <tr>
+            <td class="table__logo">
+              <% if company.logo.attached? %>
+                <%= image_tag company.logo %>
+              <% end %>
+            </td>
+            <td><%= link_to company.display_name, company_path(company) %></td>
+            <td>
+              <% if company.website.present? %>
+                <%= link_to company.website, company.website, target: "_blank", class: "txt-sm" %>
+              <% end %>
+            </td>
+            <td class="txt-end"><%= company.contacts.count %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p class="empty-state__message">No companies yet.</p>
+  </div>
+<% end %>

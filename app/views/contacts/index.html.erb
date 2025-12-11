@@ -1,26 +1,35 @@
-<h1>Contacts</h1>
+<div class="page-header">
+  <h1 class="page-header__title">Contacts</h1>
+  <span class="page-header__subtitle txt-muted"><%= @contacts.count %> total</span>
+</div>
 
-<p><%= @contacts.count %> contacts</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Companies</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @contacts.each do |contact| %>
-      <tr>
-        <td><%= link_to contact.name.presence || "(No name)", contact %></td>
-        <td><%= link_to contact.email, contact %></td>
-        <td>
-          <% contact.companies.each do |company| %>
-            <%= link_to company.display_name, company_path(company) %><%= ", " unless company == contact.companies.last %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% if @contacts.any? %>
+  <div class="table-responsive">
+    <table class="table table--hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Companies</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @contacts.each do |contact| %>
+          <tr>
+            <td><%= link_to contact.name.presence || "(No name)", contact %></td>
+            <td class="txt-sm"><%= link_to contact.email, contact %></td>
+            <td class="txt-sm">
+              <% contact.companies.each do |company| %>
+                <%= link_to company.display_name, company_path(company) %><%= ", " unless company == contact.companies.last %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p class="empty-state__message">No contacts yet.</p>
+  </div>
+<% end %>
