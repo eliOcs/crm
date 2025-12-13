@@ -1,0 +1,27 @@
+<tr id="<%= dom_id(audit_log) %>">
+  <td class="txt-nowrap"><%= audit_log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+  <td><%= audit_log.action %></td>
+  <td><%= audit_log.message %></td>
+  <td>
+    <% if audit_log.metadata["source"] == "ui" %>
+      <span class="txt-sm">User</span>
+    <% else %>
+      <span class="txt-sm txt-subtle">System</span>
+    <% end %>
+  </td>
+  <td>
+    <% if audit_log.metadata["source_email"].present? %>
+      <% full_path = Rails.root.join("db/seeds/emails", audit_log.metadata["source_email"]).to_s %>
+      <%= link_to audit_log.metadata["source_email"], email_path(EmlReader.encode_path(full_path)), class: "txt-sm" %>
+    <% end %>
+  </td>
+  <td>
+    <% if audit_log.field_changes.any? %>
+      <ul class="txt-sm">
+        <% audit_log.field_changes.each do |field, change| %>
+          <li><strong><%= field %></strong>: <%= change["from"].presence || "(empty)" %> &rarr; <%= change["to"] %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </td>
+</tr>

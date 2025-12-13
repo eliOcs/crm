@@ -1,0 +1,122 @@
+@layer components {
+  /* Inline Edit Component
+     Click label to edit - label is replaced by input field */
+
+  .inline-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--inline-space);
+  }
+
+  /* Label (clickable to edit) */
+  .inline-edit__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5ch;
+    cursor: pointer;
+    border-block-end: 1px dotted var(--color-border-strong);
+    transition: border-color var(--duration-fast) var(--ease-out);
+
+    &:hover {
+      border-color: var(--color-ink);
+      font-weight: 500;
+    }
+
+    &:hover .inline-edit__icon {
+      opacity: 1;
+    }
+  }
+
+  .inline-edit__icon {
+    opacity: 0;
+    color: var(--color-ink-muted);
+    transition: opacity var(--duration-fast) var(--ease-out);
+
+    & svg {
+      display: block;
+      inline-size: 0.75rem;
+      block-size: 0.75rem;
+    }
+  }
+
+  /* Input (hidden by default) - use higher specificity to override inputs.css */
+  .inline-edit .inline-edit__input {
+    display: none;
+    padding: var(--block-space-half) var(--inline-space);
+    font-size: var(--text-base);
+    font-family: inherit;
+    color: var(--color-ink);
+    background: var(--color-canvas);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--input-radius);
+    min-inline-size: 12rem;
+
+    &:focus {
+      outline: var(--focus-ring-size) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+      border-color: var(--color-link);
+    }
+  }
+
+  /* Action buttons (hidden by default) */
+  .inline-edit__btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: var(--input-radius);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
+
+    &:focus-visible {
+      outline: var(--focus-ring-size) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+    }
+
+    & svg {
+      inline-size: 1rem;
+      block-size: 1rem;
+    }
+  }
+
+  .inline-edit__btn--save {
+    color: var(--color-positive);
+
+    &:hover {
+      color: oklch(55% 0.15 145);
+    }
+  }
+
+  .inline-edit__btn--cancel {
+    color: var(--color-negative);
+
+    &:hover {
+      color: oklch(55% 0.15 25);
+    }
+  }
+
+  /* Editing state */
+  .inline-edit--editing {
+    .inline-edit__label {
+      display: none;
+    }
+
+    &.inline-edit .inline-edit__input {
+      display: block;
+    }
+
+    .inline-edit__btn {
+      display: flex;
+    }
+  }
+
+  /* Saving state */
+  .inline-edit--saving {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}

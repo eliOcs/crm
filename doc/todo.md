@@ -10,8 +10,3 @@ You can get a free Microsoft 365 developer account (E5 sandbox) for testing:
 - Perfect for testing Graph API integration
 
 https://developer.microsoft.com/en-us/microsoft-365/dev-program
-
-Want to start on the design/landing page work? I can help with:
-- Improving the app's UI/styling
-- Planning what the landing page should include
-- Setting up a simple deployment (Heroku, Fly.io, etc.)

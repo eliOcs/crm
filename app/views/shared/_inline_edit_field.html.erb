@@ -1,0 +1,48 @@
+<%# Inline editable label - click to edit
+    locals:
+      - url: the update URL
+      - field: the field name (e.g., "name", "job_role")
+      - value: current value
+      - placeholder: text to show when empty (default: "Not provided")
+%>
+<% placeholder ||= "Not provided" %>
+<div class="inline-edit"
+     data-controller="inline-edit"
+     data-inline-edit-url-value="<%= url %>"
+     data-inline-edit-field-value="<%= field %>">
+  <%# Clickable label (view mode) %>
+  <span class="inline-edit__label"
+        data-inline-edit-target="label"
+        data-action="click->inline-edit#edit">
+    <span class="<%= 'txt-subtle' unless value.present? %>"
+          data-inline-edit-target="text"><%= value.presence || placeholder %></span>
+    <span class="inline-edit__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
+      </svg>
+    </span>
+  </span>
+
+  <%# Input + buttons (edit mode) %>
+  <input type="text"
+         class="inline-edit__input"
+         value="<%= value %>"
+         data-inline-edit-target="input"
+         data-action="keydown->inline-edit#keydown">
+  <button type="button"
+          class="inline-edit__btn inline-edit__btn--cancel"
+          data-action="click->inline-edit#cancel"
+          title="Cancel (Esc)">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+    </svg>
+  </button>
+  <button type="button"
+          class="inline-edit__btn inline-edit__btn--save"
+          data-action="click->inline-edit#save"
+          title="Save (Enter)">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+    </svg>
+  </button>
+</div>

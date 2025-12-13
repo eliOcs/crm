@@ -6,36 +6,33 @@
 
 <div class="info-card margin-block-end-double">
   <dl>
-    <% if @contact.name.present? %>
-      <dt>Email</dt>
-      <dd><%= @contact.email %></dd>
-    <% end %>
+    <dt>Email</dt>
+    <dd><%= @contact.email %></dd>
 
-    <% if @contact.job_role.present? %>
-      <dt>Job Role</dt>
-      <dd><%= @contact.job_role %></dd>
-    <% end %>
+    <dt>Name</dt>
+    <dd><%= render "shared/inline_edit_field", url: contact_path(@contact), field: "name", value: @contact.name %></dd>
 
-    <% if @contact.department.present? %>
-      <dt>Department</dt>
-      <dd><%= @contact.department %></dd>
-    <% end %>
+    <dt>Job Role</dt>
+    <dd><%= render "shared/inline_edit_field", url: contact_path(@contact), field: "job_role", value: @contact.job_role %></dd>
 
-    <% if @contact.phone_numbers.present? && @contact.phone_numbers.any? %>
-      <dt>Phone Numbers</dt>
-      <dd><%= @contact.phone_numbers.join(", ") %></dd>
-    <% end %>
+    <dt>Department</dt>
+    <dd><%= render "shared/inline_edit_field", url: contact_path(@contact), field: "department", value: @contact.department %></dd>
 
-    <% if @contact.companies.any? %>
-      <dt>Companies</dt>
-      <dd>
+    <dt>Phone Numbers</dt>
+    <dd><%= render "shared/inline_edit_field", url: contact_path(@contact), field: "phone_numbers", value: @contact.phone_numbers&.join(", "), placeholder: "Not provided (comma-separated)" %></dd>
+
+    <dt>Companies</dt>
+    <dd>
+      <% if @contact.companies.any? %>
         <ul>
           <% @contact.companies.each do |company| %>
             <li><%= link_to company.display_name, company %></li>
           <% end %>
         </ul>
-      </dd>
-    <% end %>
+      <% else %>
+        <span class="txt-subtle">Not linked to any company</span>
+      <% end %>
+    </dd>
   </dl>
 </div>
 
@@ -44,45 +41,27 @@
     <h2 class="section__title">Audit Log</h2>
   </div>
 
-  <% if @contact.audit_logs.any? %>
-    <div class="table-responsive">
-      <table class="table table--compact">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Action</th>
-            <th>Message</th>
-            <th>Source</th>
-            <th>Changes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @contact.audit_logs.order(created_at: :desc).each do |log| %>
-            <tr>
-              <td class="txt-nowrap"><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
-              <td><%= log.action %></td>
-              <td><%= log.message %></td>
-              <td>
-                <% if log.metadata["source_email"].present? %>
-                  <% full_path = Rails.root.join("db/seeds/emails", log.metadata["source_email"]).to_s %>
-                  <%= link_to log.metadata["source_email"], email_path(EmlReader.encode_path(full_path)), class: "txt-sm" %>
-                <% end %>
-              </td>
-              <td>
-                <% if log.field_changes.any? %>
-                  <ul class="txt-sm">
-                    <% log.field_changes.each do |field, change| %>
-                      <li><strong><%= field %></strong>: <%= change["from"].presence || "(empty)" %> &rarr; <%= change["to"] %></li>
-                    <% end %>
-                  </ul>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
+  <div class="table-responsive">
+    <table class="table table--compact">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Action</th>
+          <th>Message</th>
+          <th>By</th>
+          <th>Source</th>
+          <th>Changes</th>
+        </tr>
+      </thead>
+      <tbody id="audit_log_entries">
+        <% @contact.audit_logs.order(created_at: :desc).each do |log| %>
+          <%= render partial: "audit_logs/audit_log", locals: { audit_log: log } %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @contact.audit_logs.empty? %>
     <p class="txt-subtle">No audit history yet.</p>
   <% end %>
 </section>

@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   resource :registration, only: %i[ new create ]
   resources :passwords, param: :token
 
-  resources :contacts, only: %i[ index show ]
-  resources :companies, only: %i[ index show ]
+  resources :contacts, only: %i[ index show update ]
+  resources :companies, only: %i[ index show update ]
   resources :emails, only: %i[ index show ] do
     get "attachment/:cid", action: :attachment, as: :attachment, on: :member, cid: /.+/
     get "download/:index", action: :download, as: :download, on: :member
