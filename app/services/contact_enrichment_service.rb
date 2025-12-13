@@ -18,7 +18,8 @@ class ContactEnrichmentService
   end
 
   def process_email(eml_path)
-    @source_email = eml_path
+    # Store path relative to EMAILS_DIR for portability across environments
+    @source_email = eml_path.to_s.sub("#{EmlReader::EMAILS_DIR}/", "")
     result = LlmEmailExtractor.new(eml_path).extract
     @logger.info "  LLM: #{result[:contacts].count} contacts, #{result[:companies].count} companies"
 

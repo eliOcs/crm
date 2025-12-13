@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Sync local data to production server
+# Usage: bin/sync-to-production [--dry-run]
+
+PRODUCTION_HOST="52.30.167.17"
+PRODUCTION_USER="root"
+REMOTE_STORAGE="/var/lib/docker/volumes/crm_storage/_data"
+REMOTE_EMAILS="/root/crm-emails"
+LOCAL_EMAILS_DIR="db/seeds/emails"
+
+DRY_RUN=""
+if [[ "${1:-}" == "--dry-run" ]]; then
+  DRY_RUN="--dry-run"
+  echo "==> DRY RUN MODE - no changes will be made"
+fi
+
+echo "==> Syncing local data to production ($PRODUCTION_HOST)"
+echo ""
+
+# 1. Database
+echo "==> Syncing database..."
+rsync -avz --progress $DRY_RUN \
+  storage/development.sqlite3 \
+  "$PRODUCTION_USER@$PRODUCTION_HOST:$REMOTE_STORAGE/production.sqlite3"
+
+# 2. Active Storage files (company logos, excluding sqlite files)
+echo ""
+echo "==> Syncing Active Storage files (company logos)..."
+BLOB_COUNT=$(find storage -type f -not -name "*.sqlite3*" 2>/dev/null | wc -l | tr -d ' ')
+echo "   Found $BLOB_COUNT Active Storage blobs"
+rsync -avz --progress $DRY_RUN \
+  --exclude='*.sqlite3' \
+  --exclude='*.sqlite3-*' \
+  storage/ \
+  "$PRODUCTION_USER@$PRODUCTION_HOST:$REMOTE_STORAGE/"
+
+# 3. Only EML files referenced in the database (paths are stored relative)
+# Note: Email attachments are embedded inside the EML files
+echo ""
+echo "==> Finding referenced EML files (includes embedded attachments)..."
+
+TMPFILE=$(mktemp)
+trap "rm -f $TMPFILE" EXIT
+
+sqlite3 storage/development.sqlite3 \
+  "SELECT DISTINCT json_extract(metadata, '\$.source_email') FROM audit_logs WHERE json_extract(metadata, '\$.source_email') IS NOT NULL" \
+  > "$TMPFILE"
+
+FILE_COUNT=$(wc -l < "$TMPFILE" | tr -d ' ')
+echo "   Found $FILE_COUNT referenced EML files"
+
+if [[ "$FILE_COUNT" -gt 0 ]]; then
+  echo ""
+  cat "$TMPFILE"
+  echo ""
+  echo "==> Syncing referenced EML files..."
+  rsync -avz --progress $DRY_RUN \
+    --files-from="$TMPFILE" \
+    "$LOCAL_EMAILS_DIR/" \
+    "$PRODUCTION_USER@$PRODUCTION_HOST:$REMOTE_EMAILS/"
+fi
+
+echo ""
+echo "==> Sync complete!"
+echo ""
+echo "Production paths:"
+echo "  Database: $REMOTE_STORAGE/production.sqlite3"
+echo "  Storage:  $REMOTE_STORAGE/"
+echo "  Emails:   $REMOTE_EMAILS/ (mounted at /emails in container)"
+echo ""
+echo "NOTE: You may need to redeploy for changes to take effect:"
+echo "  bin/kamal deploy"

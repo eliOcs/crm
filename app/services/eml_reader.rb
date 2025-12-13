@@ -1,5 +1,5 @@
 class EmlReader
-  EMAILS_DIR = Rails.root.join("db/seeds/emails")
+  EMAILS_DIR = Pathname.new(ENV.fetch("EMAILS_DIR", Rails.root.join("db/seeds/emails")))
 
   def initialize(eml_path)
     @eml_path = eml_path

@@ -11,7 +11,7 @@
   </td>
   <td>
     <% if audit_log.metadata["source_email"].present? %>
-      <% full_path = Rails.root.join("db/seeds/emails", audit_log.metadata["source_email"]).to_s %>
+      <% full_path = EmlReader::EMAILS_DIR.join(audit_log.metadata["source_email"]).to_s %>
       <%= link_to audit_log.metadata["source_email"], email_path(EmlReader.encode_path(full_path)), class: "txt-sm" %>
     <% end %>
   </td>
