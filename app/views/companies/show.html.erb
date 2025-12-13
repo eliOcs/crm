@@ -61,32 +61,4 @@
   <% end %>
 </section>
 
-<section class="section">
-  <div class="section__header">
-    <h2 class="section__title">Audit Log</h2>
-  </div>
-
-  <div class="table-responsive">
-    <table class="table table--compact">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Action</th>
-          <th>Message</th>
-          <th>By</th>
-          <th>Source</th>
-          <th>Changes</th>
-        </tr>
-      </thead>
-      <tbody id="audit_log_entries">
-        <% @company.audit_logs.order(created_at: :desc).each do |log| %>
-          <%= render partial: "audit_logs/audit_log", locals: { audit_log: log } %>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-
-  <% if @company.audit_logs.empty? %>
-    <p class="txt-subtle">No audit history yet.</p>
-  <% end %>
-</section>
+<%= render "shared/audit_log_section", record: @company %>
