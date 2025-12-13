@@ -41,3 +41,4 @@
 
 # Ignore test coverage reports
 /coverage/
+.playwright-mcp/
