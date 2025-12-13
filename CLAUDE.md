@@ -17,6 +17,7 @@ CRM application for managing contacts, companies, and emails. Built to help pars
 
 ```bash
 ANTHROPIC_API_KEY=sk-ant-...  # Required for LLM features (enrichment)
+EMAILS_DIR=/path/to/emails    # Optional: Override default db/seeds/emails location
 ```
 
 ## Key Commands
@@ -31,10 +32,17 @@ bin/setup                 # Setup project (installs deps, configures git hooks)
 # Import tasks
 bin/rails import:enrich_contacts  # Enrich contacts/companies with LLM (extracts job roles, phones, companies, logos)
 bin/extract-pst <file>            # Extract EML files from PST backup
+bin/reset-and-import              # Reset DB and import (use LIMIT=N for fewer emails)
 
 # Database
 bin/rails db:migrate      # Run migrations
 bin/rails db:reset        # Reset database
+
+# Production
+bin/sync-to-production    # Sync database, logos, and referenced EML files to production
+bin/kamal deploy          # Deploy to production
+bin/kamal console         # Rails console on production
+bin/kamal logs            # Tail production logs
 ```
 
 ## Project Structure
@@ -42,6 +50,8 @@ bin/rails db:reset        # Reset database
 ```
 app/
 ├── controllers/
+│   ├── concerns/
+│   │   └── inline_editable.rb    # Shared inline editing logic
 │   ├── companies_controller.rb   # Company list and detail
 │   ├── contacts_controller.rb    # Contact list
 │   ├── dashboard_controller.rb   # Home page (logged in)
@@ -106,6 +116,31 @@ Inline images in emails use Content-ID references:
 - Served through `emails#attachment` action
 - HTML `cid:xxx` references replaced with attachment URLs
 
+### InlineEditable Concern
+Controllers that support inline field editing include `InlineEditable`:
+```ruby
+class ContactsController < ApplicationController
+  include InlineEditable
+  inline_editable :name, :job_role, :department, :phone_numbers
+
+  def update
+    @contact = Current.user.contacts.find(params[:id])
+    inline_update(@contact)
+  end
+end
+```
+
+The concern:
+- Validates field is in allowed list
+- Creates audit log entry with old/new values
+- Renders shared Turbo Stream template (`shared/inline_update.turbo_stream.erb`)
+- Override `transform_value(field, value)` for custom parsing (e.g., comma-separated phone numbers)
+
+### Audit Log Paths
+Audit logs store source email paths **relative** to `EMAILS_DIR` for portability:
+- Stored: `Company/123/email.eml`
+- Full path reconstructed: `EmlReader::EMAILS_DIR.join(relative_path)`
+
 ## Git Workflow
 
 Pre-commit hook runs automatically:
@@ -142,6 +177,8 @@ Configuration: `test/support/vcr.rb`
 - `doc/best-practices.md` - Rails 7+ conventions and patterns (READ THIS)
 - `.gitignore` - Ignores `db/seeds/emails/` and `*.pst` files
 - `config/routes.rb` - All routes defined here
+- `config/deploy.yml` - Kamal deployment configuration
+- `bin/sync-to-production` - Sync local data to production
 
 ## CSS Architecture
 
@@ -242,3 +279,45 @@ bin/extract-pst backup.pst db/seeds/emails
 | `/emails` | Email list (paginated) |
 | `/emails/:id` | View email |
 | `/emails/:id/attachment/:cid` | Serve inline attachment |
+
+## Production Deployment
+
+Uses **Kamal** for Docker-based deployment to AWS EC2 (ARM64 Graviton).
+
+### Key Commands
+```bash
+bin/kamal deploy              # Full deploy
+bin/kamal console             # Rails console on production
+bin/kamal logs                # Tail production logs
+bin/kamal shell               # SSH into container
+```
+
+### Configuration (`config/deploy.yml`)
+- **Host**: `52.30.167.17` (crm.eliocapella.com)
+- **Registry**: AWS ECR (eu-west-1)
+- **SSL**: Auto via Let's Encrypt
+- **Architecture**: ARM64 (Graviton)
+
+### Volume Mounts
+```yaml
+volumes:
+  - "crm_storage:/rails/storage"    # SQLite + Active Storage
+  - "/root/crm-emails:/emails:ro"   # EML files (read-only)
+```
+
+### Production Sync
+Sync local data to production (database, logos, and referenced EML files only):
+```bash
+bin/sync-to-production            # Full sync
+bin/sync-to-production --dry-run  # Preview changes
+```
+
+The script:
+1. Copies `storage/development.sqlite3` → production
+2. Syncs Active Storage blobs (company logos)
+3. Queries audit_logs for referenced EML files and syncs only those (not all 5GB)
+
+After syncing, redeploy to pick up changes:
+```bash
+bin/kamal deploy
+```
