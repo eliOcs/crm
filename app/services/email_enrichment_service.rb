@@ -1,4 +1,4 @@
-class ContactEnrichmentService
+class EmailEnrichmentService
   include Auditable
 
   attr_reader :user, :stats
@@ -13,6 +13,9 @@ class ContactEnrichmentService
       companies_new: 0,
       companies_enriched: 0,
       logos_attached: 0,
+      tasks_new: 0,
+      tasks_updated: 0,
+      tasks_skipped: 0,
       errors: 0
     }
   end
@@ -20,7 +23,16 @@ class ContactEnrichmentService
   def process_email(eml_path)
     # Store path relative to EMAILS_DIR for portability across environments
     @source_email = eml_path.to_s.sub("#{EmlReader::EMAILS_DIR}/", "")
-    result = LlmEmailExtractor.new(eml_path).extract
+
+    # Read email data for date
+    email_data = EmlReader.new(eml_path).read
+    return unless email_data
+
+    email_date = email_data[:date] || Date.current
+
+    # Extract contacts and companies
+    extractor = LlmEmailExtractor.new(eml_path)
+    result = extractor.extract
     @logger.info "  LLM: #{result[:contacts].count} contacts, #{result[:companies].count} companies"
 
     # Build domain map for company lookup
@@ -33,8 +45,21 @@ class ContactEnrichmentService
       domain_map[company.domain] = company if company.domain.present?
     end
 
+    # Build contact map for task linking
+    contact_map = {}
+
     result[:contacts].each do |contact_data|
-      process_contact(contact_data, domain_map)
+      contact = process_contact(contact_data, domain_map)
+      contact_map[contact_data[:email]&.downcase] = contact if contact
+    end
+
+    # Extract and process tasks (separate LLM call)
+    existing_tasks = @user.tasks.active.includes(:contact, :company).to_a
+    tasks = extractor.extract_tasks(email_date: email_date, existing_tasks: existing_tasks)
+    @logger.info "  LLM: #{tasks.count} tasks extracted"
+
+    tasks.each do |task_data|
+      process_task(task_data, contact_map, domain_map, email_date)
     end
   end
 
@@ -154,25 +179,125 @@ class ContactEnrichmentService
     end
 
     # Link to company by email domain
-    return unless contact_data[:email].present?
+    if contact_data[:email].present?
+      domain = contact_data[:email].split("@").last&.downcase
 
-    domain = contact_data[:email].split("@").last&.downcase
-    return unless domain.present?
+      if domain.present?
+        company = domain_map[domain]
+        company ||= @user.companies.find_by(domain: domain)
 
-    company = domain_map[domain]
-    company ||= @user.companies.find_by(domain: domain)
+        if company && !contact.companies.include?(company)
+          contact.companies << company
+          @logger.info "  DB: LINK contact_id=#{contact.id} company_id=#{company.id}"
 
-    if company && !contact.companies.include?(company)
-      contact.companies << company
-      @logger.info "  DB: LINK contact_id=#{contact.id} company_id=#{company.id}"
+          log_audit(
+            record: contact,
+            action: "link",
+            message: "company link",
+            field_changes: { "company_id" => { "from" => nil, "to" => company.id } },
+            metadata: { source_email: @source_email }
+          )
+        end
+      end
+    end
+
+    contact
+  end
+
+  def process_task(task_data, contact_map, domain_map, email_date)
+    # Find associated contact from sender
+    contact = contact_map[task_data[:sender_email]]
+    contact ||= @user.contacts.find_by(email: task_data[:sender_email]) if task_data[:sender_email].present?
+
+    # Find associated company from contact or sender domain
+    company = contact&.companies&.first
+    if company.nil? && task_data[:sender_email].present?
+      domain = task_data[:sender_email].split("@").last&.downcase
+      company = domain_map[domain] || @user.companies.find_by(domain: domain) if domain.present?
+    end
+
+    if task_data[:id].present?
+      update_existing_task(task_data, contact, company, email_date)
+    else
+      create_new_task(task_data, contact, company, email_date)
+    end
+  end
+
+  def update_existing_task(task_data, contact, company, email_date)
+    task = @user.tasks.find_by(id: task_data[:id])
+
+    unless task
+      @logger.warn "  Task id=#{task_data[:id]} not found, creating new"
+      create_new_task(task_data.merge(id: nil), contact, company, email_date)
+      return
+    end
+
+    updates = {}
+
+    # Append new context to description
+    if task_data[:description].present?
+      existing_desc = task.description || ""
+      new_context = "\n\n---\nUpdate from #{@source_email}:\n#{task_data[:description]}"
+      updates[:description] = existing_desc + new_context
+    end
+
+    # Update due date if new one is more urgent
+    if task_data[:due_date].present?
+      if task.due_date.nil? || task_data[:due_date] < task.due_date
+        updates[:due_date] = task_data[:due_date]
+      end
+    end
+
+    # Link to contact/company if not already linked
+    updates[:contact_id] = contact.id if contact && task.contact_id.nil?
+    updates[:company_id] = company.id if company && task.company_id.nil?
+
+    if updates.any?
+      # Use email date as updated_at
+      updates[:updated_at] = email_date if email_date
+
+      task.update!(updates)
+      @stats[:tasks_updated] += 1
+      @logger.info "  DB: UPDATE task id=#{task.id} #{updates.keys.join(', ')}"
 
       log_audit(
-        record: contact,
-        action: "link",
-        message: "company link",
-        field_changes: { "company_id" => { "from" => nil, "to" => company.id } },
+        record: task,
+        action: "update",
+        message: "email extraction",
+        field_changes: build_field_changes(task),
         metadata: { source_email: @source_email }
       )
+    else
+      @stats[:tasks_skipped] += 1
     end
+  end
+
+  def create_new_task(task_data, contact, company, email_date)
+    attrs = {
+      name: task_data[:name],
+      description: task_data[:description],
+      status: "incoming",
+      due_date: task_data[:due_date],
+      contact_id: contact&.id,
+      company_id: company&.id
+    }
+    # Use email date as created_at/updated_at
+    if email_date
+      attrs[:created_at] = email_date
+      attrs[:updated_at] = email_date
+    end
+
+    task = @user.tasks.create!(attrs)
+
+    @stats[:tasks_new] += 1
+    @logger.info "  DB: CREATE task id=#{task.id} name=#{task.name.truncate(40).inspect}"
+
+    log_audit(
+      record: task,
+      action: "create",
+      message: "email extraction",
+      field_changes: build_field_changes(task),
+      metadata: { source_email: @source_email }
+    )
   end
 end

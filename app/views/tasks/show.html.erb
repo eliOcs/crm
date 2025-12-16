@@ -1,0 +1,76 @@
+<div class="page-header">
+  <h1 class="page-header__title"><%= @task.name %></h1>
+  <span class="status-badge status-badge--<%= @task.status %>"><%= @task.status_label %></span>
+</div>
+
+<div class="info-card">
+  <div class="info-card__row">
+    <span class="info-card__label">Status</span>
+    <span class="info-card__value">
+      <span class="status-badge status-badge--<%= @task.status %>"><%= @task.status_label %></span>
+    </span>
+  </div>
+
+  <div class="info-card__row">
+    <span class="info-card__label">Name</span>
+    <span class="info-card__value">
+      <%= render "shared/inline_edit_field",
+          url: task_path(@task),
+          field: :name,
+          value: @task.name %>
+    </span>
+  </div>
+
+  <div class="info-card__row">
+    <span class="info-card__label">Description</span>
+    <span class="info-card__value">
+      <%= render "shared/inline_edit_field",
+          url: task_path(@task),
+          field: :description,
+          value: @task.description,
+          placeholder: "No description" %>
+    </span>
+  </div>
+
+  <% if @task.due_date %>
+    <div class="info-card__row">
+      <span class="info-card__label">Due Date</span>
+      <span class="info-card__value <%= 'txt-danger' if @task.due_date < Date.current && @task.status != 'done' %>">
+        <%= @task.due_date.strftime("%B %d, %Y") %>
+        <% if @task.due_date < Date.current && @task.status != 'done' %>
+          <span class="txt-sm">(overdue)</span>
+        <% end %>
+      </span>
+    </div>
+  <% end %>
+
+  <% if @task.contact %>
+    <div class="info-card__row">
+      <span class="info-card__label">Contact</span>
+      <span class="info-card__value">
+        <%= link_to @task.contact.name || @task.contact.email, contact_path(@task.contact) %>
+      </span>
+    </div>
+  <% end %>
+
+  <% if @task.company %>
+    <div class="info-card__row">
+      <span class="info-card__label">Company</span>
+      <span class="info-card__value">
+        <%= link_to @task.company.display_name, company_path(@task.company) %>
+      </span>
+    </div>
+  <% end %>
+
+  <div class="info-card__row">
+    <span class="info-card__label">Created</span>
+    <span class="info-card__value txt-muted"><%= @task.created_at.strftime("%B %d, %Y at %H:%M") %></span>
+  </div>
+
+  <div class="info-card__row">
+    <span class="info-card__label">Last updated</span>
+    <span class="info-card__value txt-muted"><%= @task.updated_at.strftime("%B %d, %Y at %H:%M") %></span>
+  </div>
+</div>
+
+<%= render "shared/audit_log_section", record: @task %>

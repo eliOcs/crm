@@ -25,6 +25,25 @@ class LlmEmailExtractor
     empty_result
   end
 
+  def extract_tasks(email_date:, existing_tasks: [])
+    email_data = EmlReader.new(@eml_path).read
+    return [] unless email_data
+
+    @email_text ||= build_email_text(email_data)
+
+    response = @client.messages.create(
+      model: MODEL,
+      max_tokens: 1024,
+      temperature: 0,
+      messages: [ { role: "user", content: @email_text } ],
+      system: tasks_system_prompt(email_date: email_date, existing_tasks: existing_tasks)
+    )
+    parse_tasks_response(response)
+  rescue Anthropic::Error => e
+    Rails.logger.error("Task extraction failed: #{e.message}")
+    []
+  end
+
   private
 
   def empty_result
@@ -107,6 +126,109 @@ class LlmEmailExtractor
   rescue JSON::ParserError => e
     Rails.logger.error("Failed to parse contacts response: #{e.message}")
     []
+  end
+
+  # === TASKS EXTRACTION ===
+
+  def tasks_system_prompt(email_date:, existing_tasks:)
+    formatted_tasks = if existing_tasks.empty?
+      "No existing active tasks."
+    else
+      existing_tasks.map(&:summary_for_llm).join("\n")
+    end
+
+    <<~PROMPT
+      You are a task extractor for a CRM system. Extract follow-up tasks ONLY when the email explicitly requests action from the recipient.
+
+      <instructions>
+      ONLY extract tasks when:
+      1. The sender explicitly asks the recipient to do something
+      2. There's a clear action item with an expected response or deliverable
+      3. The email requests a reply, document, decision, or meeting scheduling
+
+      DO NOT extract tasks for:
+      1. Informational emails (newsletters, announcements, status updates)
+      2. Auto-generated emails (receipts, confirmations, notifications)
+      3. Emails where the sender is completing a task (delivering something, not requesting)
+      4. Simple acknowledgments or thank you emails
+      5. Emails that are just forwarding information without asking for action
+      </instructions>
+
+      <date_context>
+      Email date: #{email_date.strftime("%Y-%m-%d")} (#{email_date.strftime("%A")})
+      Use this date to resolve relative deadlines:
+      - "by Friday" -> next Friday from email date
+      - "by end of week" -> Friday of email's week
+      - "by end of month" -> last day of email's month
+      - "ASAP" / "urgent" -> email date
+      - "next week" -> Monday of following week
+      </date_context>
+
+      <existing_tasks>
+      #{formatted_tasks}
+      </existing_tasks>
+
+      <output_format>
+      Return ONLY a JSON array of tasks:
+      [
+        {
+          "id": null,
+          "name": "Send updated proposal",
+          "description": "Client requested revised pricing for Q2",
+          "due_date": "2025-01-20",
+          "sender_email": "client@example.com"
+        }
+      ]
+
+      If updating an existing task (same topic from same sender), include the task id:
+      [
+        {
+          "id": 42,
+          "name": "Send updated proposal",
+          "description": "Follow-up: client needs it by Friday",
+          "due_date": "2025-01-17",
+          "sender_email": "client@example.com"
+        }
+      ]
+
+      If no actionable tasks found, return: []
+      </output_format>
+
+      <guidelines>
+      - Extract the MINIMUM number of tasks (prefer one clear task over multiple vague ones)
+      - Use imperative verb form: "Send...", "Review...", "Schedule...", "Reply to..."
+      - Keep task names under 60 characters
+      - Only set id if the email clearly relates to an existing task
+      - When unsure between update vs new task, prefer creating new task
+      - Use null for unknown fields, never hallucinate
+      </guidelines>
+    PROMPT
+  end
+
+  def parse_tasks_response(response)
+    text = response.content.first.text
+    json_match = text.match(/\[[\s\S]*\]/)
+    return [] unless json_match
+
+    Array(JSON.parse(json_match[0])).map do |task|
+      {
+        id: task["id"],
+        name: task["name"]&.strip.presence,
+        description: task["description"]&.strip.presence,
+        due_date: parse_date(task["due_date"]),
+        sender_email: task["sender_email"]&.strip&.downcase.presence
+      }
+    end.select { |t| t[:name].present? }
+  rescue JSON::ParserError => e
+    Rails.logger.error("Failed to parse tasks response: #{e.message}")
+    []
+  end
+
+  def parse_date(date_str)
+    return nil unless date_str.present?
+    Date.parse(date_str)
+  rescue Date::Error
+    nil
   end
 
   # === COMPANIES EXTRACTION ===

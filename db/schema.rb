@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_15_173151) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_16_181300) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -100,12 +100,18 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_173151) do
   end
 
   create_table "tasks", force: :cascade do |t|
+    t.integer "company_id"
+    t.integer "contact_id"
     t.datetime "created_at", null: false
     t.text "description"
+    t.date "due_date"
     t.string "name", null: false
     t.string "status", default: "incoming", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["company_id"], name: "index_tasks_on_company_id"
+    t.index ["contact_id"], name: "index_tasks_on_contact_id"
+    t.index ["due_date"], name: "index_tasks_on_due_date"
     t.index ["status"], name: "index_tasks_on_status"
     t.index ["user_id"], name: "index_tasks_on_user_id"
   end
@@ -126,5 +132,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_173151) do
   add_foreign_key "companies_contacts", "contacts"
   add_foreign_key "contacts", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "tasks", "companies"
+  add_foreign_key "tasks", "contacts"
   add_foreign_key "tasks", "users"
 end

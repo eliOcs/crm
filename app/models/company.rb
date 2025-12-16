@@ -1,6 +1,7 @@
 class Company < ApplicationRecord
   belongs_to :user
   has_many :audit_logs, as: :auditable, dependent: :destroy
+  has_many :tasks
   has_and_belongs_to_many :contacts
   has_one_attached :logo
 

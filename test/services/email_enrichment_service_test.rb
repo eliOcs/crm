@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ContactEnrichmentServiceTest < ActiveSupport::TestCase
+class EmailEnrichmentServiceTest < ActiveSupport::TestCase
   setup do
     @user = User.create!(email_address: "test@example.com", password: "password123")
     @eml_dir = Rails.root.join("db/seeds/emails/Archivo de datos de Outlook/Bandeja de entrada")
@@ -15,7 +15,7 @@ class ContactEnrichmentServiceTest < ActiveSupport::TestCase
     )
 
     VCR.use_cassette("enrichment_domain_matching") do
-      service = ContactEnrichmentService.new(@user, logger: @logger)
+      service = EmailEnrichmentService.new(@user, logger: @logger)
       service.process_email(@eml_dir.join("11.eml").to_s)  # Has ITPSA contacts
     end
 
@@ -27,7 +27,7 @@ class ContactEnrichmentServiceTest < ActiveSupport::TestCase
 
   test "contacts are linked to companies by email domain" do
     VCR.use_cassette("enrichment_contact_domain_linking") do
-      service = ContactEnrichmentService.new(@user, logger: @logger)
+      service = EmailEnrichmentService.new(@user, logger: @logger)
       service.process_email(@eml_dir.join("Webmail/1.eml").to_s)
     end
 
@@ -47,7 +47,7 @@ class ContactEnrichmentServiceTest < ActiveSupport::TestCase
     fixtures_dir = Rails.root.join("test/fixtures/files/emails")
 
     VCR.use_cassette("enrichment_name_matching") do
-      service = ContactEnrichmentService.new(@user, logger: @logger)
+      service = EmailEnrichmentService.new(@user, logger: @logger)
 
       # Process first email - should create Belagrolex company
       service.process_email(fixtures_dir.join("belagrolex_1.eml").to_s)
@@ -60,5 +60,29 @@ class ContactEnrichmentServiceTest < ActiveSupport::TestCase
     belagrolex_companies = @user.companies.where(legal_name: "Belagrolex")
                                           .or(@user.companies.where(commercial_name: "Belagrolex"))
     assert_equal 1, belagrolex_companies.count, "Should not create duplicate companies - name matching should work"
+  end
+
+  test "extracts tasks from emails requesting action" do
+    VCR.use_cassette("enrichment_task_extraction") do
+      service = EmailEnrichmentService.new(@user, logger: @logger)
+      service.process_email(@eml_dir.join("Webmail/1.eml").to_s)
+    end
+
+    # Should have created at least one task
+    assert @user.tasks.count >= 1, "Should extract tasks from email"
+
+    task = @user.tasks.first
+    assert_not_nil task.name, "Task should have a name"
+    assert_equal "incoming", task.status, "New tasks should have incoming status"
+
+    # Task should be linked to contact/company if sender was extracted
+    if task.contact
+      assert_not_nil task.contact.email, "Linked contact should have email"
+    end
+
+    # Audit log should be created with source email
+    audit_log = task.audit_logs.find_by(action: "create")
+    assert_not_nil audit_log, "Should create audit log for task"
+    assert_not_nil audit_log.metadata["source_email"], "Audit log should have source_email in metadata"
   end
 end

@@ -1,0 +1,744 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.anthropic.com/v1/messages
+    body:
+      encoding: UTF-8
+      string: '{"model":"claude-3-5-haiku-latest","max_tokens":2048,"temperature":0,"messages":[{"role":"user","content":"From:
+        Anna Puchal <APuchal@itpsa.com>\nTo: Ana Alcaraz <AAlcaraz@itpsa.com>, ITPSA
+        Lab Desenvolupament <LabDesenvolupament@itpsa.com>, Javier Estevez Medina
+        <JEstevez@itpsa.com>, Maria Moreno <mmoreno@itpsa.com>\nSubject: RE: Validació
+        mostres T25\nDate: 2025-01-22T14:45:10+00:00\n\n--- Email Body (Markdown)
+        ---\nBona tarda, Ana,\n\nDoncs no ho sé, tot i que crec que em varen dir que
+        augmentarien la dosi d’antioxidant. Jo enviaria els resultats i guardeu mostra
+        per si s’ha de repetir.\n\nGràcies,\n\n| ![Icono Descripción generada automáticamente](cid:image002.png)
+        |   | Anna Puchal *Food Division Manager * |    |\n| --- | --- | --- | ---
+        |\n|   |  ![Imagen que contiene Icono Descripción generada automáticamente](cid:image003.png)
+        | [+34 93 452 03 30 ](tel:+34934520330) |    |   |\n|  ![Icono Descripción
+        generada automáticamente](cid:image004.png) | apuchal@itpsa.com  |    |  
+        |\n|   |   |  ![Icono Descripción generada automáticamente](cid:image005.png)
+        | [www.itpsa.com ](https://itpsa.com/) |   |   |\n|    |    |  ![Icono Descripción
+        generada automáticamente](cid:image006.png) | Avda. Roma 157 – 7ª Planta 08011,
+        Barcelona (Spain)  |   |  |\n\n**AVISO LEGAL**\n\nDe conformidad con lo establecido
+        en la normativa vigente en Protección de Datos de Carácter Personal, le informamos
+        que INDUSTRIAL TECNICA PECUARIA, S.A. con C.I.F. A08219511 y domicilio social
+        sito Av. de Roma 157, 7, 08011 Barcelona, cuenta con los protocolos de seguridad
+        establecidos por el RGPD. De acuerdo con los derechos que le confiere la normativa
+        vigente en protección de datos, usted puede ejercer los derechos de acceso,
+        rectificación, limitación de tratamiento, supresión, portabilidad y oposición
+        al tratamiento de sus datos de carácter personal, así como del consentimiento
+        prestado para el tratamiento de estos, dirigiendo su petición a la dirección
+        postal indicada más arriba o al correo electrónico itpsa@itpsa.com. Este mensaje
+        está dirigido únicamente a su destinatario y es confidencial. Si lo ha recibido
+        por error, INDUSTRIAL TECNICA PECUARIA, S.A. le informa que su contenido es
+        reservado y su lectura, copia y uso no está autorizado, INDUSTRIAL TECNICA
+        PECUARIA, S.A. no garantiza la confidencialidad de los mensajes transmitidos
+        vía Internet y se reserva el derecho a ejercer las acciones legales que le
+        correspondan contra todo tercero que acceda de forma ilegítima al contenido
+        de este mensaje y al de los ficheros contenidos en el mismo.\n\nQ Por favor,
+        considere el medio ambiente antes de imprimir este correo.\n\n**LEGAL NOTICE**\n\nIn
+        accordance with the provisions of current regulations on the Protection of
+        Personal Data, we inform you that INDUSTRIAL TECNICA PECUARIA, S.A. with C.I.F.
+        A08219511 and registered office at Av. De Roma 157, 7, 08011 Barcelona, ​​has
+        the security protocols established by the GDPR. In accordance with the rights
+        conferred by current regulations on data protection, you can exercise the
+        rights of access, rectification, limitation of treatment, deletion, portability,
+        and opposition to the processing of your personal data       as well as the
+        consent given for the treatment of the same, directing your request to the
+        postal address indicated above or to the email itpsa@itpsa.com. This message
+        is intended for the intended recipient only and is confidential. If you have
+        received it by      mistake, INDUSTRIAL TECNICA PECUARIA, S.A. informs you
+        that its content is reserved, and its reading, copying and use is not authorized,
+        INDUSTRIAL TECNICA PECUARIA, S.A. does not guarantee the confidentiality of
+        the messages transmitted via the Internet    and reserves the right to exercise
+        the corresponding legal actions against any third party who illegitimately
+        accesses the content of this message and the files contained therein.\n\nQ
+        Please consider the environment before printing this e-mail.\n\n**De:** Ana
+        Alcaraz <AAlcaraz@itpsa.com> \n**Enviat:** miércoles, 22 de enero de 2025
+        14:00\n**Per a:** Anna Puchal <APuchal@itpsa.com>; ITPSA Lab Desenvolupament
+        <LabDesenvolupament@itpsa.com>; Javier Estevez Medina <JEstevez@itpsa.com>;
+        Maria Moreno <mmoreno@itpsa.com>\n**Tema:** RE: Validació mostres T25\n\nBona
+        tarda Anna,\n\nSaps quina dosis de ROSPHEROL T25 porten aquestes mostres?
+        Hem trobat un residual de tocoferols excessivament alt en comparació amb altres
+        mostres de Royal i era per saber si la cosa bé de la mostra o de l’anàlisi.
+        Ja ens diràs per tal de fer l’informe o repetir les analítiques abans de passar
+        els resultats.\n\nSalutacions,\n\n| ![Icono Descripción generada automáticamente](cid:image002.png)
+        |   | **Ana Alcaraz García** *R+D+s Laboratory Technician * |    |\n| ---
+        | --- | --- | --- |\n|   |  ![Imagen que contiene Icono Descripción generada
+        automáticamente](cid:image003.png) | + 34 977 600 027 / 608 472 518 |    |
+          |\n|  ![Icono Descripción generada automáticamente](cid:image004.png) |
+        aalcaraz@itpsa.com  <xxxxxxxx@itpsa.com > |    |   |\n|   |   |  ![Icono Descripción
+        generada automáticamente](cid:image005.png) | [www.itpsa.com ](https://itpsa.com/)
+        |   |   |\n|    |    |  ![Icono Descripción generada automáticamente](cid:image006.png)
+        | Polígon Industrial de Valls, C/Artesans 61 43800 Valls, Tarragona (Spain) 
+        |   |  |\n\n**AVISO LEGAL**\n\nDe conformidad con lo establecido en la normativa
+        vigente en Protección de Datos de Carácter Personal, le informamos que INDUSTRIAL
+        TECNICA PECUARIA, S.A. con C.I.F. A08219511 y domicilio social sito Av. de
+        Roma 157, 7, 08011 Barcelona, cuenta con los protocolos de seguridad establecidos
+        por el RGPD. De acuerdo con los derechos que le confiere la normativa vigente
+        en protección de datos, usted puede ejercer los derechos de acceso, rectificación,
+        limitación de tratamiento, supresión, portabilidad y oposición al tratamiento
+        de sus datos de carácter personal, así como del consentimiento prestado para
+        el tratamiento de estos, dirigiendo su petición a la dirección postal indicada
+        más arriba o al correo electrónico itpsa@itpsa.com. Este mensaje está dirigido
+        únicamente a su destinatario y es confidencial. Si lo ha recibido por error,
+        INDUSTRIAL TECNICA PECUARIA, S.A. le informa que su contenido es reservado
+        y su lectura, copia y uso no está autorizado, INDUSTRIAL TECNICA PECUARIA,
+        S.A. no garantiza la confidencialidad de los mensajes transmitidos vía Internet
+        y se reserva el derecho a ejercer las acciones legales que le correspondan
+        contra todo tercero que acceda de forma ilegítima al contenido de este mensaje
+        y al de los ficheros contenidos en el mismo.\n\nQ Por favor, considere el
+        medio ambiente antes de imprimir este correo.\n\n**LEGAL NOTICE**\n\nIn accordance
+        with the provisions of current regulations on the Protection of Personal Data,
+        we inform you that INDUSTRIAL TECNICA PECUARIA, S.A. with C.I.F. A08219511
+        and registered office at Av. De Roma 157, 7, 08011 Barcelona, ​​has the security
+        protocols established by the GDPR. In accordance with the rights conferred
+        by current regulations on data protection, you can exercise the rights of
+        access, rectification, limitation of treatment, deletion, portability, and
+        opposition to the processing of your personal data       as well as the consent
+        given for the treatment of the same, directing your request to the postal
+        address indicated above or to the email itpsa@itpsa.com. This message is intended
+        for the intended recipient only and is confidential. If you have received
+        it by      mistake, INDUSTRIAL TECNICA PECUARIA, S.A. informs you that its
+        content is reserved, and its reading, copying and use is not authorized, INDUSTRIAL
+        TECNICA PECUARIA, S.A. does not guarantee the confidentiality of the messages
+        transmitted via the Internet    and reserves the right to exercise the corresponding
+        legal actions against any third party who illegitimately accesses the content
+        of this message and the files contained therein.\n\nQ Please consider the
+        environment before printing this e-mail.\n\n**De:** Anna Puchal <APuchal@itpsa.com>
+        \n**Enviado el:** miércoles, 15 de enero de 2025 15:57\n**Para:** ITPSA Lab
+        Desenvolupament <LabDesenvolupament@itpsa.com>; Javier Estevez Medina <JEstevez@itpsa.com>;
+        Ana Alcaraz <AAlcaraz@itpsa.com>; Maria Moreno <mmoreno@itpsa.com>\n**Asunto:**
+        RV: Validació mostres T25\n\n**De:** Irene <irene@royalprotein.com> \n**Enviado
+        el:** miércoles, 15 de enero de 2025 15:52\n**Para:** Anna Puchal <APuchal@itpsa.com>\n**CC:**
+        Gloria <gloria@royalprotein.com>\n**Asunto:** Validació mostres T25\n\nBona
+        tarda Anna,\n\nUs farem arribar unes mostres per validar el romanent d’antioxidant
+        (validació anual).\n\n| **Item** | **Sampling point** | **Batch n°** | **Product
+        name** | **Quantity (g)** | **Production date*** | **AOX applied*** | **Dosage**
+        | **Process level (AOX application)*** |\n| --- | --- | --- | --- | --- |
+        --- | --- | --- | --- |\n| **(ppm)*** |\n| 1 | PCD | 080125PCD/01 |   |  
+        | 08/01/2025 | T25 |   |   |\n| 2 | PCD | 090125PCD/04 |   |   | 09/01/2025
+        | T25 |   |   |\n\nGràcies per endavant,\n\n| ![](cid:image008.jpg) | Irene
+        Taberner i Felip *R & D Department* **RP ROYAL DISTRIBUTION, S.L** C/ Sant
+        Andreu, 85 · 17834 Porqueres (GIRONA) - SPAIN Phone : **+34 972 57 14 04**
+        Direct Phone:**  +34 972 78 95 68**irene@royalprotein.com · [www.royalprotein.com](http://www.royalprotein.com/)
+          RP Royal Distribution, S.L. [Privacy policy](http://www.royalprotein.com/index.php/en/privacy-policy.html)
+        |"}],"system":"You are a contact information extractor. Extract ALL people
+        mentioned in emails.\n\n<instructions>\nExtract ALL contacts from the email:\n1.
+        From/To/Cc headers - extract every email address\n2. Email signatures - extract
+        detailed info (name, role, phone, etc.)\n3. Forwarded email headers - extract
+        sender/recipients from \"De:\", \"From:\", \"Para:\", \"To:\" lines\n4. Email
+        body mentions - any person referenced by name or email\n\nFor each contact,
+        extract:\n- email: Email address (required, lowercase)\n- name: Full name
+        (if available)\n- job_role: Job title - NOT the department (see examples below)\n-
+        department: Department or division name\n- phone_numbers: Array of phone numbers
+        with country codes\n\nDistinguishing job_role vs department:\n- \"[Department]
+        Manager\" -> extract the department name, job_role is \"Manager\"\n- \"[Department]
+        Technician\" -> extract the department name, job_role is \"Technician\"\n-
+        \"Senior Engineer\" -> job_role only, no department\n- \"[Division] Director\"
+        -> extract division as department, job_role is \"Director\"\n</instructions>\n\n<output_format>\nReturn
+        ONLY a JSON array of contacts:\n[\n  {\"email\": \"john@example.com\", \"name\":
+        \"John Doe\", \"job_role\": \"Manager\", \"department\": \"Sales\", \"phone_numbers\":
+        [\"+1-555-1234\"]}\n]\n\nIf no contacts found, return: []\n</output_format>\n\n<guidelines>\n-
+        Extract EVERY email address mentioned, even if minimal info available\n- Use
+        null for unknown fields, never hallucinate\n- Normalize emails to lowercase\n-
+        Include country codes in phone numbers when visible\n</guidelines>\n"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Anthropic::Client/Ruby 1.16.0
+      Host:
+      - api.anthropic.com
+      X-Stainless-Arch:
+      - x64
+      X-Stainless-Lang:
+      - ruby
+      X-Stainless-Os:
+      - Linux
+      X-Stainless-Package-Version:
+      - 1.16.0
+      X-Stainless-Runtime:
+      - ruby
+      X-Stainless-Runtime-Version:
+      - 3.4.7
+      Content-Type:
+      - application/json
+      Anthropic-Version:
+      - '2023-06-01'
+      X-Api-Key:
+      - "<ANTHROPIC_API_KEY>"
+      X-Stainless-Retry-Count:
+      - '0'
+      X-Stainless-Timeout:
+      - '600.0'
+      Content-Length:
+      - '11278'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Dec 2025 18:19:29 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 9af0304e99b77dd7-MAD
+      Cf-Cache-Status:
+      - DYNAMIC
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Anthropic-Organization-Id:
+      - 36f27efe-3e16-4c65-95cd-f21d3225017e
+      Anthropic-Ratelimit-Input-Tokens-Limit:
+      - '100000'
+      Anthropic-Ratelimit-Input-Tokens-Remaining:
+      - '98000'
+      Anthropic-Ratelimit-Input-Tokens-Reset:
+      - '2025-12-16T18:19:25Z'
+      Anthropic-Ratelimit-Output-Tokens-Limit:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Remaining:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Reset:
+      - '2025-12-16T18:19:30Z'
+      Anthropic-Ratelimit-Requests-Limit:
+      - '1000'
+      Anthropic-Ratelimit-Requests-Remaining:
+      - '999'
+      Anthropic-Ratelimit-Requests-Reset:
+      - '2025-12-16T18:19:23Z'
+      Anthropic-Ratelimit-Tokens-Limit:
+      - '120000'
+      Anthropic-Ratelimit-Tokens-Remaining:
+      - '118000'
+      Anthropic-Ratelimit-Tokens-Reset:
+      - '2025-12-16T18:19:25Z'
+      Request-Id:
+      - req_011CWApwwN9k5xCDsELoT2eF
+      X-Envoy-Upstream-Service-Time:
+      - '6303'
+      Vary:
+      - Accept-Encoding
+      X-Robots-Tag:
+      - none
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJtb2RlbCI6ImNsYXVkZS0zLTUtaGFpa3UtMjAyNDEwMjIiLCJpZCI6Im1zZ18wMUZRcXQ2d0JEdjZtWGp6aWdXWjY1VVYiLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJCYXNlZCBvbiB0aGUgZW1haWwsIGhlcmUgYXJlIHRoZSBjb250YWN0cyBleHRyYWN0ZWQ6XG5cbltcbiAge1xuICAgIFwiZW1haWxcIjogXCJhcHVjaGFsQGl0cHNhLmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIkFubmEgUHVjaGFsXCIsXG4gICAgXCJqb2Jfcm9sZVwiOiBcIk1hbmFnZXJcIixcbiAgICBcImRlcGFydG1lbnRcIjogXCJGb29kIERpdmlzaW9uXCIsXG4gICAgXCJwaG9uZV9udW1iZXJzXCI6IFtcIiszNCA5MyA0NTIgMDMgMzBcIl1cbiAgfSxcbiAge1xuICAgIFwiZW1haWxcIjogXCJhYWxjYXJhekBpdHBzYS5jb21cIixcbiAgICBcIm5hbWVcIjogXCJBbmEgQWxjYXJheiBHYXJjw61hXCIsXG4gICAgXCJqb2Jfcm9sZVwiOiBcIlRlY2huaWNpYW5cIixcbiAgICBcImRlcGFydG1lbnRcIjogXCJSK0QrcyBMYWJvcmF0b3J5XCIsXG4gICAgXCJwaG9uZV9udW1iZXJzXCI6IFtcIiszNCA5NzcgNjAwIDAyN1wiLCBcIiszNCA2MDggNDcyIDUxOFwiXVxuICB9LFxuICB7XG4gICAgXCJlbWFpbFwiOiBcImplc3RldmV6QGl0cHNhLmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIkphdmllciBFc3RldmV6IE1lZGluYVwiLFxuICAgIFwiam9iX3JvbGVcIjogbnVsbCxcbiAgICBcImRlcGFydG1lbnRcIjogbnVsbCxcbiAgICBcInBob25lX251bWJlcnNcIjogW11cbiAgfSxcbiAge1xuICAgIFwiZW1haWxcIjogXCJtbW9yZW5vQGl0cHNhLmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIk1hcmlhIE1vcmVub1wiLFxuICAgIFwiam9iX3JvbGVcIjogbnVsbCxcbiAgICBcImRlcGFydG1lbnRcIjogbnVsbCxcbiAgICBcInBob25lX251bWJlcnNcIjogW11cbiAgfSxcbiAge1xuICAgIFwiZW1haWxcIjogXCJpcmVuZUByb3lhbHByb3RlaW4uY29tXCIsXG4gICAgXCJuYW1lXCI6IFwiSXJlbmUgVGFiZXJuZXIgaSBGZWxpcFwiLFxuICAgIFwiam9iX3JvbGVcIjogbnVsbCxcbiAgICBcImRlcGFydG1lbnRcIjogXCJSICYgRCBEZXBhcnRtZW50XCIsXG4gICAgXCJwaG9uZV9udW1iZXJzXCI6IFtcIiszNCA5NzIgNTcgMTQgMDRcIiwgXCIrMzQgOTcyIDc4IDk1IDY4XCJdXG4gIH0sXG4gIHtcbiAgICBcImVtYWlsXCI6IFwiZ2xvcmlhQHJveWFscHJvdGVpbi5jb21cIixcbiAgICBcIm5hbWVcIjogXCJHbG9yaWFcIixcbiAgICBcImpvYl9yb2xlXCI6IG51bGwsXG4gICAgXCJkZXBhcnRtZW50XCI6IG51bGwsXG4gICAgXCJwaG9uZV9udW1iZXJzXCI6IFtdXG4gIH1cbl0ifV0sInN0b3BfcmVhc29uIjoiZW5kX3R1cm4iLCJzdG9wX3NlcXVlbmNlIjpudWxsLCJ1c2FnZSI6eyJpbnB1dF90b2tlbnMiOjM0MDgsImNhY2hlX2NyZWF0aW9uX2lucHV0X3Rva2VucyI6MCwiY2FjaGVfcmVhZF9pbnB1dF90b2tlbnMiOjAsImNhY2hlX2NyZWF0aW9uIjp7ImVwaGVtZXJhbF81bV9pbnB1dF90b2tlbnMiOjAsImVwaGVtZXJhbF8xaF9pbnB1dF90b2tlbnMiOjB9LCJvdXRwdXRfdG9rZW5zIjo0MzksInNlcnZpY2VfdGllciI6InN0YW5kYXJkIn19
+  recorded_at: Tue, 16 Dec 2025 18:19:29 GMT
+- request:
+    method: post
+    uri: https://api.anthropic.com/v1/messages
+    body:
+      encoding: UTF-8
+      string: '{"model":"claude-3-5-haiku-latest","max_tokens":2048,"temperature":0,"messages":[{"role":"user","content":[{"type":"text","text":"From:
+        Anna Puchal <APuchal@itpsa.com>\nTo: Ana Alcaraz <AAlcaraz@itpsa.com>, ITPSA
+        Lab Desenvolupament <LabDesenvolupament@itpsa.com>, Javier Estevez Medina
+        <JEstevez@itpsa.com>, Maria Moreno <mmoreno@itpsa.com>\nSubject: RE: Validació
+        mostres T25\nDate: 2025-01-22T14:45:10+00:00\n\n--- Email Body (Markdown)
+        ---\nBona tarda, Ana,\n\nDoncs no ho sé, tot i que crec que em varen dir que
+        augmentarien la dosi d’antioxidant. Jo enviaria els resultats i guardeu mostra
+        per si s’ha de repetir.\n\nGràcies,\n\n| ![Icono Descripción generada automáticamente](cid:image002.png)
+        |   | Anna Puchal *Food Division Manager * |    |\n| --- | --- | --- | ---
+        |\n|   |  ![Imagen que contiene Icono Descripción generada automáticamente](cid:image003.png)
+        | [+34 93 452 03 30 ](tel:+34934520330) |    |   |\n|  ![Icono Descripción
+        generada automáticamente](cid:image004.png) | apuchal@itpsa.com  |    |  
+        |\n|   |   |  ![Icono Descripción generada automáticamente](cid:image005.png)
+        | [www.itpsa.com ](https://itpsa.com/) |   |   |\n|    |    |  ![Icono Descripción
+        generada automáticamente](cid:image006.png) | Avda. Roma 157 – 7ª Planta 08011,
+        Barcelona (Spain)  |   |  |\n\n**AVISO LEGAL**\n\nDe conformidad con lo establecido
+        en la normativa vigente en Protección de Datos de Carácter Personal, le informamos
+        que INDUSTRIAL TECNICA PECUARIA, S.A. con C.I.F. A08219511 y domicilio social
+        sito Av. de Roma 157, 7, 08011 Barcelona, cuenta con los protocolos de seguridad
+        establecidos por el RGPD. De acuerdo con los derechos que le confiere la normativa
+        vigente en protección de datos, usted puede ejercer los derechos de acceso,
+        rectificación, limitación de tratamiento, supresión, portabilidad y oposición
+        al tratamiento de sus datos de carácter personal, así como del consentimiento
+        prestado para el tratamiento de estos, dirigiendo su petición a la dirección
+        postal indicada más arriba o al correo electrónico itpsa@itpsa.com. Este mensaje
+        está dirigido únicamente a su destinatario y es confidencial. Si lo ha recibido
+        por error, INDUSTRIAL TECNICA PECUARIA, S.A. le informa que su contenido es
+        reservado y su lectura, copia y uso no está autorizado, INDUSTRIAL TECNICA
+        PECUARIA, S.A. no garantiza la confidencialidad de los mensajes transmitidos
+        vía Internet y se reserva el derecho a ejercer las acciones legales que le
+        correspondan contra todo tercero que acceda de forma ilegítima al contenido
+        de este mensaje y al de los ficheros contenidos en el mismo.\n\nQ Por favor,
+        considere el medio ambiente antes de imprimir este correo.\n\n**LEGAL NOTICE**\n\nIn
+        accordance with the provisions of current regulations on the Protection of
+        Personal Data, we inform you that INDUSTRIAL TECNICA PECUARIA, S.A. with C.I.F.
+        A08219511 and registered office at Av. De Roma 157, 7, 08011 Barcelona, ​​has
+        the security protocols established by the GDPR. In accordance with the rights
+        conferred by current regulations on data protection, you can exercise the
+        rights of access, rectification, limitation of treatment, deletion, portability,
+        and opposition to the processing of your personal data       as well as the
+        consent given for the treatment of the same, directing your request to the
+        postal address indicated above or to the email itpsa@itpsa.com. This message
+        is intended for the intended recipient only and is confidential. If you have
+        received it by      mistake, INDUSTRIAL TECNICA PECUARIA, S.A. informs you
+        that its content is reserved, and its reading, copying and use is not authorized,
+        INDUSTRIAL TECNICA PECUARIA, S.A. does not guarantee the confidentiality of
+        the messages transmitted via the Internet    and reserves the right to exercise
+        the corresponding legal actions against any third party who illegitimately
+        accesses the content of this message and the files contained therein.\n\nQ
+        Please consider the environment before printing this e-mail.\n\n**De:** Ana
+        Alcaraz <AAlcaraz@itpsa.com> \n**Enviat:** miércoles, 22 de enero de 2025
+        14:00\n**Per a:** Anna Puchal <APuchal@itpsa.com>; ITPSA Lab Desenvolupament
+        <LabDesenvolupament@itpsa.com>; Javier Estevez Medina <JEstevez@itpsa.com>;
+        Maria Moreno <mmoreno@itpsa.com>\n**Tema:** RE: Validació mostres T25\n\nBona
+        tarda Anna,\n\nSaps quina dosis de ROSPHEROL T25 porten aquestes mostres?
+        Hem trobat un residual de tocoferols excessivament alt en comparació amb altres
+        mostres de Royal i era per saber si la cosa bé de la mostra o de l’anàlisi.
+        Ja ens diràs per tal de fer l’informe o repetir les analítiques abans de passar
+        els resultats.\n\nSalutacions,\n\n| ![Icono Descripción generada automáticamente](cid:image002.png)
+        |   | **Ana Alcaraz García** *R+D+s Laboratory Technician * |    |\n| ---
+        | --- | --- | --- |\n|   |  ![Imagen que contiene Icono Descripción generada
+        automáticamente](cid:image003.png) | + 34 977 600 027 / 608 472 518 |    |
+          |\n|  ![Icono Descripción generada automáticamente](cid:image004.png) |
+        aalcaraz@itpsa.com  <xxxxxxxx@itpsa.com > |    |   |\n|   |   |  ![Icono Descripción
+        generada automáticamente](cid:image005.png) | [www.itpsa.com ](https://itpsa.com/)
+        |   |   |\n|    |    |  ![Icono Descripción generada automáticamente](cid:image006.png)
+        | Polígon Industrial de Valls, C/Artesans 61 43800 Valls, Tarragona (Spain) 
+        |   |  |\n\n**AVISO LEGAL**\n\nDe conformidad con lo establecido en la normativa
+        vigente en Protección de Datos de Carácter Personal, le informamos que INDUSTRIAL
+        TECNICA PECUARIA, S.A. con C.I.F. A08219511 y domicilio social sito Av. de
+        Roma 157, 7, 08011 Barcelona, cuenta con los protocolos de seguridad establecidos
+        por el RGPD. De acuerdo con los derechos que le confiere la normativa vigente
+        en protección de datos, usted puede ejercer los derechos de acceso, rectificación,
+        limitación de tratamiento, supresión, portabilidad y oposición al tratamiento
+        de sus datos de carácter personal, así como del consentimiento prestado para
+        el tratamiento de estos, dirigiendo su petición a la dirección postal indicada
+        más arriba o al correo electrónico itpsa@itpsa.com. Este mensaje está dirigido
+        únicamente a su destinatario y es confidencial. Si lo ha recibido por error,
+        INDUSTRIAL TECNICA PECUARIA, S.A. le informa que su contenido es reservado
+        y su lectura, copia y uso no está autorizado, INDUSTRIAL TECNICA PECUARIA,
+        S.A. no garantiza la confidencialidad de los mensajes transmitidos vía Internet
+        y se reserva el derecho a ejercer las acciones legales que le correspondan
+        contra todo tercero que acceda de forma ilegítima al contenido de este mensaje
+        y al de los ficheros contenidos en el mismo.\n\nQ Por favor, considere el
+        medio ambiente antes de imprimir este correo.\n\n**LEGAL NOTICE**\n\nIn accordance
+        with the provisions of current regulations on the Protection of Personal Data,
+        we inform you that INDUSTRIAL TECNICA PECUARIA, S.A. with C.I.F. A08219511
+        and registered office at Av. De Roma 157, 7, 08011 Barcelona, ​​has the security
+        protocols established by the GDPR. In accordance with the rights conferred
+        by current regulations on data protection, you can exercise the rights of
+        access, rectification, limitation of treatment, deletion, portability, and
+        opposition to the processing of your personal data       as well as the consent
+        given for the treatment of the same, directing your request to the postal
+        address indicated above or to the email itpsa@itpsa.com. This message is intended
+        for the intended recipient only and is confidential. If you have received
+        it by      mistake, INDUSTRIAL TECNICA PECUARIA, S.A. informs you that its
+        content is reserved, and its reading, copying and use is not authorized, INDUSTRIAL
+        TECNICA PECUARIA, S.A. does not guarantee the confidentiality of the messages
+        transmitted via the Internet    and reserves the right to exercise the corresponding
+        legal actions against any third party who illegitimately accesses the content
+        of this message and the files contained therein.\n\nQ Please consider the
+        environment before printing this e-mail.\n\n**De:** Anna Puchal <APuchal@itpsa.com>
+        \n**Enviado el:** miércoles, 15 de enero de 2025 15:57\n**Para:** ITPSA Lab
+        Desenvolupament <LabDesenvolupament@itpsa.com>; Javier Estevez Medina <JEstevez@itpsa.com>;
+        Ana Alcaraz <AAlcaraz@itpsa.com>; Maria Moreno <mmoreno@itpsa.com>\n**Asunto:**
+        RV: Validació mostres T25\n\n**De:** Irene <irene@royalprotein.com> \n**Enviado
+        el:** miércoles, 15 de enero de 2025 15:52\n**Para:** Anna Puchal <APuchal@itpsa.com>\n**CC:**
+        Gloria <gloria@royalprotein.com>\n**Asunto:** Validació mostres T25\n\nBona
+        tarda Anna,\n\nUs farem arribar unes mostres per validar el romanent d’antioxidant
+        (validació anual).\n\n| **Item** | **Sampling point** | **Batch n°** | **Product
+        name** | **Quantity (g)** | **Production date*** | **AOX applied*** | **Dosage**
+        | **Process level (AOX application)*** |\n| --- | --- | --- | --- | --- |
+        --- | --- | --- | --- |\n| **(ppm)*** |\n| 1 | PCD | 080125PCD/01 |   |  
+        | 08/01/2025 | T25 |   |   |\n| 2 | PCD | 090125PCD/04 |   |   | 09/01/2025
+        | T25 |   |   |\n\nGràcies per endavant,\n\n| ![](cid:image008.jpg) | Irene
+        Taberner i Felip *R & D Department* **RP ROYAL DISTRIBUTION, S.L** C/ Sant
+        Andreu, 85 · 17834 Porqueres (GIRONA) - SPAIN Phone : **+34 972 57 14 04**
+        Direct Phone:**  +34 972 78 95 68**irene@royalprotein.com · [www.royalprotein.com](http://www.royalprotein.com/)
+          RP Royal Distribution, S.L. [Privacy policy](http://www.royalprotein.com/index.php/en/privacy-policy.html)
+        |"},{"type":"text","text":"Image (content_id: image008.jpg):"},{"type":"image","source":{"type":"base64","media_type":"image/jpeg","data":"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"}},{"type":"text","text":"Image
+        (content_id: image007.jpg):"},{"type":"image","source":{"type":"base64","media_type":"image/jpeg","data":"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"}},{"type":"text","text":"Image
+        (content_id: image006.png):"},{"type":"image","source":{"type":"base64","media_type":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABxLuKEAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEr2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI0LTEyLTE4PC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjg4MWIyZTRiLTljN2EtNDRlNy1iODcyLTFlOTQxZDFjNGFiOTwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5EaXNlw7FvIHNpbiB0w610dWxvIC0gMzwvcmRmOmxpPgogICA8L3JkZjpBbHQ+CiAgPC9kYzp0aXRsZT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3Jp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"}},{"type":"text","text":"Image
+        (content_id: image005.png):"},{"type":"image","source":{"type":"base64","media_type":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABxLuKEAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEr2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI0LTEyLTE4PC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjU5YWEyMjM3LTVmYzEtNDhmMi1iOTI5LTYxZmI1YTAwZjg2MDwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5EaXNlw7FvIHNpbiB0w610dWxvIC0gNDwvcmRmOmxpPgogICA8L3JkZjpBbHQ+CiAgPC9kYzp0aXRsZT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3Jp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"}},{"type":"text","text":"Image
+        (content_id: image004.png):"},{"type":"image","source":{"type":"base64","media_type":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABxLuKEAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEr2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI0LTEyLTE4PC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjU1Mjg0ODNkLTQ4MzktNDIxZi1hMzQ4LWE4YjkyZmMxN2JmMjwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5EaXNlw7FvIHNpbiB0w610dWxvIC0gMjwvcmRmOmxpPgogICA8L3JkZjpBbHQ+CiAgPC9kYzp0aXRsZT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3Jp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"}},{"type":"text","text":"Image
+        (content_id: image003.png):"},{"type":"image","source":{"type":"base64","media_type":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABxLuKEAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEr2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI0LTEyLTE4PC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjcyZTE3NzA0LWM0ZDMtNGFmYy1iMTVmLWM1NWFkNmVmYTY4ZTwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5EaXNlw7FvIHNpbiB0w610dWxvIC0gMTwvcmRmOmxpPgogICA8L3JkZjpBbHQ+CiAgPC9kYzp0aXRsZT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3Jp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"}},{"type":"text","text":"Image
+        (content_id: image002.png):"},{"type":"image","source":{"type":"base64","media_type":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEr2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI0LTEyLTE3PC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPmVhMTUwYzBlLTEyNTItNDk2Ni1hZDQ0LWQxMDhhNjVlY2Y3MTwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5EaXNlw7FvIHNpbiB0w610dWxvIC0gMTwvcmRmOmxpPgogICA8L3JkZjpBbHQ+CiAgPC9kYzp0aXRsZT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3Jp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"}}]}],"system":"You
+        are a company information extractor. Extract ALL companies/organizations mentioned
+        in emails.\n\n<instructions>\nExtract ALL companies from the email:\n1. Email
+        signatures - company names, addresses, websites\n2. Email domains - infer
+        company from contact email domains\n3. Legal notices/disclaimers - often contain
+        full legal names, addresses, and VAT IDs\n4. Forwarded emails - companies
+        mentioned in nested signatures\n\nFor each company, extract:\n- legal_name:
+        Full official/registered name (includes legal suffix like S.A., S.L., Inc.,
+        Ltd., GmbH)\n- commercial_name: Brand/trade name commonly used (shorter, without
+        legal suffix)\n- domain: Email domain for this company (e.g., \"example.com\"
+        from contacts @example.com)\n- website: Official website URL\n- location:
+        Physical address from signature or legal notice\n- vat_id: Tax/VAT identification
+        number (C.I.F., NIF, VAT, Tax ID, EIN, etc.)\n- logo_content_id: Content ID
+        of the company''s logo image (if visible in signature)\n\nImage references
+        in the email use markdown: ![alt](cid:image_id)\nMatch logo images to companies
+        by their position near company names in signatures.\n</instructions>\n\n<output_format>\nReturn
+        ONLY a JSON array of companies:\n[\n  {\"legal_name\": \"Example Corporation
+        Inc.\", \"commercial_name\": \"Example\", \"domain\": \"example.com\", \"website\":
+        \"https://example.com\", \"location\": \"123 Main St, City, Country\", \"vat_id\":
+        \"XX12345678\", \"logo_content_id\": \"image001.png\"}\n]\n\nIf no companies
+        found, return: []\n</output_format>\n\n<guidelines>\n- Extract both legal
+        and commercial names when available\n- IMPORTANT: Always extract domain from
+        contact emails associated with this company\n- Infer website from domain if
+        not explicit (e.g., domain \"example.com\" -> website \"https://example.com\")\n-
+        Look carefully at legal notices/disclaimers at the bottom of emails for VAT
+        IDs\n- Use null for unknown fields, never hallucinate\n- Only set logo_content_id
+        if you can identify a logo image for that company\n</guidelines>\n"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Anthropic::Client/Ruby 1.16.0
+      Host:
+      - api.anthropic.com
+      X-Stainless-Arch:
+      - x64
+      X-Stainless-Lang:
+      - ruby
+      X-Stainless-Os:
+      - Linux
+      X-Stainless-Package-Version:
+      - 1.16.0
+      X-Stainless-Runtime:
+      - ruby
+      X-Stainless-Runtime-Version:
+      - 3.4.7
+      Content-Type:
+      - application/json
+      Anthropic-Version:
+      - '2023-06-01'
+      X-Api-Key:
+      - "<ANTHROPIC_API_KEY>"
+      X-Stainless-Retry-Count:
+      - '0'
+      X-Stainless-Timeout:
+      - '600.0'
+      Content-Length:
+      - '70797'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Dec 2025 18:19:35 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 9af03076b8737dd7-MAD
+      Cf-Cache-Status:
+      - DYNAMIC
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Anthropic-Organization-Id:
+      - 36f27efe-3e16-4c65-95cd-f21d3225017e
+      Anthropic-Ratelimit-Input-Tokens-Limit:
+      - '100000'
+      Anthropic-Ratelimit-Input-Tokens-Remaining:
+      - '98000'
+      Anthropic-Ratelimit-Input-Tokens-Reset:
+      - '2025-12-16T18:19:32Z'
+      Anthropic-Ratelimit-Output-Tokens-Limit:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Remaining:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Reset:
+      - '2025-12-16T18:19:35Z'
+      Anthropic-Ratelimit-Requests-Limit:
+      - '1000'
+      Anthropic-Ratelimit-Requests-Remaining:
+      - '999'
+      Anthropic-Ratelimit-Requests-Reset:
+      - '2025-12-16T18:19:29Z'
+      Anthropic-Ratelimit-Tokens-Limit:
+      - '120000'
+      Anthropic-Ratelimit-Tokens-Remaining:
+      - '118000'
+      Anthropic-Ratelimit-Tokens-Reset:
+      - '2025-12-16T18:19:32Z'
+      Request-Id:
+      - req_011CWApxQs8LKpfPbuRcAKh3
+      X-Envoy-Upstream-Service-Time:
+      - '5242'
+      Vary:
+      - Accept-Encoding
+      X-Robots-Tag:
+      - none
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJtb2RlbCI6ImNsYXVkZS0zLTUtaGFpa3UtMjAyNDEwMjIiLCJpZCI6Im1zZ18wMVE3ZXhqRzI1SnBvb0RXcVR4UXhXRDciLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJCYXNlZCBvbiB0aGUgZW1haWwsIEkndmUgZXh0cmFjdGVkIHRoZSBmb2xsb3dpbmcgY29tcGFuaWVzOlxuXG5bXG4gIHtcbiAgICBcImxlZ2FsX25hbWVcIjogXCJJTkRVU1RSSUFMIFRFQ05JQ0EgUEVDVUFSSUEsIFMuQS5cIixcbiAgICBcImNvbW1lcmNpYWxfbmFtZVwiOiBcIklUUFNBXCIsXG4gICAgXCJkb21haW5cIjogXCJpdHBzYS5jb21cIixcbiAgICBcIndlYnNpdGVcIjogXCJodHRwczovL2l0cHNhLmNvbS9cIixcbiAgICBcImxvY2F0aW9uXCI6IFwiQXZkYS4gUm9tYSAxNTcg4oCTIDfCqiBQbGFudGEgMDgwMTEsIEJhcmNlbG9uYSAoU3BhaW4pXCIsXG4gICAgXCJ2YXRfaWRcIjogXCJBMDgyMTk1MTFcIixcbiAgICBcImxvZ29fY29udGVudF9pZFwiOiBcImltYWdlMDAyLnBuZ1wiXG4gIH0sXG4gIHtcbiAgICBcImxlZ2FsX25hbWVcIjogXCJSUCBST1lBTCBESVNUUklCVVRJT04sIFMuTFwiLFxuICAgIFwiY29tbWVyY2lhbF9uYW1lXCI6IFwiUm95YWwgUHJvdGVpblwiLFxuICAgIFwiZG9tYWluXCI6IFwicm95YWxwcm90ZWluLmNvbVwiLFxuICAgIFwid2Vic2l0ZVwiOiBcImh0dHBzOi8vd3d3LnJveWFscHJvdGVpbi5jb20vXCIsXG4gICAgXCJsb2NhdGlvblwiOiBcIkMvIFNhbnQgQW5kcmV1LCA4NSDCtyAxNzgzNCBQb3JxdWVyZXMgKEdJUk9OQSkgLSBTUEFJTlwiLFxuICAgIFwidmF0X2lkXCI6IG51bGwsXG4gICAgXCJsb2dvX2NvbnRlbnRfaWRcIjogXCJpbWFnZTAwOC5qcGdcIlxuICB9XG5dIn1dLCJzdG9wX3JlYXNvbiI6ImVuZF90dXJuIiwic3RvcF9zZXF1ZW5jZSI6bnVsbCwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjozODYzLCJjYWNoZV9jcmVhdGlvbl9pbnB1dF90b2tlbnMiOjAsImNhY2hlX3JlYWRfaW5wdXRfdG9rZW5zIjowLCJjYWNoZV9jcmVhdGlvbiI6eyJlcGhlbWVyYWxfNW1faW5wdXRfdG9rZW5zIjowLCJlcGhlbWVyYWxfMWhfaW5wdXRfdG9rZW5zIjowfSwib3V0cHV0X3Rva2VucyI6MjczLCJzZXJ2aWNlX3RpZXIiOiJzdGFuZGFyZCJ9fQ==
+  recorded_at: Tue, 16 Dec 2025 18:19:35 GMT
+- request:
+    method: post
+    uri: https://api.anthropic.com/v1/messages
+    body:
+      encoding: UTF-8
+      string: '{"model":"claude-3-5-haiku-latest","max_tokens":1024,"temperature":0,"messages":[{"role":"user","content":"From:
+        Anna Puchal <APuchal@itpsa.com>\nTo: Ana Alcaraz <AAlcaraz@itpsa.com>, ITPSA
+        Lab Desenvolupament <LabDesenvolupament@itpsa.com>, Javier Estevez Medina
+        <JEstevez@itpsa.com>, Maria Moreno <mmoreno@itpsa.com>\nSubject: RE: Validació
+        mostres T25\nDate: 2025-01-22T14:45:10+00:00\n\n--- Email Body (Markdown)
+        ---\nBona tarda, Ana,\n\nDoncs no ho sé, tot i que crec que em varen dir que
+        augmentarien la dosi d’antioxidant. Jo enviaria els resultats i guardeu mostra
+        per si s’ha de repetir.\n\nGràcies,\n\n| ![Icono Descripción generada automáticamente](cid:image002.png)
+        |   | Anna Puchal *Food Division Manager * |    |\n| --- | --- | --- | ---
+        |\n|   |  ![Imagen que contiene Icono Descripción generada automáticamente](cid:image003.png)
+        | [+34 93 452 03 30 ](tel:+34934520330) |    |   |\n|  ![Icono Descripción
+        generada automáticamente](cid:image004.png) | apuchal@itpsa.com  |    |  
+        |\n|   |   |  ![Icono Descripción generada automáticamente](cid:image005.png)
+        | [www.itpsa.com ](https://itpsa.com/) |   |   |\n|    |    |  ![Icono Descripción
+        generada automáticamente](cid:image006.png) | Avda. Roma 157 – 7ª Planta 08011,
+        Barcelona (Spain)  |   |  |\n\n**AVISO LEGAL**\n\nDe conformidad con lo establecido
+        en la normativa vigente en Protección de Datos de Carácter Personal, le informamos
+        que INDUSTRIAL TECNICA PECUARIA, S.A. con C.I.F. A08219511 y domicilio social
+        sito Av. de Roma 157, 7, 08011 Barcelona, cuenta con los protocolos de seguridad
+        establecidos por el RGPD. De acuerdo con los derechos que le confiere la normativa
+        vigente en protección de datos, usted puede ejercer los derechos de acceso,
+        rectificación, limitación de tratamiento, supresión, portabilidad y oposición
+        al tratamiento de sus datos de carácter personal, así como del consentimiento
+        prestado para el tratamiento de estos, dirigiendo su petición a la dirección
+        postal indicada más arriba o al correo electrónico itpsa@itpsa.com. Este mensaje
+        está dirigido únicamente a su destinatario y es confidencial. Si lo ha recibido
+        por error, INDUSTRIAL TECNICA PECUARIA, S.A. le informa que su contenido es
+        reservado y su lectura, copia y uso no está autorizado, INDUSTRIAL TECNICA
+        PECUARIA, S.A. no garantiza la confidencialidad de los mensajes transmitidos
+        vía Internet y se reserva el derecho a ejercer las acciones legales que le
+        correspondan contra todo tercero que acceda de forma ilegítima al contenido
+        de este mensaje y al de los ficheros contenidos en el mismo.\n\nQ Por favor,
+        considere el medio ambiente antes de imprimir este correo.\n\n**LEGAL NOTICE**\n\nIn
+        accordance with the provisions of current regulations on the Protection of
+        Personal Data, we inform you that INDUSTRIAL TECNICA PECUARIA, S.A. with C.I.F.
+        A08219511 and registered office at Av. De Roma 157, 7, 08011 Barcelona, ​​has
+        the security protocols established by the GDPR. In accordance with the rights
+        conferred by current regulations on data protection, you can exercise the
+        rights of access, rectification, limitation of treatment, deletion, portability,
+        and opposition to the processing of your personal data       as well as the
+        consent given for the treatment of the same, directing your request to the
+        postal address indicated above or to the email itpsa@itpsa.com. This message
+        is intended for the intended recipient only and is confidential. If you have
+        received it by      mistake, INDUSTRIAL TECNICA PECUARIA, S.A. informs you
+        that its content is reserved, and its reading, copying and use is not authorized,
+        INDUSTRIAL TECNICA PECUARIA, S.A. does not guarantee the confidentiality of
+        the messages transmitted via the Internet    and reserves the right to exercise
+        the corresponding legal actions against any third party who illegitimately
+        accesses the content of this message and the files contained therein.\n\nQ
+        Please consider the environment before printing this e-mail.\n\n**De:** Ana
+        Alcaraz <AAlcaraz@itpsa.com> \n**Enviat:** miércoles, 22 de enero de 2025
+        14:00\n**Per a:** Anna Puchal <APuchal@itpsa.com>; ITPSA Lab Desenvolupament
+        <LabDesenvolupament@itpsa.com>; Javier Estevez Medina <JEstevez@itpsa.com>;
+        Maria Moreno <mmoreno@itpsa.com>\n**Tema:** RE: Validació mostres T25\n\nBona
+        tarda Anna,\n\nSaps quina dosis de ROSPHEROL T25 porten aquestes mostres?
+        Hem trobat un residual de tocoferols excessivament alt en comparació amb altres
+        mostres de Royal i era per saber si la cosa bé de la mostra o de l’anàlisi.
+        Ja ens diràs per tal de fer l’informe o repetir les analítiques abans de passar
+        els resultats.\n\nSalutacions,\n\n| ![Icono Descripción generada automáticamente](cid:image002.png)
+        |   | **Ana Alcaraz García** *R+D+s Laboratory Technician * |    |\n| ---
+        | --- | --- | --- |\n|   |  ![Imagen que contiene Icono Descripción generada
+        automáticamente](cid:image003.png) | + 34 977 600 027 / 608 472 518 |    |
+          |\n|  ![Icono Descripción generada automáticamente](cid:image004.png) |
+        aalcaraz@itpsa.com  <xxxxxxxx@itpsa.com > |    |   |\n|   |   |  ![Icono Descripción
+        generada automáticamente](cid:image005.png) | [www.itpsa.com ](https://itpsa.com/)
+        |   |   |\n|    |    |  ![Icono Descripción generada automáticamente](cid:image006.png)
+        | Polígon Industrial de Valls, C/Artesans 61 43800 Valls, Tarragona (Spain) 
+        |   |  |\n\n**AVISO LEGAL**\n\nDe conformidad con lo establecido en la normativa
+        vigente en Protección de Datos de Carácter Personal, le informamos que INDUSTRIAL
+        TECNICA PECUARIA, S.A. con C.I.F. A08219511 y domicilio social sito Av. de
+        Roma 157, 7, 08011 Barcelona, cuenta con los protocolos de seguridad establecidos
+        por el RGPD. De acuerdo con los derechos que le confiere la normativa vigente
+        en protección de datos, usted puede ejercer los derechos de acceso, rectificación,
+        limitación de tratamiento, supresión, portabilidad y oposición al tratamiento
+        de sus datos de carácter personal, así como del consentimiento prestado para
+        el tratamiento de estos, dirigiendo su petición a la dirección postal indicada
+        más arriba o al correo electrónico itpsa@itpsa.com. Este mensaje está dirigido
+        únicamente a su destinatario y es confidencial. Si lo ha recibido por error,
+        INDUSTRIAL TECNICA PECUARIA, S.A. le informa que su contenido es reservado
+        y su lectura, copia y uso no está autorizado, INDUSTRIAL TECNICA PECUARIA,
+        S.A. no garantiza la confidencialidad de los mensajes transmitidos vía Internet
+        y se reserva el derecho a ejercer las acciones legales que le correspondan
+        contra todo tercero que acceda de forma ilegítima al contenido de este mensaje
+        y al de los ficheros contenidos en el mismo.\n\nQ Por favor, considere el
+        medio ambiente antes de imprimir este correo.\n\n**LEGAL NOTICE**\n\nIn accordance
+        with the provisions of current regulations on the Protection of Personal Data,
+        we inform you that INDUSTRIAL TECNICA PECUARIA, S.A. with C.I.F. A08219511
+        and registered office at Av. De Roma 157, 7, 08011 Barcelona, ​​has the security
+        protocols established by the GDPR. In accordance with the rights conferred
+        by current regulations on data protection, you can exercise the rights of
+        access, rectification, limitation of treatment, deletion, portability, and
+        opposition to the processing of your personal data       as well as the consent
+        given for the treatment of the same, directing your request to the postal
+        address indicated above or to the email itpsa@itpsa.com. This message is intended
+        for the intended recipient only and is confidential. If you have received
+        it by      mistake, INDUSTRIAL TECNICA PECUARIA, S.A. informs you that its
+        content is reserved, and its reading, copying and use is not authorized, INDUSTRIAL
+        TECNICA PECUARIA, S.A. does not guarantee the confidentiality of the messages
+        transmitted via the Internet    and reserves the right to exercise the corresponding
+        legal actions against any third party who illegitimately accesses the content
+        of this message and the files contained therein.\n\nQ Please consider the
+        environment before printing this e-mail.\n\n**De:** Anna Puchal <APuchal@itpsa.com>
+        \n**Enviado el:** miércoles, 15 de enero de 2025 15:57\n**Para:** ITPSA Lab
+        Desenvolupament <LabDesenvolupament@itpsa.com>; Javier Estevez Medina <JEstevez@itpsa.com>;
+        Ana Alcaraz <AAlcaraz@itpsa.com>; Maria Moreno <mmoreno@itpsa.com>\n**Asunto:**
+        RV: Validació mostres T25\n\n**De:** Irene <irene@royalprotein.com> \n**Enviado
+        el:** miércoles, 15 de enero de 2025 15:52\n**Para:** Anna Puchal <APuchal@itpsa.com>\n**CC:**
+        Gloria <gloria@royalprotein.com>\n**Asunto:** Validació mostres T25\n\nBona
+        tarda Anna,\n\nUs farem arribar unes mostres per validar el romanent d’antioxidant
+        (validació anual).\n\n| **Item** | **Sampling point** | **Batch n°** | **Product
+        name** | **Quantity (g)** | **Production date*** | **AOX applied*** | **Dosage**
+        | **Process level (AOX application)*** |\n| --- | --- | --- | --- | --- |
+        --- | --- | --- | --- |\n| **(ppm)*** |\n| 1 | PCD | 080125PCD/01 |   |  
+        | 08/01/2025 | T25 |   |   |\n| 2 | PCD | 090125PCD/04 |   |   | 09/01/2025
+        | T25 |   |   |\n\nGràcies per endavant,\n\n| ![](cid:image008.jpg) | Irene
+        Taberner i Felip *R & D Department* **RP ROYAL DISTRIBUTION, S.L** C/ Sant
+        Andreu, 85 · 17834 Porqueres (GIRONA) - SPAIN Phone : **+34 972 57 14 04**
+        Direct Phone:**  +34 972 78 95 68**irene@royalprotein.com · [www.royalprotein.com](http://www.royalprotein.com/)
+          RP Royal Distribution, S.L. [Privacy policy](http://www.royalprotein.com/index.php/en/privacy-policy.html)
+        |"}],"system":"You are a task extractor for a CRM system. Extract follow-up
+        tasks ONLY when the email explicitly requests action from the recipient.\n\n<instructions>\nONLY
+        extract tasks when:\n1. The sender explicitly asks the recipient to do something\n2.
+        There''s a clear action item with an expected response or deliverable\n3.
+        The email requests a reply, document, decision, or meeting scheduling\n\nDO
+        NOT extract tasks for:\n1. Informational emails (newsletters, announcements,
+        status updates)\n2. Auto-generated emails (receipts, confirmations, notifications)\n3.
+        Emails where the sender is completing a task (delivering something, not requesting)\n4.
+        Simple acknowledgments or thank you emails\n5. Emails that are just forwarding
+        information without asking for action\n</instructions>\n\n<date_context>\nEmail
+        date: 2025-01-22 (Wednesday)\nUse this date to resolve relative deadlines:\n-
+        \"by Friday\" -> next Friday from email date\n- \"by end of week\" -> Friday
+        of email''s week\n- \"by end of month\" -> last day of email''s month\n- \"ASAP\"
+        / \"urgent\" -> email date\n- \"next week\" -> Monday of following week\n</date_context>\n\n<existing_tasks>\nNo
+        existing active tasks.\n</existing_tasks>\n\n<output_format>\nReturn ONLY
+        a JSON array of tasks:\n[\n  {\n    \"id\": null,\n    \"name\": \"Send updated
+        proposal\",\n    \"description\": \"Client requested revised pricing for Q2\",\n    \"due_date\":
+        \"2025-01-20\",\n    \"sender_email\": \"client@example.com\"\n  }\n]\n\nIf
+        updating an existing task (same topic from same sender), include the task
+        id:\n[\n  {\n    \"id\": 42,\n    \"name\": \"Send updated proposal\",\n    \"description\":
+        \"Follow-up: client needs it by Friday\",\n    \"due_date\": \"2025-01-17\",\n    \"sender_email\":
+        \"client@example.com\"\n  }\n]\n\nIf no actionable tasks found, return: []\n</output_format>\n\n<guidelines>\n-
+        Extract the MINIMUM number of tasks (prefer one clear task over multiple vague
+        ones)\n- Use imperative verb form: \"Send...\", \"Review...\", \"Schedule...\",
+        \"Reply to...\"\n- Keep task names under 60 characters\n- Only set id if the
+        email clearly relates to an existing task\n- When unsure between update vs
+        new task, prefer creating new task\n- Use null for unknown fields, never hallucinate\n</guidelines>\n"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Anthropic::Client/Ruby 1.16.0
+      Host:
+      - api.anthropic.com
+      X-Stainless-Arch:
+      - x64
+      X-Stainless-Lang:
+      - ruby
+      X-Stainless-Os:
+      - Linux
+      X-Stainless-Package-Version:
+      - 1.16.0
+      X-Stainless-Runtime:
+      - ruby
+      X-Stainless-Runtime-Version:
+      - 3.4.7
+      Content-Type:
+      - application/json
+      Anthropic-Version:
+      - '2023-06-01'
+      X-Api-Key:
+      - "<ANTHROPIC_API_KEY>"
+      X-Stainless-Retry-Count:
+      - '0'
+      X-Stainless-Timeout:
+      - '600.0'
+      Content-Length:
+      - '11949'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Dec 2025 18:19:41 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 9af03098cf897dd7-MAD
+      Cf-Cache-Status:
+      - DYNAMIC
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Anthropic-Organization-Id:
+      - 36f27efe-3e16-4c65-95cd-f21d3225017e
+      Anthropic-Ratelimit-Input-Tokens-Limit:
+      - '100000'
+      Anthropic-Ratelimit-Input-Tokens-Remaining:
+      - '98000'
+      Anthropic-Ratelimit-Input-Tokens-Reset:
+      - '2025-12-16T18:19:37Z'
+      Anthropic-Ratelimit-Output-Tokens-Limit:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Remaining:
+      - '20000'
+      Anthropic-Ratelimit-Output-Tokens-Reset:
+      - '2025-12-16T18:19:41Z'
+      Anthropic-Ratelimit-Requests-Limit:
+      - '1000'
+      Anthropic-Ratelimit-Requests-Remaining:
+      - '999'
+      Anthropic-Ratelimit-Requests-Reset:
+      - '2025-12-16T18:19:35Z'
+      Anthropic-Ratelimit-Tokens-Limit:
+      - '120000'
+      Anthropic-Ratelimit-Tokens-Remaining:
+      - '118000'
+      Anthropic-Ratelimit-Tokens-Reset:
+      - '2025-12-16T18:19:37Z'
+      Request-Id:
+      - req_011CWApxpB5xUVtasGVKxhjG
+      X-Envoy-Upstream-Service-Time:
+      - '6041'
+      Vary:
+      - Accept-Encoding
+      X-Robots-Tag:
+      - none
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: '{"model":"claude-3-5-haiku-20241022","id":"msg_01Unq7EGHaCYic8DReEgezRB","type":"message","role":"assistant","content":[{"type":"text","text":"Based
+        on the email context, I''ll extract the following task:\n\n[\n  {\n    \"id\":
+        null,\n    \"name\": \"Send T25 sample analysis results\",\n    \"description\":
+        \"Prepare and send analysis report for T25 samples with high tocopherol residual.
+        Confirm antioxidant dosage and decide if reanalysis is needed.\",\n    \"due_date\":
+        \"2025-01-24\",\n    \"sender_email\": \"aalcaraz@itpsa.com\"\n  }\n]\n\nRationale:\n-
+        Ana Alcaraz explicitly requests action in her email\n- She asks Anna to provide
+        information about the ROSPHEROL T25 dosage\n- The task involves sending an
+        analysis report or deciding whether to repeat the analysis\n- I''ve set a
+        due date of 2025-01-24 (two days from the email date) as a reasonable turnaround
+        time for a technical investigation\n- The description captures the key action
+        items from the email exchange"}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":3603,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":226,"service_tier":"standard"}}'
+  recorded_at: Tue, 16 Dec 2025 18:19:41 GMT
+recorded_with: VCR 6.3.1

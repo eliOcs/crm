@@ -30,7 +30,7 @@ bin/rubocop               # Lint code
 bin/setup                 # Setup project (installs deps, configures git hooks)
 
 # Import tasks
-bin/rails import:enrich_contacts  # Enrich contacts/companies with LLM (extracts job roles, phones, companies, logos)
+bin/rails import:process_emails   # Process emails: extract contacts, companies, and tasks via LLM
 bin/extract-pst <file>            # Extract EML files from PST backup
 bin/reset-and-import              # Reset DB and import (use LIMIT=N for fewer emails)
 

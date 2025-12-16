@@ -1,6 +1,6 @@
 namespace :import do
-  desc "Enrich contacts and extract companies using LLM from EML files"
-  task enrich_contacts: :environment do
+  desc "Process emails: extract contacts, companies, and tasks using LLM"
+  task process_emails: :environment do
     # Ensure output is flushed immediately for real-time logging
     $stdout.sync = true
 
@@ -56,7 +56,7 @@ namespace :import do
     logger.info "Using Claude 3.5 Haiku for extraction"
     logger.info ""
 
-    service = ContactEnrichmentService.new(user, logger: logger)
+    service = EmailEnrichmentService.new(user, logger: logger)
 
     eml_files.each.with_index(1) do |eml_path, index|
       eml_relative = eml_path.sub("#{eml_dir}/", "")
@@ -82,9 +82,14 @@ namespace :import do
     logger.info "  Companies:"
     logger.info "    New:        #{stats[:companies_new]}"
     logger.info "    Logos:      #{stats[:logos_attached]}"
+    logger.info "  Tasks:"
+    logger.info "    New:        #{stats[:tasks_new]}"
+    logger.info "    Updated:    #{stats[:tasks_updated]}"
+    logger.info "    Skipped:    #{stats[:tasks_skipped]}"
     logger.info "  Errors:       #{stats[:errors]}"
     logger.info ""
     logger.info "  Total contacts:  #{user.contacts.count}"
     logger.info "  Total companies: #{user.companies.count}"
+    logger.info "  Total tasks:     #{user.tasks.count}"
   end
 end
