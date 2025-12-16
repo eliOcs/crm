@@ -1,3 +1,5 @@
+<%= link_to "Back to tasks", tasks_path, class: "back-link" %>
+
 <div class="page-header">
   <h1 class="page-header__title"><%= @task.name %></h1>
   <span class="status-badge status-badge--<%= @task.status %>"><%= @task.status_label %></span>
