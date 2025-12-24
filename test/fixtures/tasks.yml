@@ -1,0 +1,11 @@
+one:
+  user: one
+  name: Follow up with client
+  status: todo
+  contact: one
+  company: one
+
+two:
+  user: two
+  name: Review proposal
+  status: in_progress

@@ -10,7 +10,7 @@ class ContactsController < ApplicationController
 
   def show
     @contact = Current.user.contacts.includes(:companies).find(params[:id])
-    fresh_when [ @contact, @contact.companies ]
+    fresh_when etag: [ @contact, @contact.companies.cache_key_with_version ]
   end
 
   def update

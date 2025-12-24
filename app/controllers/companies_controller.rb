@@ -11,7 +11,7 @@ class CompaniesController < ApplicationController
   def show
     @company = Current.user.companies.find(params[:id])
     @contacts = @company.contacts.order(:name)
-    fresh_when [ @company, @contacts ]
+    fresh_when etag: [ @company, @contacts.cache_key_with_version ]
   end
 
   def update
