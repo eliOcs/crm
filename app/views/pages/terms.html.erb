@@ -1,0 +1,147 @@
+<% content_for :title, t("legal.terms.title") %>
+
+<div class="legal-page">
+  <div class="container container--narrow">
+    <header class="legal-page__header">
+      <%= link_to landing_path, class: "legal-page__back" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        <%= t("legal.back_to_home") %>
+      <% end %>
+      <h1 class="legal-page__title"><%= t("legal.terms.title") %></h1>
+      <p class="legal-page__meta"><%= t("legal.last_updated", date: t("legal.terms.last_updated_date")) %></p>
+    </header>
+
+    <div class="legal-page__content">
+      <!-- 1. Introduction -->
+      <section class="legal-section">
+        <h2>1. <%= t("legal.terms.intro.title") %></h2>
+        <p><%= t("legal.terms.intro.welcome") %></p>
+        <p><%= t("legal.terms.intro.agreement") %></p>
+        <address class="legal-address">
+          <strong>Elio Capella Sánchez</strong><br>
+          NIF: 05306867P<br>
+          C/ Roncesvalles 3<br>
+          28760 Tres Cantos, Madrid<br>
+          <%= t("legal.spain") %>
+        </address>
+      </section>
+
+      <!-- 2. Service Description -->
+      <section class="legal-section">
+        <h2>2. <%= t("legal.terms.service.title") %></h2>
+        <p><%= t("legal.terms.service.description") %></p>
+        <ul>
+          <% t("legal.terms.service.features").each do |feature| %>
+            <li><%= feature %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 3. Account Registration -->
+      <section class="legal-section">
+        <h2>3. <%= t("legal.terms.account.title") %></h2>
+        <p><%= t("legal.terms.account.requirements") %></p>
+        <ul>
+          <% t("legal.terms.account.obligations").each do |obligation| %>
+            <li><%= obligation %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 4. Acceptable Use -->
+      <section class="legal-section">
+        <h2>4. <%= t("legal.terms.acceptable_use.title") %></h2>
+        <p><%= t("legal.terms.acceptable_use.intro") %></p>
+        <ul>
+          <% t("legal.terms.acceptable_use.prohibited").each do |item| %>
+            <li><%= item %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 5. Email Integration -->
+      <section class="legal-section">
+        <h2>5. <%= t("legal.terms.email_integration.title") %></h2>
+        <p><%= t("legal.terms.email_integration.description") %></p>
+        <ul>
+          <% t("legal.terms.email_integration.terms").each do |term| %>
+            <li><%= term %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 6. AI Processing -->
+      <section class="legal-section">
+        <h2>6. <%= t("legal.terms.ai.title") %></h2>
+        <p><%= t("legal.terms.ai.description") %></p>
+        <ul>
+          <% t("legal.terms.ai.terms").each do |term| %>
+            <li><%= term %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 7. Intellectual Property -->
+      <section class="legal-section">
+        <h2>7. <%= t("legal.terms.ip.title") %></h2>
+        <p><%= t("legal.terms.ip.ownership") %></p>
+        <p><%= t("legal.terms.ip.user_content") %></p>
+      </section>
+
+      <!-- 8. Payment Terms -->
+      <section class="legal-section">
+        <h2>8. <%= t("legal.terms.payment.title") %></h2>
+        <p><%= t("legal.terms.payment.description") %></p>
+        <ul>
+          <% t("legal.terms.payment.terms").each do |term| %>
+            <li><%= term %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 9. Limitation of Liability -->
+      <section class="legal-section">
+        <h2>9. <%= t("legal.terms.liability.title") %></h2>
+        <p><%= t("legal.terms.liability.disclaimer") %></p>
+        <p><%= t("legal.terms.liability.limitation") %></p>
+      </section>
+
+      <!-- 10. Warranty Disclaimer -->
+      <section class="legal-section">
+        <h2>10. <%= t("legal.terms.warranty.title") %></h2>
+        <p><%= t("legal.terms.warranty.disclaimer") %></p>
+      </section>
+
+      <!-- 11. Termination -->
+      <section class="legal-section">
+        <h2>11. <%= t("legal.terms.termination.title") %></h2>
+        <p><%= t("legal.terms.termination.user_rights") %></p>
+        <p><%= t("legal.terms.termination.our_rights") %></p>
+        <p><%= t("legal.terms.termination.effects") %></p>
+      </section>
+
+      <!-- 12. Changes to Terms -->
+      <section class="legal-section">
+        <h2>12. <%= t("legal.terms.changes.title") %></h2>
+        <p><%= t("legal.terms.changes.description") %></p>
+      </section>
+
+      <!-- 13. Governing Law -->
+      <section class="legal-section">
+        <h2>13. <%= t("legal.terms.law.title") %></h2>
+        <p><%= t("legal.terms.law.description") %></p>
+      </section>
+
+      <!-- 14. Contact -->
+      <section class="legal-section">
+        <h2>14. <%= t("legal.terms.contact.title") %></h2>
+        <p><%= t("legal.terms.contact.description") %></p>
+        <address class="legal-address">
+          <%= mail_to "legal@mercuriocrm.es" %>
+        </address>
+      </section>
+    </div>
+  </div>
+</div>

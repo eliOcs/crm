@@ -7,3 +7,8 @@
 - **Blue-Grey Palette:** Primary color derived from the logo (#4D6B7D blue-grey). Accent colors are soft beige and muted orange. This creates a professional, trustworthy feel.
 - **High Whitespace:** The layout breathes. There is significant padding.
 - **"Pill" Shapes:** The buttons are fully rounded.
+
+# Websites Inspiration:
+- https://gusto.com/
+- https://www.findigs.com/
+- https://scratchpay.com/

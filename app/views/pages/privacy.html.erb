@@ -1,0 +1,163 @@
+<% content_for :title, t("legal.privacy.title") %>
+
+<div class="legal-page">
+  <div class="container container--narrow">
+    <header class="legal-page__header">
+      <%= link_to landing_path, class: "legal-page__back" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        <%= t("legal.back_to_home") %>
+      <% end %>
+      <h1 class="legal-page__title"><%= t("legal.privacy.title") %></h1>
+      <p class="legal-page__meta"><%= t("legal.last_updated", date: t("legal.privacy.last_updated_date")) %></p>
+    </header>
+
+    <div class="legal-page__content">
+      <!-- Summary Section -->
+      <section class="legal-section">
+        <h2><%= t("legal.privacy.summary.title") %></h2>
+        <div class="legal-summary">
+          <% t("legal.privacy.summary.points").each do |point| %>
+            <div class="legal-summary__item">
+              <strong><%= point[:question] %></strong>
+              <p><%= point[:answer] %></p>
+            </div>
+          <% end %>
+        </div>
+      </section>
+
+      <!-- 1. Data Controller -->
+      <section class="legal-section">
+        <h2>1. <%= t("legal.privacy.controller.title") %></h2>
+        <p><%= t("legal.privacy.controller.intro") %></p>
+        <address class="legal-address">
+          <strong>Elio Capella Sánchez</strong><br>
+          NIF: 05306867P<br>
+          C/ Roncesvalles 3<br>
+          28760 Tres Cantos, Madrid<br>
+          <%= t("legal.spain") %><br>
+          <%= mail_to "privacy@mercuriocrm.es" %>
+        </address>
+      </section>
+
+      <!-- 2. Data We Collect -->
+      <section class="legal-section">
+        <h2>2. <%= t("legal.privacy.data_collected.title") %></h2>
+        <p><%= t("legal.privacy.data_collected.intro") %></p>
+
+        <h3><%= t("legal.privacy.data_collected.account.title") %></h3>
+        <ul>
+          <% t("legal.privacy.data_collected.account.items").each do |item| %>
+            <li><%= item %></li>
+          <% end %>
+        </ul>
+
+        <h3><%= t("legal.privacy.data_collected.email.title") %></h3>
+        <ul>
+          <% t("legal.privacy.data_collected.email.items").each do |item| %>
+            <li><%= item %></li>
+          <% end %>
+        </ul>
+
+        <h3><%= t("legal.privacy.data_collected.usage.title") %></h3>
+        <ul>
+          <% t("legal.privacy.data_collected.usage.items").each do |item| %>
+            <li><%= item %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 3. How We Use Your Data -->
+      <section class="legal-section">
+        <h2>3. <%= t("legal.privacy.purposes.title") %></h2>
+        <p><%= t("legal.privacy.purposes.intro") %></p>
+        <ul>
+          <% t("legal.privacy.purposes.items").each do |item| %>
+            <li><strong><%= item[:purpose] %>:</strong> <%= item[:description] %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 4. Legal Basis -->
+      <section class="legal-section">
+        <h2>4. <%= t("legal.privacy.legal_basis.title") %></h2>
+        <p><%= t("legal.privacy.legal_basis.intro") %></p>
+        <ul>
+          <% t("legal.privacy.legal_basis.items").each do |item| %>
+            <li><strong><%= item[:basis] %>:</strong> <%= item[:description] %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 5. Data Retention -->
+      <section class="legal-section">
+        <h2>5. <%= t("legal.privacy.retention.title") %></h2>
+        <p><%= t("legal.privacy.retention.intro") %></p>
+        <ul>
+          <% t("legal.privacy.retention.items").each do |item| %>
+            <li><%= item %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 6. Data Sharing -->
+      <section class="legal-section">
+        <h2>6. <%= t("legal.privacy.sharing.title") %></h2>
+        <p><%= t("legal.privacy.sharing.intro") %></p>
+        <ul>
+          <% t("legal.privacy.sharing.items").each do |item| %>
+            <li><strong><%= item[:recipient] %>:</strong> <%= item[:purpose] %></li>
+          <% end %>
+        </ul>
+        <p><%= t("legal.privacy.sharing.no_sell") %></p>
+      </section>
+
+      <!-- 7. International Transfers -->
+      <section class="legal-section">
+        <h2>7. <%= t("legal.privacy.transfers.title") %></h2>
+        <p><%= t("legal.privacy.transfers.intro") %></p>
+        <p><%= t("legal.privacy.transfers.safeguards") %></p>
+      </section>
+
+      <!-- 8. Your Rights -->
+      <section class="legal-section">
+        <h2>8. <%= t("legal.privacy.rights.title") %></h2>
+        <p><%= t("legal.privacy.rights.intro") %></p>
+        <ul>
+          <% t("legal.privacy.rights.items").each do |item| %>
+            <li><strong><%= item[:right] %>:</strong> <%= item[:description] %></li>
+          <% end %>
+        </ul>
+        <p><%= t("legal.privacy.rights.exercise_html", email: "privacy@mercuriocrm.es") %></p>
+        <p><%= t("legal.privacy.rights.complaint_html") %></p>
+      </section>
+
+      <!-- 9. Security -->
+      <section class="legal-section">
+        <h2>9. <%= t("legal.privacy.security.title") %></h2>
+        <p><%= t("legal.privacy.security.intro") %></p>
+        <ul>
+          <% t("legal.privacy.security.items").each do |item| %>
+            <li><%= item %></li>
+          <% end %>
+        </ul>
+      </section>
+
+      <!-- 10. Changes -->
+      <section class="legal-section">
+        <h2>10. <%= t("legal.privacy.changes.title") %></h2>
+        <p><%= t("legal.privacy.changes.intro") %></p>
+      </section>
+
+      <!-- 11. Contact -->
+      <section class="legal-section">
+        <h2>11. <%= t("legal.privacy.contact.title") %></h2>
+        <p><%= t("legal.privacy.contact.intro") %></p>
+        <address class="legal-address">
+          <%= mail_to "privacy@mercuriocrm.es" %>
+        </address>
+      </section>
+    </div>
+  </div>
+</div>

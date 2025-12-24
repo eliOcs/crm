@@ -1,4 +1,51 @@
 es:
+  # Landing Page
+  landing:
+    title: "Mercurio - Tus correos, organizados"
+    headline_html: "Tus correos, organizados.<br>Tus oportunidades, capturadas."
+    subheadline: "Deja de perder contactos y seguimientos en tu bandeja de entrada. Nuestra IA extrae automáticamente contactos, empresas y tareas pendientes de tus correos."
+    get_started: "Empezar"
+    sign_in: "Iniciar Sesión"
+    create_account: "Crear Cuenta Gratis"
+    features:
+      extraction:
+        title: "Extracción Automática de Contactos"
+        description: "Olvídate de la entrada manual de datos. Nuestra IA lee tus correos y extrae automáticamente información de contactos, datos de empresas, cargos y teléfonos."
+      followup:
+        title: "Nunca Pierdas un Seguimiento"
+        description: "La extracción de tareas con IA identifica acciones pendientes, fechas límite y compromisos de tus conversaciones por correo. Cada oportunidad queda registrada."
+      search:
+        title: "Búsqueda Semántica de Todo"
+        description: "Busca en contactos, empresas, tareas, correos y documentos usando lenguaje natural. Encuentra \"clientes en Barcelona\" o \"facturas pendientes del mes pasado\" al instante."
+    value:
+      title: "Diseñado para equipos de ventas de pequeñas empresas"
+      description: "Estás ocupado cerrando ventas, no introduciendo datos. Conecta tu correo y deja que la IA haga el trabajo administrativo mientras te centras en lo importante: construir relaciones y hacer crecer los ingresos."
+    integrations:
+      title: "Integraciones que trabajan para ti"
+      exchange: "Microsoft Exchange"
+      navision: "Microsoft Dynamics NAV"
+      phone: "Teléfono y WhatsApp"
+      cloud: "Almacenamiento en la Nube"
+      coming_soon: "Próximamente"
+      on_roadmap: "En desarrollo"
+    cta:
+      title: "¿Listo para organizar tus ventas?"
+      description: "Empieza a extraer valor de tus correos hoy. Prueba gratis."
+    footer:
+      spain: "España"
+      product: "Producto"
+      features: "Características"
+      integrations: "Integraciones"
+      pricing: "Precios"
+      legal: "Legal"
+      privacy_policy: "Política de Privacidad"
+      terms_of_service: "Términos de Servicio"
+      support: "Soporte"
+      contact_us: "Contáctanos"
+      help_center: "Centro de Ayuda"
+      security: "Seguridad"
+      rights_reserved: "Todos los derechos reservados."
+
   # Navigation
   nav:
     tasks: "Tareas"
@@ -167,6 +214,226 @@ es:
       en: "English"
       es: "Español"
     saved: "Configuración guardada correctamente."
+
+  # Legal Pages
+  legal:
+    spain: "España"
+    back_to_home: "Volver al inicio"
+    last_updated: "Última actualización: %{date}"
+
+    privacy:
+      title: "Política de Privacidad"
+      last_updated_date: "Diciembre 2024"
+      summary:
+        title: "Resumen"
+        points:
+          - question: "¿Qué datos recopilamos?"
+            answer: "Recopilamos información de cuenta (email, contraseña), datos de correo que conectes (remitentes, destinatarios, contenido) y datos de uso (tiempos de acceso, funciones utilizadas)."
+          - question: "¿Cómo usamos tus datos?"
+            answer: "Para proporcionar el servicio CRM, extraer contactos y tareas de tus correos mediante IA, y mejorar nuestro servicio."
+          - question: "¿Compartimos tus datos?"
+            answer: "Solo con proveedores esenciales para el servicio (hosting, procesamiento IA). Nunca vendemos tus datos."
+          - question: "¿Cuáles son tus derechos?"
+            answer: "Puedes acceder, corregir, eliminar o exportar tus datos en cualquier momento. Contáctanos en privacy@mercuriocrm.es."
+      controller:
+        title: "Responsable del Tratamiento"
+        intro: "El responsable del tratamiento de tus datos personales es:"
+      data_collected:
+        title: "Datos que Recopilamos"
+        intro: "Recopilamos las siguientes categorías de datos personales:"
+        account:
+          title: "Información de Cuenta"
+          items:
+            - "Dirección de correo electrónico"
+            - "Contraseña cifrada"
+            - "Preferencia de idioma"
+        email:
+          title: "Datos de Correo (cuando conectas tu email)"
+          items:
+            - "Direcciones de email de remitentes y destinatarios"
+            - "Asuntos y contenido de los correos"
+            - "Fechas y horas de los correos"
+            - "Metadatos de adjuntos (nombres, tamaños)"
+            - "Información de contactos extraída de correos (nombres, cargos, teléfonos)"
+            - "Información de empresas extraída de correos (nombres, direcciones, CIF/NIF)"
+        usage:
+          title: "Datos de Uso"
+          items:
+            - "Marcas de tiempo de acceso y direcciones IP"
+            - "Funciones utilizadas en la aplicación"
+            - "Tipo de navegador e información del dispositivo"
+      purposes:
+        title: "Cómo Usamos tus Datos"
+        intro: "Tratamos tus datos personales para los siguientes fines:"
+        items:
+          - purpose: "Prestación del Servicio"
+            description: "Para crear y gestionar tu cuenta, proporcionar la funcionalidad CRM y procesar tus datos de correo."
+          - purpose: "Extracción con IA"
+            description: "Para extraer automáticamente contactos, empresas y tareas de tus correos conectados mediante inteligencia artificial."
+          - purpose: "Mejora del Servicio"
+            description: "Para analizar patrones de uso y mejorar la calidad y funcionalidades del servicio."
+          - purpose: "Seguridad"
+            description: "Para detectar y prevenir fraudes, abusos y amenazas de seguridad."
+          - purpose: "Comunicación"
+            description: "Para enviarte notificaciones relacionadas con el servicio y responder a tus consultas."
+      legal_basis:
+        title: "Base Legal del Tratamiento"
+        intro: "Tratamos tus datos basándonos en las siguientes bases legales según el RGPD:"
+        items:
+          - basis: "Ejecución del Contrato (Art. 6.1.b)"
+            description: "Tratamiento necesario para proporcionar el servicio CRM que solicitaste."
+          - basis: "Interés Legítimo (Art. 6.1.f)"
+            description: "Para seguridad, prevención de fraude y mejora del servicio, cuando nuestros intereses no prevalezcan sobre tus derechos."
+          - basis: "Consentimiento (Art. 6.1.a)"
+            description: "Para comunicaciones de marketing opcionales, que puedes retirar en cualquier momento."
+          - basis: "Obligación Legal (Art. 6.1.c)"
+            description: "Para cumplir con requisitos legales como leyes fiscales y contables."
+      retention:
+        title: "Conservación de Datos"
+        intro: "Conservamos tus datos personales durante los siguientes períodos:"
+        items:
+          - "Datos de cuenta: Hasta que elimines tu cuenta, más cualquier período de retención legalmente requerido."
+          - "Datos de correo: Hasta que desconectes tu email o elimines tu cuenta."
+          - "Contactos y empresas extraídos: Hasta que los elimines o elimines tu cuenta."
+          - "Registros de uso: 12 meses por motivos de seguridad."
+          - "Copias de seguridad: Hasta 30 días después de la eliminación."
+      sharing:
+        title: "Compartición de Datos"
+        intro: "Compartimos tus datos con las siguientes categorías de destinatarios:"
+        items:
+          - recipient: "Proveedor de Infraestructura Cloud (AWS)"
+            purpose: "Alojamiento de servidores y almacenamiento seguro de datos en la UE."
+          - recipient: "Proveedor de Procesamiento IA (Anthropic)"
+            purpose: "Procesamiento de correos para extraer contactos y tareas. El contenido se procesa pero no se almacena por el proveedor."
+        no_sell: "Nunca vendemos tus datos personales a terceros."
+      transfers:
+        title: "Transferencias Internacionales"
+        intro: "Tus datos se almacenan principalmente en la Unión Europea (AWS Irlanda). Algún procesamiento puede ocurrir fuera de la UE al usar servicios de IA."
+        safeguards: "Para cualquier transferencia fuera de la UE, garantizamos las salvaguardas apropiadas, incluyendo Cláusulas Contractuales Tipo aprobadas por la Comisión Europea."
+      rights:
+        title: "Tus Derechos"
+        intro: "Según el RGPD, tienes los siguientes derechos respecto a tus datos personales:"
+        items:
+          - right: "Acceso"
+            description: "Solicitar una copia de tus datos personales."
+          - right: "Rectificación"
+            description: "Solicitar la corrección de datos inexactos."
+          - right: "Supresión"
+            description: "Solicitar la eliminación de tus datos ('derecho al olvido')."
+          - right: "Limitación"
+            description: "Solicitar la limitación del tratamiento en determinadas circunstancias."
+          - right: "Portabilidad"
+            description: "Recibir tus datos en un formato estructurado y legible por máquina."
+          - right: "Oposición"
+            description: "Oponerte al tratamiento basado en intereses legítimos."
+          - right: "Retirar Consentimiento"
+            description: "Retirar el consentimiento para tratamientos opcionales en cualquier momento."
+        exercise_html: "Para ejercer estos derechos, contáctanos en <a href=\"mailto:%{email}\">%{email}</a>."
+        complaint_html: "También tienes derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (<a href=\"https://www.aepd.es\" target=\"_blank\" rel=\"noopener\">AEPD</a>)."
+      security:
+        title: "Medidas de Seguridad"
+        intro: "Implementamos medidas técnicas y organizativas apropiadas para proteger tus datos:"
+        items:
+          - "Cifrado de datos en tránsito (TLS/HTTPS) y en reposo"
+          - "Hash seguro de contraseñas usando bcrypt"
+          - "Actualizaciones de seguridad regulares y monitorización de vulnerabilidades"
+          - "Controles de acceso y requisitos de autenticación"
+          - "Copias de seguridad regulares con cifrado"
+      changes:
+        title: "Cambios en esta Política"
+        intro: "Podemos actualizar esta política de privacidad periódicamente. Te notificaremos los cambios significativos por email o a través de la aplicación. La fecha de 'última actualización' en la parte superior indica cuándo se revisó la política por última vez."
+      contact:
+        title: "Contacto"
+        intro: "Si tienes preguntas sobre esta política de privacidad o nuestras prácticas de datos, contáctanos:"
+
+    terms:
+      title: "Términos de Servicio"
+      last_updated_date: "Diciembre 2024"
+      intro:
+        title: "Introducción"
+        welcome: "Bienvenido a Mercurio. Estos Términos de Servicio regulan el uso de nuestra aplicación CRM y servicios relacionados."
+        agreement: "Al crear una cuenta o usar nuestro servicio, aceptas quedar vinculado por estos términos. Si no estás de acuerdo, por favor no uses nuestro servicio. El servicio es proporcionado por:"
+      service:
+        title: "Descripción del Servicio"
+        description: "Mercurio es una aplicación de gestión de relaciones con clientes (CRM) que te ayuda a gestionar contactos, empresas y tareas. El servicio incluye:"
+        features:
+          - "Integración de email para importar y organizar tus comunicaciones de negocio"
+          - "Extracción con IA de contactos, empresas y acciones pendientes de correos"
+          - "Gestión de contactos y empresas con campos personalizables"
+          - "Seguimiento de tareas y gestión de seguimientos"
+          - "Búsqueda semántica en todos tus datos"
+      account:
+        title: "Registro de Cuenta"
+        requirements: "Para usar Mercurio, debes crear una cuenta. Aceptas:"
+        obligations:
+          - "Proporcionar información de registro precisa y completa"
+          - "Mantener la seguridad de tu contraseña y cuenta"
+          - "Notificarnos inmediatamente de cualquier acceso no autorizado"
+          - "Ser responsable de todas las actividades bajo tu cuenta"
+          - "Tener al menos 18 años o contar con consentimiento parental"
+      acceptable_use:
+        title: "Uso Aceptable"
+        intro: "Aceptas no usar Mercurio para:"
+        prohibited:
+          - "Violar cualquier ley o regulación aplicable"
+          - "Infringir derechos de propiedad intelectual de otros"
+          - "Subir o transmitir malware o código malicioso"
+          - "Intentar obtener acceso no autorizado a nuestros sistemas"
+          - "Interferir o interrumpir el servicio"
+          - "Enviar spam o comunicaciones no solicitadas"
+          - "Procesar datos sobre los que no tienes derecho"
+          - "Usar el servicio para propósitos ilegales"
+      email_integration:
+        title: "Integración de Email"
+        description: "Cuando conectas tu cuenta de correo a Mercurio, nos autorizas a:"
+        terms:
+          - "Acceder y leer tus correos con el fin de extraer información de contactos y tareas"
+          - "Almacenar los datos extraídos (contactos, empresas, tareas) en tu cuenta de Mercurio"
+          - "Procesar el contenido de correos usando servicios de IA para extracción de datos"
+          - "Puedes desconectar tu email y eliminar los datos extraídos en cualquier momento"
+          - "No enviamos correos en tu nombre sin una acción explícita por tu parte"
+      ai:
+        title: "Procesamiento con IA"
+        description: "Mercurio usa inteligencia artificial para extraer información de tus correos. Entiendes y aceptas que:"
+        terms:
+          - "La extracción con IA es automática y puede no ser 100% precisa"
+          - "Debes revisar los datos extraídos para verificar su exactitud"
+          - "El procesamiento con IA es realizado por proveedores externos (Anthropic)"
+          - "El contenido de los correos se procesa pero no se almacena por los proveedores de IA"
+          - "Trabajamos continuamente para mejorar la precisión de la IA"
+      ip:
+        title: "Propiedad Intelectual"
+        ownership: "Mercurio y su contenido original, características y funcionalidades son propiedad de Elio Capella Sánchez y están protegidos por leyes internacionales de copyright, marcas registradas y otras leyes de propiedad intelectual."
+        user_content: "Conservas la propiedad de todos los datos que subes o creas en Mercurio. Al usar el servicio, nos otorgas una licencia limitada para procesar tus datos únicamente para proporcionar el servicio."
+      payment:
+        title: "Términos de Pago"
+        description: "Durante nuestro período beta, Mercurio es gratuito. Cuando introduzcamos planes de pago:"
+        terms:
+          - "Los precios se comunicarán claramente antes de cualquier cargo"
+          - "Tendrás la opción de continuar con un plan gratuito o actualizar"
+          - "Las suscripciones de pago se facturarán mensual o anualmente"
+          - "Los reembolsos se proporcionarán según las leyes de protección al consumidor aplicables"
+      liability:
+        title: "Limitación de Responsabilidad"
+        disclaimer: "En la máxima medida permitida por la ley, Mercurio y su propietario no serán responsables de daños indirectos, incidentales, especiales, consecuentes o punitivos, incluyendo pérdida de beneficios, datos u oportunidades de negocio."
+        limitation: "Nuestra responsabilidad total por cualquier reclamación derivada de tu uso del servicio no excederá la cantidad que nos hayas pagado en los 12 meses anteriores a la reclamación, o 100€, lo que sea mayor."
+      warranty:
+        title: "Exención de Garantías"
+        disclaimer: "El servicio se proporciona 'tal cual' y 'según disponibilidad' sin garantías de ningún tipo, expresas o implícitas, incluyendo pero no limitadas a garantías implícitas de comerciabilidad, idoneidad para un fin particular y no infracción. No garantizamos que el servicio será ininterrumpido, seguro o libre de errores."
+      termination:
+        title: "Terminación"
+        user_rights: "Puedes terminar tu cuenta en cualquier momento contactándonos o usando la función de eliminación de cuenta."
+        our_rights: "Podemos suspender o terminar tu acceso si violas estos términos, realizas actividades dañinas o no pagas las tarifas aplicables."
+        effects: "Tras la terminación, tu derecho a usar el servicio cesa inmediatamente. Eliminaremos tus datos en 30 días a menos que la ley requiera conservarlos."
+      changes:
+        title: "Cambios en los Términos"
+        description: "Podemos modificar estos términos en cualquier momento. Te notificaremos los cambios materiales por email o a través de la aplicación al menos 30 días antes de que entren en vigor. El uso continuado después de los cambios constituye aceptación."
+      law:
+        title: "Ley Aplicable"
+        description: "Estos términos se rigen por las leyes de España. Cualquier disputa se resolverá en los tribunales de Madrid, España, sin perjuicio de tu derecho como consumidor a presentar reclamaciones en tu lugar de residencia."
+      contact:
+        title: "Contacto"
+        description: "Para preguntas sobre estos términos, contáctanos:"
 
   # Date/time formats
   date:

@@ -1,0 +1,165 @@
+@layer components {
+  /* =========================================================================
+     Legal Pages (Privacy Policy, Terms of Service)
+     ========================================================================= */
+
+  .legal-page {
+    padding-block: var(--block-space-triple);
+    min-block-size: 100vh;
+    background-color: oklch(var(--lch-white));
+  }
+
+  .legal-page__header {
+    margin-block-end: var(--block-space-triple);
+    padding-block-end: var(--block-space-double);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .legal-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--inline-space-half);
+    font-size: var(--text-sm);
+    color: var(--color-ink-subtle);
+    text-decoration: none;
+    margin-block-end: var(--block-space);
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+
+  .legal-page__title {
+    font-family: "Gabarito", sans-serif;
+    font-size: clamp(var(--text-2xl), 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0 0 var(--block-space-half) 0;
+  }
+
+  .legal-page__meta {
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+    margin: 0;
+  }
+
+  .legal-page__content {
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink);
+  }
+
+  /* -------------------------------------------------------------------------
+     Legal Sections
+     ------------------------------------------------------------------------- */
+  .legal-section {
+    margin-block-end: var(--block-space-triple);
+
+    &:last-child {
+      margin-block-end: 0;
+    }
+
+    & h2 {
+      font-family: "Gabarito", sans-serif;
+      font-size: var(--text-xl);
+      font-weight: 600;
+      color: var(--color-ink);
+      margin: 0 0 var(--block-space) 0;
+    }
+
+    & h3 {
+      font-family: "Gabarito", sans-serif;
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--color-ink);
+      margin: var(--block-space-double) 0 var(--block-space-half) 0;
+    }
+
+    & p {
+      margin: 0 0 var(--block-space) 0;
+
+      &:last-child {
+        margin-block-end: 0;
+      }
+    }
+
+    & ul {
+      margin: 0 0 var(--block-space) 0;
+      padding-inline-start: 1.5rem;
+
+      & li {
+        margin-block-end: var(--block-space-half);
+
+        &:last-child {
+          margin-block-end: 0;
+        }
+      }
+    }
+
+    & a {
+      color: var(--color-primary);
+      text-decoration: underline;
+
+      &:hover {
+        color: var(--color-primary-hover);
+      }
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Legal Summary (Q&A format)
+     ------------------------------------------------------------------------- */
+  .legal-summary {
+    background-color: var(--color-canvas);
+    border: 1px solid var(--color-border);
+    border-radius: var(--card-radius);
+    padding: var(--block-space-double);
+    margin-block-end: var(--block-space-double);
+  }
+
+  .legal-summary__item {
+    padding-block-end: var(--block-space);
+    margin-block-end: var(--block-space);
+    border-block-end: 1px solid var(--color-border);
+
+    &:last-child {
+      padding-block-end: 0;
+      margin-block-end: 0;
+      border-block-end: none;
+    }
+
+    & strong {
+      display: block;
+      font-size: var(--text-base);
+      color: var(--color-ink);
+      margin-block-end: var(--block-space-half);
+    }
+
+    & p {
+      font-size: var(--text-sm);
+      color: var(--color-ink-subtle);
+      margin: 0;
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Legal Address Block
+     ------------------------------------------------------------------------- */
+  .legal-address {
+    font-style: normal;
+    background-color: var(--color-canvas);
+    border: 1px solid var(--color-border);
+    border-radius: var(--card-radius);
+    padding: var(--block-space);
+    margin-block: var(--block-space);
+
+    & a {
+      color: var(--color-primary);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
