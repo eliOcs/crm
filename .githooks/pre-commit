@@ -16,7 +16,7 @@ echo "=> Running bundler-audit..."
 bin/bundler-audit --quiet
 
 echo "=> Running importmap audit..."
-bin/importmap audit 2>/dev/null || echo "   (skipped - network error)"
+bin/importmap audit
 
 # Run tests
 echo "=> Running tests..."
