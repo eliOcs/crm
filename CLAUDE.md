@@ -94,7 +94,7 @@ Business logic extracted into service objects in `app/services/`:
 email = EmlReader.new(path).read
 # => { from:, to:, subject:, date:, body:, html_body:, attachments: }
 
-# LLM-powered extraction (contacts + companies + logos) - uses Claude 3.5 Haiku
+# LLM-powered extraction (contacts + companies + logos) - uses Claude Haiku 4.5
 result = LlmEmailExtractor.new(path).extract
 # => { contacts: [{email:, name:, job_role:, department:, phone_numbers:}, ...],
 #      companies: [{legal_name:, commercial_name:, domain:, website:, location:, vat_id:, logo_content_id:}, ...],
@@ -102,7 +102,7 @@ result = LlmEmailExtractor.new(path).extract
 ```
 
 ### LLM Models Used
-- **Claude 3.5 Haiku** (`claude-3-5-haiku-latest`): Email extraction (fast, cost-effective)
+- **Claude Haiku 4.5** (`claude-haiku-4-5-20251001`): Email extraction (fast, cost-effective)
 
 ### File-based Email Storage
 Emails are read directly from EML files on disk (not stored in database):

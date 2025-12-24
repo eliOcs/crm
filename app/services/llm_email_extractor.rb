@@ -1,5 +1,5 @@
 class LlmEmailExtractor
-  MODEL = "claude-3-5-haiku-latest"
+  MODEL = "claude-haiku-4-5-20251001"
   MAX_IMAGES = 10
 
   def initialize(eml_path)
