@@ -3,7 +3,7 @@ require "test_helper"
 class EmailEnrichmentServiceTest < ActiveSupport::TestCase
   setup do
     @user = User.create!(email_address: "test@example.com", password: "password123")
-    @eml_dir = Rails.root.join("db/seeds/emails/Archivo de datos de Outlook/Bandeja de entrada")
+    @fixtures_dir = Rails.root.join("test/fixtures/files/emails")
     @logger = Logger.new("/dev/null")  # Suppress logs in tests
   end
 
@@ -16,7 +16,7 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
 
     VCR.use_cassette("enrichment_domain_matching") do
       service = EmailEnrichmentService.new(@user, logger: @logger)
-      service.process_email(@eml_dir.join("11.eml").to_s)  # Has ITPSA contacts
+      service.process_email(@fixtures_dir.join("itpsa_11.eml").to_s)
     end
 
     # Should reuse existing company by domain, not create duplicate
@@ -28,7 +28,7 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
   test "contacts are linked to companies by email domain" do
     VCR.use_cassette("enrichment_contact_domain_linking") do
       service = EmailEnrichmentService.new(@user, logger: @logger)
-      service.process_email(@eml_dir.join("Webmail/1.eml").to_s)
+      service.process_email(@fixtures_dir.join("webmail_1.eml").to_s)
     end
 
     # Contacts with @itpsa.com should be linked to ITPSA company
@@ -44,16 +44,14 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
   end
 
   test "name matching prevents duplicate companies without domain" do
-    fixtures_dir = Rails.root.join("test/fixtures/files/emails")
-
     VCR.use_cassette("enrichment_name_matching") do
       service = EmailEnrichmentService.new(@user, logger: @logger)
 
       # Process first email - should create Belagrolex company
-      service.process_email(fixtures_dir.join("belagrolex_1.eml").to_s)
+      service.process_email(@fixtures_dir.join("belagrolex_1.eml").to_s)
 
       # Process second email - should find existing Belagrolex by name, not create duplicate
-      service.process_email(fixtures_dir.join("belagrolex_2.eml").to_s)
+      service.process_email(@fixtures_dir.join("belagrolex_2.eml").to_s)
     end
 
     # Should have only one Belagrolex company (matched by name since no domain)
@@ -65,7 +63,7 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
   test "extracts tasks from emails requesting action" do
     VCR.use_cassette("enrichment_task_extraction") do
       service = EmailEnrichmentService.new(@user, logger: @logger)
-      service.process_email(@eml_dir.join("Webmail/1.eml").to_s)
+      service.process_email(@fixtures_dir.join("webmail_1.eml").to_s)
     end
 
     # Should have created at least one task
