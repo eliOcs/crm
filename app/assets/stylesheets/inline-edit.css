@@ -90,4 +90,61 @@
     opacity: 0.6;
     pointer-events: none;
   }
+
+  /* Inline Select Component
+     Click badge to show dropdown, auto-saves on change */
+
+  .inline-select {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Badge (clickable to edit) */
+  .inline-select__badge {
+    cursor: pointer;
+    transition: filter var(--duration-fast) var(--ease-out);
+
+    &:hover {
+      filter: brightness(0.95);
+    }
+  }
+
+  /* Select dropdown (hidden by default) */
+  .inline-select__select {
+    display: none;
+    padding-block: 0.375em;
+    padding-inline: 0.5em;
+    font-size: var(--text-sm);
+    font-family: inherit;
+    line-height: var(--leading-normal);
+    color: var(--color-ink);
+    background: oklch(var(--lch-white));
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px oklch(var(--lch-primary) / 15%);
+    }
+  }
+
+  /* Editing state */
+  .inline-select--editing {
+    .inline-select__badge {
+      display: none;
+    }
+
+    .inline-select__select {
+      display: block;
+    }
+  }
+
+  /* Saving state */
+  .inline-select--saving {
+    opacity: 0.6;
+    pointer-events: none;
+  }
 }

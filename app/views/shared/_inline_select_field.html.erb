@@ -1,0 +1,35 @@
+<%# Inline editable select - click badge to edit via dropdown
+    locals:
+      - url: the update URL
+      - field: the field name (e.g., "status")
+      - value: current value
+      - options: array of [label, value] pairs or hash of value => label
+      - badge_class: optional CSS class for the badge (default: "status-badge status-badge--{value}")
+%>
+<% badge_class ||= "status-badge status-badge--#{value}" %>
+<div class="inline-select"
+     data-controller="inline-select"
+     data-inline-select-url-value="<%= url %>"
+     data-inline-select-field-value="<%= field %>">
+  <%# Clickable badge (view mode) %>
+  <span class="inline-select__badge <%= badge_class %>"
+        data-inline-select-target="badge"
+        data-action="click->inline-select#edit">
+    <%= options.is_a?(Hash) ? options[value] : options.find { |label, v| v == value }&.first || value.humanize %>
+  </span>
+
+  <%# Select dropdown (edit mode) %>
+  <select class="inline-select__select"
+          data-inline-select-target="select"
+          data-action="change->inline-select#change keydown->inline-select#keydown">
+    <% if options.is_a?(Hash) %>
+      <% options.each do |val, label| %>
+        <option value="<%= val %>" <%= 'selected' if val.to_s == value.to_s %>><%= label %></option>
+      <% end %>
+    <% else %>
+      <% options.each do |label, val| %>
+        <option value="<%= val %>" <%= 'selected' if val.to_s == value.to_s %>><%= label %></option>
+      <% end %>
+    <% end %>
+  </select>
+</div>

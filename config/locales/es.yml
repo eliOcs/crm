@@ -105,6 +105,10 @@ es:
       no_description: "Sin descripción"
     statuses:
       incoming: "Pendiente"
+      not_now: "Ahora no"
+      todo: "Por hacer"
+      in_progress: "En progreso"
+      blocked: "Bloqueada"
       done: "Completada"
 
   # Emails

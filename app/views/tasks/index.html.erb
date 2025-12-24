@@ -18,7 +18,13 @@
       <tbody>
         <% @tasks.each do |task| %>
           <tr>
-            <td><span class="status-badge status-badge--<%= task.status %>"><%= t("tasks.statuses.#{task.status}") %></span></td>
+            <td>
+              <%= render "shared/inline_select_field",
+                  url: task_path(task),
+                  field: :status,
+                  value: task.status,
+                  options: Task::STATUSES.index_with { |s| t("tasks.statuses.#{s}") } %>
+            </td>
             <td><%= link_to task.name, task %></td>
             <td class="txt-sm <%= 'txt-danger' if task.due_date && task.due_date < Date.current && task.status != 'done' %>">
               <%= l(task.due_date, format: :short) if task.due_date %>

@@ -105,6 +105,10 @@ en:
       no_description: "No description"
     statuses:
       incoming: "Incoming"
+      not_now: "Not Now"
+      todo: "To Do"
+      in_progress: "In Progress"
+      blocked: "Blocked"
       done: "Done"
 
   # Emails
