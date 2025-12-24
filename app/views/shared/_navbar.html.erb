@@ -4,15 +4,16 @@
   <% end %>
 
   <div class="navbar__nav">
-    <%= link_to "Tasks", tasks_path, class: "navbar__link #{'is-active' if request.path.start_with?('/tasks')}" %>
-    <%= link_to "Contacts", contacts_path, class: "navbar__link #{'is-active' if request.path.start_with?('/contacts')}" %>
-    <%= link_to "Companies", companies_path, class: "navbar__link #{'is-active' if request.path.start_with?('/companies')}" %>
-    <%= link_to "Emails", emails_path, class: "navbar__link #{'is-active' if request.path.start_with?('/emails')}" %>
+    <%= link_to t("nav.tasks"), tasks_path, class: "navbar__link #{'is-active' if request.path.start_with?('/tasks')}" %>
+    <%= link_to t("nav.contacts"), contacts_path, class: "navbar__link #{'is-active' if request.path.start_with?('/contacts')}" %>
+    <%= link_to t("nav.companies"), companies_path, class: "navbar__link #{'is-active' if request.path.start_with?('/companies')}" %>
+    <%= link_to t("nav.emails"), emails_path, class: "navbar__link #{'is-active' if request.path.start_with?('/emails')}" %>
   </div>
 
   <div class="navbar__actions">
+    <%= link_to t("nav.settings"), edit_settings_path, class: "navbar__link #{'is-active' if request.path.start_with?('/settings')}" %>
     <div class="navbar__signout">
-      <%= button_to "Sign out", session_path, method: :delete %>
+      <%= button_to t("nav.sign_out"), session_path, method: :delete %>
     </div>
   </div>
 </nav>

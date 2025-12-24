@@ -55,7 +55,7 @@ class EmailEnrichmentService
 
     # Extract and process tasks (separate LLM call)
     existing_tasks = @user.tasks.active.includes(:contact, :company).to_a
-    tasks = extractor.extract_tasks(email_date: email_date, existing_tasks: existing_tasks)
+    tasks = extractor.extract_tasks(email_date: email_date, existing_tasks: existing_tasks, locale: @user.locale)
     @logger.info "  LLM: #{tasks.count} tasks extracted"
 
     tasks.each do |task_data|

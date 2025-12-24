@@ -1,6 +1,6 @@
 <div class="page-header">
-  <h1 class="page-header__title">Contacts</h1>
-  <span class="page-header__subtitle txt-muted"><%= @contacts.count %> total</span>
+  <h1 class="page-header__title"><%= t("contacts.title") %></h1>
+  <span class="page-header__subtitle txt-muted"><%= t("contacts.total", count: @contacts.count) %></span>
 </div>
 
 <% if @contacts.any? %>
@@ -8,15 +8,15 @@
     <table class="table table--hover">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Companies</th>
+          <th><%= t("contacts.fields.name") %></th>
+          <th><%= t("contacts.fields.email") %></th>
+          <th><%= t("contacts.fields.companies") %></th>
         </tr>
       </thead>
       <tbody>
         <% @contacts.each do |contact| %>
           <tr>
-            <td><%= link_to contact.name.presence || "(No name)", contact %></td>
+            <td><%= link_to contact.name.presence || t("contacts.no_name"), contact %></td>
             <td class="txt-sm"><%= link_to contact.email, contact %></td>
             <td class="txt-sm">
               <% contact.companies.each do |company| %>
@@ -30,6 +30,6 @@
   </div>
 <% else %>
   <div class="empty-state">
-    <p class="empty-state__message">No contacts yet.</p>
+    <p class="empty-state__message"><%= t("contacts.empty") %></p>
   </div>
 <% end %>

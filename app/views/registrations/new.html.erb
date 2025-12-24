@@ -2,12 +2,12 @@
   <div class="auth-layout__card">
     <%= image_tag "logo.svg", class: "auth-layout__logo", alt: "CRM" %>
 
-    <h1 class="auth-layout__title">Sign up</h1>
+    <h1 class="auth-layout__title"><%= t("auth.sign_up") %></h1>
 
     <%= form_with model: @user, url: registration_path, class: "form" do |form| %>
       <% if @user.errors.any? %>
         <div id="error_explanation">
-          <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+          <h2><%= t("auth.errors", count: @user.errors.count) %></h2>
           <ul>
             <% @user.errors.each do |error| %>
               <li><%= error.full_message %></li>
@@ -17,27 +17,27 @@
       <% end %>
 
       <div class="field">
-        <%= form.label :email_address, "Email" %>
-        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "email", placeholder: "you@example.com" %>
+        <%= form.label :email_address, t("auth.email") %>
+        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "email", placeholder: t("auth.email_placeholder") %>
       </div>
 
       <div class="field">
-        <%= form.label :password %>
-        <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Create a password" %>
+        <%= form.label :password, t("auth.password") %>
+        <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: t("auth.create_password_placeholder") %>
       </div>
 
       <div class="field">
-        <%= form.label :password_confirmation, "Confirm password" %>
-        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Confirm your password" %>
+        <%= form.label :password_confirmation, t("auth.confirm_password") %>
+        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: t("auth.confirm_password_placeholder") %>
       </div>
 
       <div class="form__actions">
-        <%= form.submit "Sign up", class: "btn btn--primary btn--block" %>
+        <%= form.submit t("auth.sign_up"), class: "btn btn--primary btn--block" %>
       </div>
     <% end %>
 
     <p class="auth-layout__footer">
-      Already have an account? <%= link_to "Sign in", new_session_path %>
+      <%= t("auth.already_have_account") %> <%= link_to t("auth.sign_in_link"), new_session_path %>
     </p>
   </div>
 </div>

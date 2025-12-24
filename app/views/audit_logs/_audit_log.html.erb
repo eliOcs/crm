@@ -4,9 +4,9 @@
   <td><%= audit_log.message %></td>
   <td>
     <% if audit_log.metadata["source"] == "ui" %>
-      <span class="txt-sm">User</span>
+      <span class="txt-sm"><%= t("audit_log.by_user") %></span>
     <% else %>
-      <span class="txt-sm txt-subtle">System</span>
+      <span class="txt-sm txt-subtle"><%= t("audit_log.by_system") %></span>
     <% end %>
   </td>
   <td>
@@ -19,7 +19,7 @@
     <% if audit_log.field_changes.any? %>
       <ul class="txt-sm">
         <% audit_log.field_changes.each do |field, change| %>
-          <li><strong><%= field %></strong>: <%= change["from"].presence || "(empty)" %> &rarr; <%= change["to"] %></li>
+          <li><strong><%= field %></strong>: <%= change["from"].presence || t("audit_log.empty_value") %> &rarr; <%= change["to"] %></li>
         <% end %>
       </ul>
     <% end %>

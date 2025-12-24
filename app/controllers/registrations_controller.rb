@@ -8,10 +8,11 @@ class RegistrationsController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.locale = detect_browser_locale
 
     if @user.save
       start_new_session_for @user
-      redirect_to root_path, notice: "Welcome! You have signed up successfully."
+      redirect_to root_path, notice: t("auth.welcome_notice")
     else
       render :new, status: :unprocessable_entity
     end

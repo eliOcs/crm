@@ -9,4 +9,5 @@ class User < ApplicationRecord
 
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 8 }, on: :create
+  validates :locale, inclusion: { in: %w[en es] }
 end

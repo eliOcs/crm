@@ -2,7 +2,7 @@
   <div class="auth-layout__card">
     <%= image_tag "logo.svg", class: "auth-layout__logo", alt: "CRM" %>
 
-    <h1 class="auth-layout__title">Sign in</h1>
+    <h1 class="auth-layout__title"><%= t("auth.sign_in") %></h1>
 
     <div class="flash-container">
       <% if flash[:alert] %>
@@ -15,22 +15,22 @@
 
     <%= form_with url: session_path, class: "form" do |form| %>
       <div class="field">
-        <%= form.label :email_address, "Email" %>
-        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "you@example.com", value: params[:email_address] %>
+        <%= form.label :email_address, t("auth.email") %>
+        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: t("auth.email_placeholder"), value: params[:email_address] %>
       </div>
 
       <div class="field">
-        <%= form.label :password %>
-        <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Your password", maxlength: 72 %>
+        <%= form.label :password, t("auth.password") %>
+        <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: t("auth.password_placeholder"), maxlength: 72 %>
       </div>
 
       <div class="form__actions">
-        <%= form.submit "Sign in", class: "btn btn--primary btn--block" %>
+        <%= form.submit t("auth.sign_in"), class: "btn btn--primary btn--block" %>
       </div>
     <% end %>
 
     <p class="auth-layout__footer">
-      <%= link_to "Forgot password?", new_password_path %> | <%= link_to "Sign up", new_registration_path %>
+      <%= link_to t("auth.forgot_password"), new_password_path %> | <%= link_to t("auth.sign_up_link"), new_registration_path %>
     </p>
   </div>
 </div>

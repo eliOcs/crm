@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1 class="page-header__title">Dashboard</h1>
+  <h1 class="page-header__title"><%= t("dashboard.title") %></h1>
 </div>
 
-<p>Welcome, <%= Current.user.email_address %>!</p>
+<p><%= t("dashboard.welcome", email: Current.user.email_address) %></p>

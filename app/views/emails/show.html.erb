@@ -1,34 +1,34 @@
-<%= link_to "Back to emails", emails_path, class: "back-link" %>
+<%= link_to t("emails.back"), emails_path, class: "back-link" %>
 
 <div class="page-header">
-  <h1 class="page-header__title"><%= @email[:subject].presence || "(No subject)" %></h1>
+  <h1 class="page-header__title"><%= @email[:subject].presence || t("emails.no_subject") %></h1>
 </div>
 
 <div class="email-card">
   <div class="email-card__meta">
     <dl>
-      <dt>From</dt>
+      <dt><%= t("emails.fields.from") %></dt>
       <dd>
         <% if @email[:from] %>
           <%= @email[:from][:name] %> &lt;<%= @email[:from][:email] %>&gt;
         <% else %>
-          (Unknown)
+          <%= t("emails.unknown") %>
         <% end %>
       </dd>
 
-      <dt>To</dt>
+      <dt><%= t("emails.fields.to") %></dt>
       <dd>
         <% if @email[:to].present? %>
           <% @email[:to].each do |recipient| %>
             <%= recipient[:name] %> &lt;<%= recipient[:email] %>&gt;<br>
           <% end %>
         <% else %>
-          (None)
+          <%= t("emails.none") %>
         <% end %>
       </dd>
 
       <% if @email[:cc].present? %>
-        <dt>CC</dt>
+        <dt><%= t("emails.fields.cc") %></dt>
         <dd>
           <% @email[:cc].each do |recipient| %>
             <%= recipient[:name] %> &lt;<%= recipient[:email] %>&gt;<br>
@@ -36,12 +36,12 @@
         </dd>
       <% end %>
 
-      <dt>Date</dt>
+      <dt><%= t("emails.fields.date") %></dt>
       <dd><%= @email[:date]&.strftime("%Y-%m-%d %H:%M:%S %Z") %></dd>
 
       <% file_attachments = @email[:attachments].select { |a| !a[:inline] } %>
       <% if file_attachments.any? %>
-        <dt>Attachments</dt>
+        <dt><%= t("emails.fields.attachments") %></dt>
         <dd>
           <ul>
             <% file_attachments.each do |att| %>
@@ -73,7 +73,7 @@
     <% elsif @email[:body].present? %>
       <pre><%= @email[:body] %></pre>
     <% else %>
-      <p class="txt-subtle">(No body)</p>
+      <p class="txt-subtle"><%= t("emails.no_body") %></p>
     <% end %>
   </div>
 </div>

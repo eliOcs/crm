@@ -1,6 +1,6 @@
 <div class="page-header">
-  <h1 class="page-header__title">Companies</h1>
-  <span class="page-header__subtitle txt-muted"><%= @companies.count %> total</span>
+  <h1 class="page-header__title"><%= t("companies.title") %></h1>
+  <span class="page-header__subtitle txt-muted"><%= t("companies.total", count: @companies.count) %></span>
 </div>
 
 <% if @companies.any? %>
@@ -8,10 +8,10 @@
     <table class="table table--hover">
       <thead>
         <tr>
-          <th class="table__logo">Logo</th>
-          <th>Name</th>
-          <th>Website</th>
-          <th class="txt-end">Contacts</th>
+          <th class="table__logo"><%= t("companies.fields.logo") %></th>
+          <th><%= t("companies.fields.name") %></th>
+          <th><%= t("companies.fields.website") %></th>
+          <th class="txt-end"><%= t("companies.fields.contacts") %></th>
         </tr>
       </thead>
       <tbody>
@@ -36,6 +36,6 @@
   </div>
 <% else %>
   <div class="empty-state">
-    <p class="empty-state__message">No companies yet.</p>
+    <p class="empty-state__message"><%= t("companies.empty") %></p>
   </div>
 <% end %>

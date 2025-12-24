@@ -1,4 +1,4 @@
-<%= link_to "Back to companies", companies_path, class: "back-link" %>
+<%= link_to t("companies.back"), companies_path, class: "back-link" %>
 
 <div class="page-header page-header--with-logo">
   <% if @company.logo.attached? %>
@@ -9,29 +9,29 @@
 
 <div class="info-card margin-block-end-double">
   <dl>
-    <dt>Legal Name</dt>
+    <dt><%= t("companies.fields.legal_name") %></dt>
     <dd><%= render "shared/inline_edit_field", url: company_path(@company), field: "legal_name", value: @company.legal_name %></dd>
 
-    <dt>Commercial Name</dt>
+    <dt><%= t("companies.fields.commercial_name") %></dt>
     <dd><%= render "shared/inline_edit_field", url: company_path(@company), field: "commercial_name", value: @company.commercial_name %></dd>
 
-    <dt>Domain</dt>
+    <dt><%= t("companies.fields.domain") %></dt>
     <dd><%= render "shared/inline_edit_field", url: company_path(@company), field: "domain", value: @company.domain %></dd>
 
-    <dt>Location</dt>
+    <dt><%= t("companies.fields.location") %></dt>
     <dd><%= render "shared/inline_edit_field", url: company_path(@company), field: "location", value: @company.location %></dd>
 
-    <dt>Website</dt>
+    <dt><%= t("companies.fields.website") %></dt>
     <dd><%= render "shared/inline_edit_field", url: company_path(@company), field: "website", value: @company.website %></dd>
 
-    <dt>VAT ID</dt>
+    <dt><%= t("companies.fields.vat_id") %></dt>
     <dd><%= render "shared/inline_edit_field", url: company_path(@company), field: "vat_id", value: @company.vat_id %></dd>
   </dl>
 </div>
 
 <section class="section">
   <div class="section__header">
-    <h2 class="section__title">Contacts</h2>
+    <h2 class="section__title"><%= t("contacts.title") %></h2>
     <span class="section__count"><%= @contacts.count %></span>
   </div>
 
@@ -40,15 +40,15 @@
       <table class="table table--hover">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Job Role</th>
+            <th><%= t("contacts.fields.name") %></th>
+            <th><%= t("contacts.fields.email") %></th>
+            <th><%= t("contacts.fields.job_role") %></th>
           </tr>
         </thead>
         <tbody>
           <% @contacts.each do |contact| %>
             <tr>
-              <td><%= link_to contact.name.presence || "(No name)", contact %></td>
+              <td><%= link_to contact.name.presence || t("contacts.no_name"), contact %></td>
               <td class="txt-sm"><%= contact.email %></td>
               <td class="txt-sm txt-subtle"><%= contact.job_role %></td>
             </tr>
@@ -57,7 +57,7 @@
       </table>
     </div>
   <% else %>
-    <p class="txt-subtle">No contacts linked to this company yet.</p>
+    <p class="txt-subtle"><%= t("companies.no_contacts") %></p>
   <% end %>
 </section>
 

@@ -1,6 +1,6 @@
 <div class="page-header">
-  <h1 class="page-header__title">Tasks</h1>
-  <span class="page-header__subtitle txt-muted"><%= @tasks.count %> total</span>
+  <h1 class="page-header__title"><%= t("tasks.title") %></h1>
+  <span class="page-header__subtitle txt-muted"><%= t("tasks.total", count: @tasks.count) %></span>
 </div>
 
 <% if @tasks.any? %>
@@ -8,23 +8,23 @@
     <table class="table table--hover">
       <thead>
         <tr>
-          <th>Status</th>
-          <th>Name</th>
-          <th>Due Date</th>
-          <th>Contact</th>
-          <th>Updated</th>
+          <th><%= t("tasks.fields.status") %></th>
+          <th><%= t("tasks.fields.name") %></th>
+          <th><%= t("tasks.fields.due_date") %></th>
+          <th><%= t("tasks.fields.contact") %></th>
+          <th><%= t("tasks.fields.updated") %></th>
         </tr>
       </thead>
       <tbody>
         <% @tasks.each do |task| %>
           <tr>
-            <td><span class="status-badge status-badge--<%= task.status %>"><%= task.status_label %></span></td>
+            <td><span class="status-badge status-badge--<%= task.status %>"><%= t("tasks.statuses.#{task.status}") %></span></td>
             <td><%= link_to task.name, task %></td>
             <td class="txt-sm <%= 'txt-danger' if task.due_date && task.due_date < Date.current && task.status != 'done' %>">
-              <%= task.due_date&.strftime("%b %d") %>
+              <%= l(task.due_date, format: :short) if task.due_date %>
             </td>
             <td class="txt-sm txt-muted"><%= task.contact&.name || task.contact&.email %></td>
-            <td class="txt-sm txt-muted"><%= time_ago_in_words(task.updated_at) %> ago</td>
+            <td class="txt-sm txt-muted"><%= time_ago_in_words(task.updated_at) %> <%= t("tasks.ago") %></td>
           </tr>
         <% end %>
       </tbody>
@@ -32,6 +32,6 @@
   </div>
 <% else %>
   <div class="empty-state">
-    <p class="empty-state__message">No tasks yet.</p>
+    <p class="empty-state__message"><%= t("tasks.empty") %></p>
   </div>
 <% end %>

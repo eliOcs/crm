@@ -25,7 +25,7 @@ class LlmEmailExtractor
     empty_result
   end
 
-  def extract_tasks(email_date:, existing_tasks: [])
+  def extract_tasks(email_date:, existing_tasks: [], locale: "en")
     email_data = EmlReader.new(@eml_path).read
     return [] unless email_data
 
@@ -36,7 +36,7 @@ class LlmEmailExtractor
       max_tokens: 1024,
       temperature: 0,
       messages: [ { role: "user", content: @email_text } ],
-      system: tasks_system_prompt(email_date: email_date, existing_tasks: existing_tasks)
+      system: tasks_system_prompt(email_date: email_date, existing_tasks: existing_tasks, locale: locale)
     )
     parse_tasks_response(response)
   rescue Anthropic::Error => e
@@ -130,15 +130,21 @@ class LlmEmailExtractor
 
   # === TASKS EXTRACTION ===
 
-  def tasks_system_prompt(email_date:, existing_tasks:)
+  def tasks_system_prompt(email_date:, existing_tasks:, locale: "en")
     formatted_tasks = if existing_tasks.empty?
       "No existing active tasks."
     else
       existing_tasks.map(&:summary_for_llm).join("\n")
     end
 
+    language_instruction = case locale.to_s
+    when "es" then "IMPORTANT: Write all task names and descriptions in Spanish."
+    else ""
+    end
+
     <<~PROMPT
       You are a task extractor for a CRM system. Extract follow-up tasks ONLY when the email explicitly requests action from the recipient.
+      #{language_instruction}
 
       <instructions>
       ONLY extract tasks when:

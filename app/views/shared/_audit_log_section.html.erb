@@ -1,18 +1,18 @@
 <section class="section">
   <div class="section__header">
-    <h2 class="section__title">Audit Log</h2>
+    <h2 class="section__title"><%= t("audit_log.title") %></h2>
   </div>
 
   <div class="table-responsive">
     <table class="table table--compact">
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Action</th>
-          <th>Message</th>
-          <th>By</th>
-          <th>Source</th>
-          <th>Changes</th>
+          <th><%= t("audit_log.fields.date") %></th>
+          <th><%= t("audit_log.fields.action") %></th>
+          <th><%= t("audit_log.fields.message") %></th>
+          <th><%= t("audit_log.fields.by") %></th>
+          <th><%= t("audit_log.fields.source") %></th>
+          <th><%= t("audit_log.fields.changes") %></th>
         </tr>
       </thead>
       <tbody id="audit_log_entries">
@@ -24,6 +24,6 @@
   </div>
 
   <% if record.audit_logs.empty? %>
-    <p class="txt-subtle">No audit history yet.</p>
+    <p class="txt-subtle"><%= t("audit_log.empty") %></p>
   <% end %>
 </section>

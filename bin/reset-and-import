@@ -4,6 +4,7 @@ set -e
 LIMIT=${LIMIT:-10}
 USER_EMAIL=${USER_EMAIL:-test@example.com}
 USER_PASSWORD=${USER_PASSWORD:-password123}
+USER_LOCALE=${USER_LOCALE:-es}
 
 echo "==> Resetting database..."
 bin/rails db:reset
@@ -11,8 +12,8 @@ bin/rails db:reset
 echo "==> Running migrations..."
 bin/rails db:migrate
 
-echo "==> Creating user: $USER_EMAIL..."
-bin/rails runner "User.create(email_address: '$USER_EMAIL', password: '$USER_PASSWORD').tap { |u| raise u.errors.full_messages.join unless u.persisted? }"
+echo "==> Creating user: $USER_EMAIL (locale: $USER_LOCALE)..."
+bin/rails runner "User.create(email_address: '$USER_EMAIL', password: '$USER_PASSWORD', locale: '$USER_LOCALE').tap { |u| raise u.errors.full_messages.join unless u.persisted? }"
 
 echo "==> Processing $LIMIT emails..."
 echo "$USER_EMAIL" | LIMIT=$LIMIT bin/rails import:process_emails

@@ -1,4 +1,4 @@
-<%= link_to "Back to contacts", contacts_path, class: "back-link" %>
+<%= link_to t("contacts.back"), contacts_path, class: "back-link" %>
 
 <div class="page-header">
   <h1 class="page-header__title"><%= @contact.name.presence || @contact.email %></h1>
@@ -6,22 +6,22 @@
 
 <div class="info-card margin-block-end-double">
   <dl>
-    <dt>Email</dt>
+    <dt><%= t("contacts.fields.email") %></dt>
     <dd><%= @contact.email %></dd>
 
-    <dt>Name</dt>
+    <dt><%= t("contacts.fields.name") %></dt>
     <dd><%= render "shared/inline_edit_field", url: contact_path(@contact), field: "name", value: @contact.name %></dd>
 
-    <dt>Job Role</dt>
+    <dt><%= t("contacts.fields.job_role") %></dt>
     <dd><%= render "shared/inline_edit_field", url: contact_path(@contact), field: "job_role", value: @contact.job_role %></dd>
 
-    <dt>Department</dt>
+    <dt><%= t("contacts.fields.department") %></dt>
     <dd><%= render "shared/inline_edit_field", url: contact_path(@contact), field: "department", value: @contact.department %></dd>
 
-    <dt>Phone Numbers</dt>
-    <dd><%= render "shared/inline_edit_field", url: contact_path(@contact), field: "phone_numbers", value: @contact.phone_numbers&.join(", "), placeholder: "Not provided (comma-separated)" %></dd>
+    <dt><%= t("contacts.fields.phone_numbers") %></dt>
+    <dd><%= render "shared/inline_edit_field", url: contact_path(@contact), field: "phone_numbers", value: @contact.phone_numbers&.join(", "), placeholder: t("contacts.placeholders.phone_numbers") %></dd>
 
-    <dt>Companies</dt>
+    <dt><%= t("contacts.fields.companies") %></dt>
     <dd>
       <% if @contact.companies.any? %>
         <ul>
@@ -30,7 +30,7 @@
           <% end %>
         </ul>
       <% else %>
-        <span class="txt-subtle">Not linked to any company</span>
+        <span class="txt-subtle"><%= t("contacts.not_linked") %></span>
       <% end %>
     </dd>
   </dl>

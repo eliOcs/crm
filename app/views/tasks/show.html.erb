@@ -1,20 +1,20 @@
-<%= link_to "Back to tasks", tasks_path, class: "back-link" %>
+<%= link_to t("tasks.back"), tasks_path, class: "back-link" %>
 
 <div class="page-header">
   <h1 class="page-header__title"><%= @task.name %></h1>
-  <span class="status-badge status-badge--<%= @task.status %>"><%= @task.status_label %></span>
+  <span class="status-badge status-badge--<%= @task.status %>"><%= t("tasks.statuses.#{@task.status}") %></span>
 </div>
 
 <div class="info-card">
   <div class="info-card__row">
-    <span class="info-card__label">Status</span>
+    <span class="info-card__label"><%= t("tasks.fields.status") %></span>
     <span class="info-card__value">
-      <span class="status-badge status-badge--<%= @task.status %>"><%= @task.status_label %></span>
+      <span class="status-badge status-badge--<%= @task.status %>"><%= t("tasks.statuses.#{@task.status}") %></span>
     </span>
   </div>
 
   <div class="info-card__row">
-    <span class="info-card__label">Name</span>
+    <span class="info-card__label"><%= t("tasks.fields.name") %></span>
     <span class="info-card__value">
       <%= render "shared/inline_edit_field",
           url: task_path(@task),
@@ -24,23 +24,23 @@
   </div>
 
   <div class="info-card__row">
-    <span class="info-card__label">Description</span>
+    <span class="info-card__label"><%= t("tasks.fields.description") %></span>
     <span class="info-card__value">
       <%= render "shared/inline_edit_field",
           url: task_path(@task),
           field: :description,
           value: @task.description,
-          placeholder: "No description" %>
+          placeholder: t("tasks.placeholders.no_description") %>
     </span>
   </div>
 
   <% if @task.due_date %>
     <div class="info-card__row">
-      <span class="info-card__label">Due Date</span>
+      <span class="info-card__label"><%= t("tasks.fields.due_date") %></span>
       <span class="info-card__value <%= 'txt-danger' if @task.due_date < Date.current && @task.status != 'done' %>">
-        <%= @task.due_date.strftime("%B %d, %Y") %>
+        <%= l(@task.due_date, format: :long) %>
         <% if @task.due_date < Date.current && @task.status != 'done' %>
-          <span class="txt-sm">(overdue)</span>
+          <span class="txt-sm"><%= t("tasks.overdue") %></span>
         <% end %>
       </span>
     </div>
@@ -48,7 +48,7 @@
 
   <% if @task.contact %>
     <div class="info-card__row">
-      <span class="info-card__label">Contact</span>
+      <span class="info-card__label"><%= t("tasks.fields.contact") %></span>
       <span class="info-card__value">
         <%= link_to @task.contact.name || @task.contact.email, contact_path(@task.contact) %>
       </span>
@@ -57,7 +57,7 @@
 
   <% if @task.company %>
     <div class="info-card__row">
-      <span class="info-card__label">Company</span>
+      <span class="info-card__label"><%= t("tasks.fields.company") %></span>
       <span class="info-card__value">
         <%= link_to @task.company.display_name, company_path(@task.company) %>
       </span>
@@ -65,13 +65,13 @@
   <% end %>
 
   <div class="info-card__row">
-    <span class="info-card__label">Created</span>
-    <span class="info-card__value txt-muted"><%= @task.created_at.strftime("%B %d, %Y at %H:%M") %></span>
+    <span class="info-card__label"><%= t("tasks.fields.created") %></span>
+    <span class="info-card__value txt-muted"><%= l(@task.created_at, format: :long) %></span>
   </div>
 
   <div class="info-card__row">
-    <span class="info-card__label">Last updated</span>
-    <span class="info-card__value txt-muted"><%= @task.updated_at.strftime("%B %d, %Y at %H:%M") %></span>
+    <span class="info-card__label"><%= t("tasks.fields.last_updated") %></span>
+    <span class="info-card__value txt-muted"><%= l(@task.updated_at, format: :long) %></span>
   </div>
 </div>
 

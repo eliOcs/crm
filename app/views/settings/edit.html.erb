@@ -1,0 +1,29 @@
+<div class="page-header">
+  <h1 class="page-header__title"><%= t("settings.title") %></h1>
+</div>
+
+<div class="flash-container">
+  <% if flash[:notice] %>
+    <div class="flash flash--notice"><%= flash[:notice] %></div>
+  <% end %>
+</div>
+
+<div class="info-card">
+  <%= form_with model: Current.user, url: settings_path, method: :patch, class: "form" do |form| %>
+    <div class="field">
+      <%= form.label :locale, t("settings.language") %>
+      <p class="field__hint"><%= t("settings.language_description") %></p>
+      <%= form.select :locale,
+            options_for_select([
+              [t("settings.languages.en"), "en"],
+              [t("settings.languages.es"), "es"]
+            ], Current.user.locale),
+            {},
+            class: "select" %>
+    </div>
+
+    <div class="form__actions">
+      <%= form.submit t("common.save"), class: "btn btn--primary" %>
+    </div>
+  <% end %>
+</div>

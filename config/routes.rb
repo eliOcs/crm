@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resource :session
   resource :registration, only: %i[ new create ]
+  resource :settings, only: %i[ edit update ]
   resources :passwords, param: :token
 
   resources :contacts, only: %i[ index show update ]

@@ -1,0 +1,223 @@
+es:
+  # Navigation
+  nav:
+    tasks: "Tareas"
+    contacts: "Contactos"
+    companies: "Empresas"
+    emails: "Correos"
+    settings: "Configuración"
+    sign_out: "Cerrar sesión"
+
+  # Authentication
+  auth:
+    sign_in: "Iniciar sesión"
+    sign_up: "Registrarse"
+    sign_in_link: "Iniciar sesión"
+    sign_up_link: "Registrarse"
+    forgot_password: "¿Olvidaste tu contraseña?"
+    reset_password: "Restablecer contraseña"
+    send_reset_link: "Enviar enlace"
+    back_to_sign_in: "Volver a iniciar sesión"
+    already_have_account: "¿Ya tienes una cuenta?"
+    forgot_password_intro: "Introduce tu email y te enviaremos un enlace para restablecer tu contraseña."
+    email: "Email"
+    password: "Contraseña"
+    new_password: "Nueva contraseña"
+    confirm_password: "Confirmar contraseña"
+    email_placeholder: "tu@ejemplo.com"
+    password_placeholder: "Tu contraseña"
+    create_password_placeholder: "Crea una contraseña"
+    confirm_password_placeholder: "Confirma tu contraseña"
+    new_password_placeholder: "Crea una nueva contraseña"
+    confirm_new_password_placeholder: "Confirma tu nueva contraseña"
+    welcome_notice: "¡Bienvenido! Te has registrado correctamente."
+    errors:
+      one: "1 error impidió guardar este usuario:"
+      other: "%{count} errores impidieron guardar este usuario:"
+
+  # Password reset email
+  password_mailer:
+    reset:
+      intro: "Puedes restablecer tu contraseña en"
+      link: "esta página de restablecimiento"
+      expiry: "Este enlace caducará en %{time}."
+
+  # Dashboard
+  dashboard:
+    title: "Panel"
+    welcome: "¡Bienvenido, %{email}!"
+
+  # Contacts
+  contacts:
+    title: "Contactos"
+    back: "Volver a contactos"
+    total: "%{count} en total"
+    empty: "Aún no hay contactos."
+    no_name: "(Sin nombre)"
+    not_linked: "No vinculado a ninguna empresa"
+    fields:
+      name: "Nombre"
+      email: "Email"
+      job_role: "Cargo"
+      department: "Departamento"
+      phone_numbers: "Teléfonos"
+      companies: "Empresas"
+    placeholders:
+      phone_numbers: "No proporcionado (separados por comas)"
+
+  # Companies
+  companies:
+    title: "Empresas"
+    back: "Volver a empresas"
+    total: "%{count} en total"
+    empty: "Aún no hay empresas."
+    no_contacts: "Aún no hay contactos vinculados a esta empresa."
+    fields:
+      logo: "Logo"
+      name: "Nombre"
+      legal_name: "Razón Social"
+      commercial_name: "Nombre Comercial"
+      domain: "Dominio"
+      location: "Ubicación"
+      website: "Sitio Web"
+      vat_id: "CIF/NIF"
+      contacts: "Contactos"
+
+  # Tasks
+  tasks:
+    title: "Tareas"
+    back: "Volver a tareas"
+    total: "%{count} en total"
+    empty: "Aún no hay tareas."
+    overdue: "(vencida)"
+    ago: "hace"
+    fields:
+      status: "Estado"
+      name: "Nombre"
+      description: "Descripción"
+      due_date: "Fecha límite"
+      contact: "Contacto"
+      company: "Empresa"
+      created: "Creado"
+      last_updated: "Última actualización"
+      updated: "Actualizado"
+    placeholders:
+      no_description: "Sin descripción"
+    statuses:
+      incoming: "Pendiente"
+      done: "Completada"
+
+  # Emails
+  emails:
+    title: "Correos"
+    back: "Volver a correos"
+    total: "%{count} en total"
+    empty: "Aún no hay correos."
+    unknown: "(Desconocido)"
+    no_subject: "(Sin asunto)"
+    no_body: "(Sin contenido)"
+    none: "(Ninguno)"
+    "yes": "Sí"
+    fields:
+      from: "De"
+      to: "Para"
+      cc: "CC"
+      subject: "Asunto"
+      date: "Fecha"
+      attachments: "Adjuntos"
+
+  # Audit Log
+  audit_log:
+    title: "Registro de cambios"
+    empty: "Aún no hay historial."
+    empty_value: "(vacío)"
+    by_user: "Usuario"
+    by_system: "Sistema"
+    fields:
+      date: "Fecha"
+      action: "Acción"
+      message: "Mensaje"
+      by: "Por"
+      source: "Origen"
+      changes: "Cambios"
+
+  # Common / Shared
+  common:
+    save: "Guardar"
+    cancel: "Cancelar"
+    not_provided: "No proporcionado"
+    total: "%{count} en total"
+
+  # Pagination
+  pagination:
+    page: "Página %{current} de %{total}"
+    previous: "Anterior"
+    next: "Siguiente"
+
+  # Settings
+  settings:
+    title: "Configuración"
+    language: "Idioma"
+    language_description: "Elige tu idioma preferido para la interfaz."
+    languages:
+      en: "English"
+      es: "Español"
+    saved: "Configuración guardada correctamente."
+
+  # Date/time formats
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%d de %B de %Y"
+    day_names: [domingo, lunes, martes, miércoles, jueves, viernes, sábado]
+    abbr_day_names: [dom, lun, mar, mié, jue, vie, sáb]
+    month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
+    abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%H:%M"
+      long: "%d de %B de %Y a las %H:%M"
+      with_zone: "%d/%m/%Y %H:%M:%S %Z"
+
+  # Rails built-in translations
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "aproximadamente 1 hora"
+        other: "aproximadamente %{count} horas"
+      about_x_months:
+        one: "aproximadamente 1 mes"
+        other: "aproximadamente %{count} meses"
+      about_x_years:
+        one: "aproximadamente 1 año"
+        other: "aproximadamente %{count} años"
+      almost_x_years:
+        one: "casi 1 año"
+        other: "casi %{count} años"
+      half_a_minute: "medio minuto"
+      less_than_x_minutes:
+        one: "menos de 1 minuto"
+        other: "menos de %{count} minutos"
+      less_than_x_seconds:
+        one: "menos de 1 segundo"
+        other: "menos de %{count} segundos"
+      over_x_years:
+        one: "más de 1 año"
+        other: "más de %{count} años"
+      x_days:
+        one: "1 día"
+        other: "%{count} días"
+      x_minutes:
+        one: "1 minuto"
+        other: "%{count} minutos"
+      x_months:
+        one: "1 mes"
+        other: "%{count} meses"
+      x_seconds:
+        one: "1 segundo"
+        other: "%{count} segundos"
+      x_years:
+        one: "1 año"
+        other: "%{count} años"

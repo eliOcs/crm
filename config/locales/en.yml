@@ -1,31 +1,178 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  # Navigation
+  nav:
+    tasks: "Tasks"
+    contacts: "Contacts"
+    companies: "Companies"
+    emails: "Emails"
+    settings: "Settings"
+    sign_out: "Sign out"
+
+  # Authentication
+  auth:
+    sign_in: "Sign in"
+    sign_up: "Sign up"
+    sign_in_link: "Sign in"
+    sign_up_link: "Sign up"
+    forgot_password: "Forgot password?"
+    reset_password: "Reset password"
+    send_reset_link: "Send reset link"
+    back_to_sign_in: "Back to sign in"
+    already_have_account: "Already have an account?"
+    forgot_password_intro: "Enter your email and we'll send you a link to reset your password."
+    email: "Email"
+    password: "Password"
+    new_password: "New password"
+    confirm_password: "Confirm password"
+    email_placeholder: "you@example.com"
+    password_placeholder: "Your password"
+    create_password_placeholder: "Create a password"
+    confirm_password_placeholder: "Confirm your password"
+    new_password_placeholder: "Create a new password"
+    confirm_new_password_placeholder: "Confirm your new password"
+    welcome_notice: "Welcome! You have signed up successfully."
+    errors:
+      one: "1 error prohibited this user from being saved:"
+      other: "%{count} errors prohibited this user from being saved:"
+
+  # Password reset email
+  password_mailer:
+    reset:
+      intro: "You can reset your password on"
+      link: "this password reset page"
+      expiry: "This link will expire in %{time}."
+
+  # Dashboard
+  dashboard:
+    title: "Dashboard"
+    welcome: "Welcome, %{email}!"
+
+  # Contacts
+  contacts:
+    title: "Contacts"
+    back: "Back to contacts"
+    total: "%{count} total"
+    empty: "No contacts yet."
+    no_name: "(No name)"
+    not_linked: "Not linked to any company"
+    fields:
+      name: "Name"
+      email: "Email"
+      job_role: "Job Role"
+      department: "Department"
+      phone_numbers: "Phone Numbers"
+      companies: "Companies"
+    placeholders:
+      phone_numbers: "Not provided (comma-separated)"
+
+  # Companies
+  companies:
+    title: "Companies"
+    back: "Back to companies"
+    total: "%{count} total"
+    empty: "No companies yet."
+    no_contacts: "No contacts linked to this company yet."
+    fields:
+      logo: "Logo"
+      name: "Name"
+      legal_name: "Legal Name"
+      commercial_name: "Commercial Name"
+      domain: "Domain"
+      location: "Location"
+      website: "Website"
+      vat_id: "VAT ID"
+      contacts: "Contacts"
+
+  # Tasks
+  tasks:
+    title: "Tasks"
+    back: "Back to tasks"
+    total: "%{count} total"
+    empty: "No tasks yet."
+    overdue: "(overdue)"
+    ago: "ago"
+    fields:
+      status: "Status"
+      name: "Name"
+      description: "Description"
+      due_date: "Due Date"
+      contact: "Contact"
+      company: "Company"
+      created: "Created"
+      last_updated: "Last updated"
+      updated: "Updated"
+    placeholders:
+      no_description: "No description"
+    statuses:
+      incoming: "Incoming"
+      done: "Done"
+
+  # Emails
+  emails:
+    title: "Emails"
+    back: "Back to emails"
+    total: "%{count} total"
+    empty: "No emails yet."
+    unknown: "(Unknown)"
+    no_subject: "(No subject)"
+    no_body: "(No body)"
+    none: "(None)"
+    "yes": "Yes"
+    fields:
+      from: "From"
+      to: "To"
+      cc: "CC"
+      subject: "Subject"
+      date: "Date"
+      attachments: "Attachments"
+
+  # Audit Log
+  audit_log:
+    title: "Audit Log"
+    empty: "No audit history yet."
+    empty_value: "(empty)"
+    by_user: "User"
+    by_system: "System"
+    fields:
+      date: "Date"
+      action: "Action"
+      message: "Message"
+      by: "By"
+      source: "Source"
+      changes: "Changes"
+
+  # Common / Shared
+  common:
+    save: "Save"
+    cancel: "Cancel"
+    not_provided: "Not provided"
+    total: "%{count} total"
+
+  # Pagination
+  pagination:
+    page: "Page %{current} of %{total}"
+    previous: "Previous"
+    next: "Next"
+
+  # Settings
+  settings:
+    title: "Settings"
+    language: "Language"
+    language_description: "Choose your preferred language for the interface."
+    languages:
+      en: "English"
+      es: "Español"
+    saved: "Settings saved successfully."
+
+  # Date/time formats
+  date:
+    formats:
+      default: "%Y-%m-%d"
+      short: "%b %d"
+      long: "%B %d, %Y"
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M"
+      short: "%H:%M"
+      long: "%B %d, %Y at %H:%M"
+      with_zone: "%Y-%m-%d %H:%M:%S %Z"
