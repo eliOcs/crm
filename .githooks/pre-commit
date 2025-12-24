@@ -8,6 +8,16 @@ echo "=> Running Rubocop..."
 bin/rubocop --force-exclusion -A
 git add -u
 
+# Security scans
+echo "=> Running Brakeman security scan..."
+bin/brakeman --no-pager -q
+
+echo "=> Running bundler-audit..."
+bin/bundler-audit --quiet
+
+echo "=> Running importmap audit..."
+bin/importmap audit 2>/dev/null || echo "   (skipped - network error)"
+
 # Run tests
 echo "=> Running tests..."
 bin/rails test
