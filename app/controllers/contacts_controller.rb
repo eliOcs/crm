@@ -5,10 +5,12 @@ class ContactsController < ApplicationController
 
   def index
     @contacts = Current.user.contacts.includes(:companies).order(:name)
+    fresh_when @contacts
   end
 
   def show
-    @contact = Current.user.contacts.find(params[:id])
+    @contact = Current.user.contacts.includes(:companies).find(params[:id])
+    fresh_when [ @contact, @contact.companies ]
   end
 
   def update

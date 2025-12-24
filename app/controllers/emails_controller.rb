@@ -21,6 +21,8 @@ class EmailsController < ApplicationController
       return
     end
 
+    return unless stale?(last_modified: File.mtime(path))
+
     @email = EmlReader.new(path).read
     @encoded_path = params[:id]
 
@@ -37,6 +39,8 @@ class EmailsController < ApplicationController
       head :not_found
       return
     end
+
+    return unless stale?(last_modified: File.mtime(path))
 
     attachment = EmlReader.new(path).attachment(content_id)
 
@@ -59,6 +63,8 @@ class EmailsController < ApplicationController
       head :not_found
       return
     end
+
+    return unless stale?(last_modified: File.mtime(path))
 
     attachment = EmlReader.new(path).attachment_by_index(index)
 

@@ -1,5 +1,6 @@
 class SettingsController < ApplicationController
   def edit
+    fresh_when Current.user
   end
 
   def update
