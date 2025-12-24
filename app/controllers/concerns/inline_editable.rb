@@ -15,7 +15,7 @@ module InlineEditable
     field = (params.keys & inline_editable_fields).first
     return render json: { error: "Invalid field" }, status: :unprocessable_entity unless field
 
-    old_value = record.send(field)
+    old_value = record.read_attribute(field)
     new_value = transform_value(field, params[field])
 
     if record.update(field => new_value)
