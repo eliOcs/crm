@@ -94,9 +94,9 @@ export default class extends Controller {
     const selectedOption = this.selectTarget.options[this.selectTarget.selectedIndex]
     const label = selectedOption.text
 
-    // Update badge text and class
+    // Update badge text and class (preserve inline-select__badge for CSS)
     this.badgeTarget.textContent = label
-    this.badgeTarget.className = `status-badge status-badge--${value}`
+    this.badgeTarget.className = `inline-select__badge status-badge status-badge--${value}`
   }
 
   keydown(event) {
