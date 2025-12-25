@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_24_110022) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_25_191744) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -90,6 +90,21 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_24_110022) do
     t.index ["user_id"], name: "index_contacts_on_user_id"
   end
 
+  create_table "microsoft_credentials", force: :cascade do |t|
+    t.text "access_token", null: false
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.datetime "expires_at", null: false
+    t.datetime "last_sync_at"
+    t.string "microsoft_user_id", null: false
+    t.text "refresh_token", null: false
+    t.string "scope"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["microsoft_user_id"], name: "index_microsoft_credentials_on_microsoft_user_id", unique: true
+    t.index ["user_id"], name: "index_microsoft_credentials_on_user_id", unique: true
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -132,6 +147,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_24_110022) do
   add_foreign_key "companies_contacts", "companies"
   add_foreign_key "companies_contacts", "contacts"
   add_foreign_key "contacts", "users"
+  add_foreign_key "microsoft_credentials", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "companies"
   add_foreign_key "tasks", "contacts"

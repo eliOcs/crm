@@ -214,6 +214,18 @@ en:
       en: "English"
       es: "Español"
     saved: "Settings saved successfully."
+    integrations: "Integrations"
+    microsoft:
+      title: "Microsoft 365"
+      description: "Connect your Microsoft account to import emails, contacts, and calendar events."
+      connect: "Connect Microsoft Account"
+      disconnect: "Disconnect"
+      disconnect_confirm: "Are you sure? This will remove access to your Microsoft emails."
+      connected_as: "Connected as %{email}"
+      connected: "Microsoft account connected successfully."
+      disconnected: "Microsoft account disconnected."
+      auth_failed: "Failed to connect Microsoft account. Please try again."
+      invalid_state: "Invalid authentication state. Please try again."
 
   # Legal Pages
   legal:

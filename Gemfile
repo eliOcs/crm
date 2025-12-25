@@ -46,6 +46,9 @@ gem "image_processing", "~> 1.2"
 # Claude API for LLM-powered contact extraction
 gem "anthropic"
 
+# OAuth 2.0 client for Microsoft Graph integration
+gem "oauth2"
+
 # Parse Accept-Language headers for i18n
 gem "http_accept_language"
 

@@ -2,12 +2,6 @@
   <h1 class="page-header__title"><%= t("settings.title") %></h1>
 </div>
 
-<div class="flash-container">
-  <% if flash[:notice] %>
-    <div class="flash flash--notice"><%= flash[:notice] %></div>
-  <% end %>
-</div>
-
 <div class="info-card">
   <%= form_with model: Current.user, url: settings_path, method: :patch, class: "form" do |form| %>
     <div class="field">
@@ -26,4 +20,30 @@
       <%= form.submit t("common.save"), class: "btn btn--primary" %>
     </div>
   <% end %>
+</div>
+
+<div class="info-card">
+  <h2><%= t("settings.integrations") %></h2>
+
+  <div class="field">
+    <label><%= t("settings.microsoft.title") %></label>
+    <p class="field__hint"><%= t("settings.microsoft.description") %></p>
+
+    <% if Current.user.microsoft_connected? %>
+      <div class="integration-status">
+        <span class="integration-status__email">
+          <%= t("settings.microsoft.connected_as", email: Current.user.microsoft_credential.email) %>
+        </span>
+        <%= button_to t("settings.microsoft.disconnect"),
+              disconnect_auth_microsoft_path,
+              method: :delete,
+              class: "btn btn--secondary",
+              data: { turbo_confirm: t("settings.microsoft.disconnect_confirm") } %>
+      </div>
+    <% else %>
+      <%= link_to t("settings.microsoft.connect"),
+            connect_auth_microsoft_path,
+            class: "btn btn--primary" %>
+    <% end %>
+  </div>
 </div>

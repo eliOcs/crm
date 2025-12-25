@@ -4,6 +4,11 @@ class User < ApplicationRecord
   has_many :contacts, dependent: :destroy
   has_many :companies, dependent: :destroy
   has_many :tasks, dependent: :destroy
+  has_one :microsoft_credential, dependent: :destroy
+
+  def microsoft_connected?
+    microsoft_credential.present?
+  end
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 

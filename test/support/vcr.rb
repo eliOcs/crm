@@ -7,6 +7,16 @@ VCR.configure do |config|
 
   # Filter API keys from recordings
   config.filter_sensitive_data("<ANTHROPIC_API_KEY>") { ENV["ANTHROPIC_API_KEY"] }
+  config.filter_sensitive_data("<MICROSOFT_CLIENT_ID>") { ENV["MICROSOFT_CLIENT_ID"] }
+  config.filter_sensitive_data("<MICROSOFT_CLIENT_SECRET>") { ENV["MICROSOFT_CLIENT_SECRET"] }
+
+  # Filter Microsoft tokens from response bodies
+  config.before_record do |interaction|
+    if interaction.response.body.include?("access_token")
+      interaction.response.body.gsub!(/"access_token":"[^"]+"/, '"access_token":"<FILTERED>"')
+      interaction.response.body.gsub!(/"refresh_token":"[^"]+"/, '"refresh_token":"<FILTERED>"')
+    end
+  end
 
   # Match on method and URI for Claude API (body can vary due to timestamps)
   config.default_cassette_options = {

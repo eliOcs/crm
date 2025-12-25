@@ -214,6 +214,18 @@ es:
       en: "English"
       es: "Español"
     saved: "Configuración guardada correctamente."
+    integrations: "Integraciones"
+    microsoft:
+      title: "Microsoft 365"
+      description: "Conecta tu cuenta de Microsoft para importar correos, contactos y eventos de calendario."
+      connect: "Conectar Cuenta Microsoft"
+      disconnect: "Desconectar"
+      disconnect_confirm: "¿Estás seguro? Esto eliminará el acceso a tus correos de Microsoft."
+      connected_as: "Conectado como %{email}"
+      connected: "Cuenta de Microsoft conectada correctamente."
+      disconnected: "Cuenta de Microsoft desconectada."
+      auth_failed: "Error al conectar la cuenta de Microsoft. Inténtalo de nuevo."
+      invalid_state: "Estado de autenticación inválido. Inténtalo de nuevo."
 
   # Legal Pages
   legal:

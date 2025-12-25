@@ -4,6 +4,14 @@ Rails.application.routes.draw do
   resource :settings, only: %i[ edit update ]
   resources :passwords, param: :token
 
+  namespace :auth do
+    resource :microsoft, only: [], controller: "microsoft" do
+      get :connect
+      get :callback
+      delete :disconnect
+    end
+  end
+
   resources :contacts, only: %i[ index show update ]
   resources :companies, only: %i[ index show update ]
   resources :tasks, only: %i[ index show update ]
