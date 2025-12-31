@@ -43,7 +43,8 @@
     <% else %>
       <%= link_to t("settings.microsoft.connect"),
             connect_auth_microsoft_path,
-            class: "btn btn--primary" %>
+            class: "btn btn--primary",
+            data: { turbo: false } %>
     <% end %>
   </div>
 </div>
@@ -53,8 +54,7 @@
     <h2><%= t("microsoft_import.title") %></h2>
     <p class="field__hint mar-b-md"><%= t("microsoft_import.description") %></p>
 
-    <turbo-frame id="microsoft-import-status">
-      <%= render "microsoft_import_status" %>
-    </turbo-frame>
+    <%= turbo_stream_from Current.user, :microsoft_import %>
+    <%= render "microsoft_import_status" %>
   </div>
 <% end %>

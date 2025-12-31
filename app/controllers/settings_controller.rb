@@ -52,13 +52,7 @@ class SettingsController < ApplicationController
   def microsoft_import_status
     @active_import = Current.user.microsoft_email_imports.active.first
     @recent_imports = Current.user.microsoft_email_imports.recent.where.not(status: "pending")
-
-    # Disable caching for polling endpoint
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
-
-    render partial: "microsoft_import_status", layout: "turbo_frame"
+    render partial: "microsoft_import_status"
   end
 
   private

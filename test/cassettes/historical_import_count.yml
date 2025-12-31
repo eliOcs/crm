@@ -1,0 +1,114 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages?$count=true&$filter=receivedDateTime%20ge%202024-12-31T00:00:00Z&$top=1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Ruby
+      Host:
+      - graph.microsoft.com
+      Authorization:
+      - Bearer <FILTERED_TOKEN>
+      Consistencylevel:
+      - eventual
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - private
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 96ba1ae1-911d-4f21-811a-d8c2987d46f3
+      Client-Request-Id:
+      - 96ba1ae1-911d-4f21-811a-d8c2987d46f3
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"France Central","Slice":"E","Ring":"5","ScaleUnit":"002","RoleInstance":"PA3PEPF00010523"}}'
+      Date:
+      - Wed, 31 Dec 2025 17:02:21 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#users(''dcb75d6e-5dbf-4ed5-b82e-be9243b006b2'')/mailFolders(''inbox'')/messages","@odata.count":11,"value":[{"@odata.etag":"W/\"CQAAABYAAACsDrxp0draSoKqIjnY3vwLAAAAABaH\"","id":"AAMkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQBGAAAAAAB8L27KsQb5QbFNIxRaPgmzBwCsDrxp0draSoKqIjnY3vwLAAAAAAEMAACsDrxp0draSoKqIjnY3vwLAAAAAAVYAAA=","createdDateTime":"2025-12-25T19:35:45Z","lastModifiedDateTime":"2025-12-25T22:11:21Z","changeKey":"CQAAABYAAACsDrxp0draSoKqIjnY3vwLAAAAABaH","categories":[],"receivedDateTime":"2025-12-25T19:35:45Z","sentDateTime":"2025-12-25T19:35:30Z","hasAttachments":false,"internetMessageId":"<CA+Bv328VBdSartztG2=F8syrE9iGp4reOaakt+k+9=-4gBrbiw@mail.gmail.com>","subject":"Re:
+        Test Email","bodyPreview":"Replying to our first email!\r\n\r\nOn Thu, Dec
+        25, 2025 at 8:35\u202fPM Elio Capella S\u00e1nchez <admin@eliocapella.onmicrosoft.com>
+        wrote:\r\nLets send our first email!","importance":"normal","parentFolderId":"AQMkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQAuAAADfC9uyrEG_UGxTSMUWj4JswEArA68adHa2gBKgqoiOdje-AsAAAIBDAAAAA==","conversationId":"AAQkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQAQAB15jq3RQq5OozD0tIVAKaQ=","conversationIndex":"AQHcddWQHXmOrdFCrk6jMPS0hUAppLUyv5YA","isDeliveryReceiptRequested":null,"isReadReceiptRequested":false,"isRead":true,"isDraft":false,"webLink":"https://outlook.office365.com/owa/?ItemID=AAMkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQBGAAAAAAB8L27KsQb5QbFNIxRaPgmzBwCsDrxp0draSoKqIjnY3vwLAAAAAAEMAACsDrxp0draSoKqIjnY3vwLAAAAAAVYAAA%3D&exvsurl=1&viewmodel=ReadMessageItem","inferenceClassification":"focused","body":{"contentType":"html","content":"<html><head>\r\n<meta
+        http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div
+        dir=\"ltr\">Replying to our first email!</div><br><div class=\"gmail_quote
+        gmail_quote_container\"><div dir=\"ltr\" class=\"gmail_attr\">On Thu, Dec
+        25, 2025 at 8:35\u202fPM Elio Capella S\u00e1nchez &lt;<a href=\"mailto:admin@eliocapella.onmicrosoft.com\">admin@eliocapella.onmicrosoft.com</a>&gt;
+        wrote:<br></div><blockquote class=\"gmail_quote\" style=\"margin:0px 0px 0px
+        0.8ex; border-left:1px solid rgb(204,204,204); padding-left:1ex\"><div class=\"msg1900642172475478393\"><div
+        dir=\"ltr\"><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif;
+        font-size:12pt; color:rgb(0,0,0)\">Lets send our first email!</div></div></div></blockquote></div></body></html>"},"sender":{"emailAddress":{"name":"Elio
+        Capella","address":"eliocapella@gmail.com"}},"from":{"emailAddress":{"name":"Elio
+        Capella","address":"eliocapella@gmail.com"}},"toRecipients":[{"emailAddress":{"name":"Elio
+        Capella S\u00e1nchez","address":"admin@eliocapella.onmicrosoft.com"}}],"ccRecipients":[],"bccRecipients":[],"replyTo":[],"flag":{"flagStatus":"notFlagged"}}],"@odata.nextLink":"https://graph.microsoft.com/v1.0/me/mailFolders(''inbox'')/messages?%24filter=receivedDateTime+ge+2024-12-31T00%3a00%3a00Z&%24count=true&%24top=1&%24skip=1"}'
+  recorded_at: Wed, 31 Dec 2025 17:02:22 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/me/mailFolders/sentitems/messages?$count=true&$filter=receivedDateTime%20ge%202024-12-31T00:00:00Z&$top=1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Ruby
+      Host:
+      - graph.microsoft.com
+      Authorization:
+      - Bearer <FILTERED_TOKEN>
+      Consistencylevel:
+      - eventual
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - private
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 35d21e50-d95c-46cb-91a8-f48edb341df3
+      Client-Request-Id:
+      - 35d21e50-d95c-46cb-91a8-f48edb341df3
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"France Central","Slice":"E","Ring":"5","ScaleUnit":"000","RoleInstance":"PA1PEPF0006B219"}}'
+      Date:
+      - Wed, 31 Dec 2025 17:02:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#users(''dcb75d6e-5dbf-4ed5-b82e-be9243b006b2'')/mailFolders(''sentitems'')/messages","@odata.count":1,"value":[{"@odata.etag":"W/\"CQAAABYAAACsDrxp0draSoKqIjnY3vwLAAAAABaF\"","id":"AAMkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQBGAAAAAAB8L27KsQb5QbFNIxRaPgmzBwCsDrxp0draSoKqIjnY3vwLAAAAAAEJAACsDrxp0draSoKqIjnY3vwLAAAAALUlAAA=","createdDateTime":"2025-12-25T19:35:02Z","lastModifiedDateTime":"2025-12-25T22:11:21Z","changeKey":"CQAAABYAAACsDrxp0draSoKqIjnY3vwLAAAAABaF","categories":[],"receivedDateTime":"2025-12-25T19:35:14Z","sentDateTime":"2025-12-25T19:35:13Z","hasAttachments":false,"internetMessageId":"<MA2P292MB030387E1381426606C242109F8B3A@MA2P292MB0303.ESPP292.PROD.OUTLOOK.COM>","subject":"Test
+        Email","bodyPreview":"Lets send our first email!","importance":"normal","parentFolderId":"AQMkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQAuAAADfC9uyrEG_UGxTSMUWj4JswEArA68adHa2gBKgqoiOdje-AsAAAIBCQAAAA==","conversationId":"AAQkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQAQAB15jq3RQq5OozD0tIVAKaQ=","conversationIndex":"AQHcddWQHXmOrdFCrk6jMPS0hUAppA==","isDeliveryReceiptRequested":false,"isReadReceiptRequested":false,"isRead":true,"isDraft":false,"webLink":"https://outlook.office365.com/owa/?ItemID=AAMkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQBGAAAAAAB8L27KsQb5QbFNIxRaPgmzBwCsDrxp0draSoKqIjnY3vwLAAAAAAEJAACsDrxp0draSoKqIjnY3vwLAAAAALUlAAA%3D&exvsurl=1&viewmodel=ReadMessageItem","inferenceClassification":"focused","body":{"contentType":"html","content":"<html><head>\r\n<meta
+        http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><style type=\"text/css\"
+        style=\"display:none\">\r\n<!--\r\np\r\n\t{margin-top:0;\r\n\tmargin-bottom:0}\r\n-->\r\n</style></head><body
+        dir=\"ltr\"><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif;
+        font-size:12pt; color:rgb(0,0,0)\">Lets send our first email!</div></body></html>"},"sender":{"emailAddress":{"name":"Elio
+        Capella S\u00e1nchez","address":"admin@eliocapella.onmicrosoft.com"}},"from":{"emailAddress":{"name":"Elio
+        Capella S\u00e1nchez","address":"admin@eliocapella.onmicrosoft.com"}},"toRecipients":[{"emailAddress":{"name":"eliocapella@gmail.com","address":"eliocapella@gmail.com"}}],"ccRecipients":[],"bccRecipients":[],"replyTo":[],"flag":{"flagStatus":"notFlagged"}}],"@odata.nextLink":"https://graph.microsoft.com/v1.0/me/mailFolders(''sentitems'')/messages?%24filter=receivedDateTime+ge+2024-12-31T00%3a00%3a00Z&%24count=true&%24top=1&%24skip=1"}'
+  recorded_at: Wed, 31 Dec 2025 17:02:22 GMT
+recorded_with: VCR 6.3.1

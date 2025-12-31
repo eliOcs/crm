@@ -33,6 +33,7 @@ class HistoricalEmailImportJob < ApplicationJob
 
   def start_counting
     @import.update!(status: "counting", started_at: Time.current)
+    @import.broadcast_progress
     Rails.logger.info "[HistoricalImport] Starting count for import #{@import.id}"
 
     # Re-enqueue to perform the actual count
@@ -49,6 +50,7 @@ class HistoricalEmailImportJob < ApplicationJob
       current_folder: FOLDERS.first,
       next_link: nil
     )
+    @import.broadcast_progress
 
     Rails.logger.info "[HistoricalImport] Counted #{total} emails, starting import"
 
@@ -69,13 +71,9 @@ class HistoricalEmailImportJob < ApplicationJob
       next_link: @import.next_link
     )
 
-    # Update progress
-    @import.update!(
-      imported_emails: @import.imported_emails + result[:imported],
-      skipped_emails: @import.skipped_emails + result[:skipped],
-      failed_emails: @import.failed_emails + result[:failed],
-      next_link: result[:next_link]
-    )
+    # Note: progress counters are updated per-email in the service via broadcast
+    # Only update pagination state here
+    @import.update!(next_link: result[:next_link])
 
     Rails.logger.info "[HistoricalImport] Batch complete: #{result}"
 
@@ -106,8 +104,9 @@ class HistoricalEmailImportJob < ApplicationJob
     @import.update!(
       status: "completed",
       completed_at: Time.current,
-      enriched_emails: @import.imported_emails  # All imported emails were queued for enrichment
+      enriched_emails: @import.imported_emails  # All imported emails were enriched synchronously
     )
+    @import.broadcast_progress
 
     Rails.logger.info "[HistoricalImport] Import #{@import.id} completed. Stats: #{import_stats}"
   end
@@ -119,6 +118,7 @@ class HistoricalEmailImportJob < ApplicationJob
       error_message: error.message.truncate(500),
       completed_at: Time.current
     )
+    @import.broadcast_progress
   end
 
   def import_stats

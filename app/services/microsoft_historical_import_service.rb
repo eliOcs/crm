@@ -10,6 +10,7 @@ class MicrosoftHistoricalImportService
     @credential = user.microsoft_credential
     @logger = logger
     @email_import_service = MicrosoftEmailImportService.new(user, logger: logger)
+    @enrichment_service = EmailEnrichmentService.new(user, logger: logger)
   end
 
   # Count total emails across all folders matching the date filter
@@ -43,6 +44,9 @@ class MicrosoftHistoricalImportService
     messages.each do |message|
       outcome = import_single_message(message)
       result[outcome] += 1
+
+      # Update progress after each email for real-time feedback
+      update_progress(outcome)
     end
 
     {
@@ -65,8 +69,9 @@ class MicrosoftHistoricalImportService
 
     email = @email_import_service.import_by_graph_id(graph_id)
     if email
-      # Queue enrichment
-      EnrichEmailJob.perform_later(email_id: email.id)
+      # Process enrichment synchronously to ensure correct order
+      # (contacts, companies, tasks depend on processing emails chronologically)
+      @enrichment_service.process_email_record(email)
       :imported
     else
       :skipped
@@ -92,6 +97,18 @@ class MicrosoftHistoricalImportService
   def date_filter
     cutoff = import.cutoff_date.iso8601
     "receivedDateTime ge #{cutoff}"
+  end
+
+  def update_progress(outcome)
+    case outcome
+    when :imported
+      @import.increment!(:imported_emails)
+    when :skipped
+      @import.increment!(:skipped_emails)
+    when :failed
+      @import.increment!(:failed_emails)
+    end
+    @import.broadcast_progress
   end
 
   def empty_result(folder_complete:)

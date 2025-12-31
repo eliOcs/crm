@@ -1,4 +1,6 @@
 class MicrosoftEmailImport < ApplicationRecord
+  include Turbo::Broadcastable
+
   belongs_to :user
 
   TIME_RANGES = {
@@ -55,5 +57,19 @@ class MicrosoftEmailImport < ApplicationRecord
 
   def status_label
     I18n.t("microsoft_import.statuses.#{status}")
+  end
+
+  # Broadcast progress update via Turbo Streams
+  def broadcast_progress
+    # Include recent imports when showing the form (after completion)
+    recent = active? ? [] : user.microsoft_email_imports.recent.where.not(status: "pending")
+
+    broadcast_replace_to(
+      user,
+      :microsoft_import,
+      target: "microsoft-import-status",
+      partial: "settings/microsoft_import_status",
+      locals: { active_import: self, recent_imports: recent }
+    )
   end
 end
