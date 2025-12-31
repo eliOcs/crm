@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # Webhooks (unauthenticated)
+  post "webhooks/microsoft", to: "webhooks#microsoft"
+
   resources :contacts, only: %i[ index show update ]
   resources :companies, only: %i[ index show update ]
   resources :tasks, only: %i[ index show update ]

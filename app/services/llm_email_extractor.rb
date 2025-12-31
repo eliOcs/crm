@@ -2,34 +2,39 @@ class LlmEmailExtractor
   MODEL = "claude-haiku-4-5-20251001"
   MAX_IMAGES = 10
 
-  def initialize(eml_path)
+  # Initialize from EML file path
+  def initialize(eml_path = nil, email: nil)
     @eml_path = eml_path
+    @email_record = email
     @client = Anthropic::Client.new
     @image_data = {}
   end
 
+  # Class method for Email record initialization
+  def self.from_email(email)
+    new(nil, email: email)
+  end
+
   def extract
-    email_data = EmlReader.new(@eml_path).read
-    return empty_result unless email_data
-
-    @image_data = extract_inline_images(email_data)
-    @email_text = build_email_text(email_data)
-
-    # Two focused extraction calls for better accuracy
-    contacts = extract_contacts
-    companies = extract_companies
-
-    { contacts: contacts, companies: companies, image_data: @image_data }
+    if @email_record
+      extract_from_email_record
+    else
+      extract_from_eml
+    end
   rescue Anthropic::Error => e
     Rails.logger.error("LLM extraction failed: #{e.message}")
     empty_result
   end
 
   def extract_tasks(email_date:, existing_tasks: [], locale: "en")
-    email_data = EmlReader.new(@eml_path).read
-    return [] unless email_data
-
-    @email_text ||= build_email_text(email_data)
+    @email_text ||= if @email_record
+      @image_data = extract_images_from_email_record
+      build_email_text_from_record(@email_record)
+    else
+      email_data = EmlReader.new(@eml_path).read
+      return [] unless email_data
+      build_email_text(email_data)
+    end
 
     response = @client.messages.create(
       model: MODEL,
@@ -405,5 +410,94 @@ class LlmEmailExtractor
     when "image/webp" then "image/webp"
     else "image/jpeg"
     end
+  end
+
+  # === EMAIL RECORD EXTRACTION (for Graph-imported emails) ===
+
+  def extract_from_eml
+    email_data = EmlReader.new(@eml_path).read
+    return empty_result unless email_data
+
+    @image_data = extract_inline_images(email_data)
+    @email_text = build_email_text(email_data)
+
+    contacts = extract_contacts
+    companies = extract_companies
+
+    { contacts: contacts, companies: companies, image_data: @image_data }
+  end
+
+  def extract_from_email_record
+    @image_data = extract_images_from_email_record
+    @email_text = build_email_text_from_record(@email_record)
+
+    contacts = extract_contacts
+    companies = extract_companies
+
+    { contacts: contacts, companies: companies, image_data: @image_data }
+  end
+
+  def build_email_text_from_record(email)
+    parts = []
+    parts << "From: #{format_db_address(email.from_address)}" if email.from_address
+    parts << "To: #{email.to_addresses.map { |a| format_db_address(a) }.join(', ')}" if email.to_addresses.present?
+    parts << "Cc: #{email.cc_addresses.map { |a| format_db_address(a) }.join(', ')}" if email.cc_addresses.present?
+    parts << "Subject: #{email.subject}" if email.subject
+    parts << "Date: #{email.sent_at}" if email.sent_at
+    parts << ""
+
+    if email.body_html.present?
+      markdown = HtmlToMarkdown.new(email.body_html).convert
+      parts << "--- Email Body (Markdown) ---"
+      parts << markdown.truncate(12000)
+    elsif email.body_plain.present?
+      parts << "--- Email Body ---"
+      parts << email.body_plain
+    else
+      parts << "(no body)"
+    end
+
+    parts.join("\n")
+  end
+
+  def format_db_address(addr)
+    return "" unless addr
+    if addr["name"].present?
+      "#{addr['name']} <#{addr['email']}>"
+    else
+      addr["email"].to_s
+    end
+  end
+
+  def extract_images_from_email_record
+    images = {}
+    return images unless @email_record
+
+    seen_hashes = {}
+
+    @email_record.email_attachments.inline.each do |attachment|
+      next unless attachment.file.attached?
+      next unless attachment.file.content_type&.start_with?("image/")
+
+      cid = attachment.content_id
+      next unless cid.present?
+
+      begin
+        raw_data = attachment.file.download
+        sha = Digest::SHA256.hexdigest(raw_data)
+        next if seen_hashes[sha]
+        seen_hashes[sha] = cid
+
+        images[cid] = {
+          content_type: normalize_content_type(attachment.file.content_type),
+          base64_data: Base64.strict_encode64(raw_data),
+          raw_data: raw_data
+        }
+      rescue => e
+        Rails.logger.warn("Failed to extract image #{cid}: #{e.message}")
+      end
+    end
+
+    images
   end
 end

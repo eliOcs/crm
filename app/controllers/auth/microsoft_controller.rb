@@ -32,6 +32,9 @@ module Auth
         **token_data
       )
 
+      # Setup webhook subscriptions for inbox and sent folders
+      SetupMicrosoftSubscriptionsJob.perform_later(user_id: Current.user.id)
+
       redirect_to edit_settings_path, notice: t("settings.microsoft.connected")
     rescue OAuth2::Error, MicrosoftGraphClient::GraphApiError => e
       Rails.logger.error("Microsoft OAuth error: #{e.message}")
@@ -39,6 +42,16 @@ module Auth
     end
 
     def disconnect
+      # Delete webhook subscriptions at Microsoft before destroying credential
+      if Current.user.microsoft_connected?
+        service = MicrosoftSubscriptionService.new(Current.user)
+        Current.user.microsoft_subscriptions.find_each do |subscription|
+          service.delete_subscription(subscription)
+        rescue => e
+          Rails.logger.warn "Could not delete subscription #{subscription.id}: #{e.message}"
+        end
+      end
+
       Current.user.microsoft_credential&.destroy
       redirect_to edit_settings_path, notice: t("settings.microsoft.disconnected")
     end

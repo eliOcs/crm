@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_31_100003) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_31_103029) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -112,19 +112,24 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_31_100003) do
     t.text "body_plain"
     t.json "cc_addresses", default: []
     t.integer "contact_id"
+    t.string "conversation_id"
     t.datetime "created_at", null: false
     t.json "from_address", null: false
+    t.string "graph_id"
     t.string "in_reply_to"
     t.string "message_id"
     t.json "references", default: []
     t.datetime "sent_at", null: false
     t.string "source_path"
+    t.string "source_type", default: "eml", null: false
     t.string "subject"
     t.json "to_addresses", default: []
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["contact_id"], name: "index_emails_on_contact_id"
+    t.index ["conversation_id"], name: "index_emails_on_conversation_id"
     t.index ["in_reply_to"], name: "index_emails_on_in_reply_to"
+    t.index ["user_id", "graph_id"], name: "index_emails_on_user_id_and_graph_id", unique: true, where: "graph_id IS NOT NULL"
     t.index ["user_id", "message_id"], name: "index_emails_on_user_id_and_message_id", unique: true, where: "message_id IS NOT NULL"
     t.index ["user_id", "sent_at"], name: "index_emails_on_user_id_and_sent_at"
     t.index ["user_id"], name: "index_emails_on_user_id"
@@ -143,6 +148,21 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_31_100003) do
     t.integer "user_id", null: false
     t.index ["microsoft_user_id"], name: "index_microsoft_credentials_on_microsoft_user_id", unique: true
     t.index ["user_id"], name: "index_microsoft_credentials_on_user_id", unique: true
+  end
+
+  create_table "microsoft_subscriptions", force: :cascade do |t|
+    t.string "client_state"
+    t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.string "folder", null: false
+    t.string "resource", null: false
+    t.string "subscription_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["expires_at"], name: "index_microsoft_subscriptions_on_expires_at"
+    t.index ["subscription_id"], name: "index_microsoft_subscriptions_on_subscription_id", unique: true
+    t.index ["user_id", "folder"], name: "index_microsoft_subscriptions_on_user_id_and_folder", unique: true
+    t.index ["user_id"], name: "index_microsoft_subscriptions_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -192,6 +212,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_31_100003) do
   add_foreign_key "emails", "contacts"
   add_foreign_key "emails", "users"
   add_foreign_key "microsoft_credentials", "users"
+  add_foreign_key "microsoft_subscriptions", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "companies"
   add_foreign_key "tasks", "contacts"

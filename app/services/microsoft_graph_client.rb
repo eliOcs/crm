@@ -8,17 +8,54 @@ class MicrosoftGraphClient
     @access_token = access_token
   end
 
+  # User profile
   def me
     get("/me")
   end
 
+  # Email messages
   def messages(options = {})
     query = build_query(options)
     get("/me/messages", query)
   end
 
-  def message(id)
-    get("/me/messages/#{id}")
+  def message(id, options = {})
+    query = {}
+    query["$select"] = options[:select].join(",") if options[:select]
+    get("/me/messages/#{id}", query)
+  end
+
+  def attachments(message_id)
+    get("/me/messages/#{message_id}/attachments")
+  end
+
+  def attachment(message_id, attachment_id)
+    get("/me/messages/#{message_id}/attachments/#{attachment_id}")
+  end
+
+  # Webhook subscriptions
+  def create_subscription(change_type:, notification_url:, resource:, expiration_date_time:, client_state:)
+    post("/subscriptions", {
+      changeType: change_type,
+      notificationUrl: notification_url,
+      resource: resource,
+      expirationDateTime: expiration_date_time,
+      clientState: client_state
+    })
+  end
+
+  def renew_subscription(subscription_id, new_expiration)
+    patch("/subscriptions/#{subscription_id}", {
+      expirationDateTime: new_expiration.iso8601
+    })
+  end
+
+  def delete_subscription(subscription_id)
+    delete("/subscriptions/#{subscription_id}")
+  end
+
+  def list_subscriptions
+    get("/subscriptions")
   end
 
   private
@@ -28,9 +65,55 @@ class MicrosoftGraphClient
     uri.query = URI.encode_www_form(query) if query.any?
 
     request = Net::HTTP::Get.new(uri)
+    set_headers(request)
+
+    execute(uri, request)
+  end
+
+  def post(path, body)
+    uri = URI("#{BASE_URL}#{path}")
+
+    request = Net::HTTP::Post.new(uri)
+    set_headers(request)
+    request["Content-Type"] = "application/json"
+    request.body = body.to_json
+
+    execute(uri, request)
+  end
+
+  def patch(path, body)
+    uri = URI("#{BASE_URL}#{path}")
+
+    request = Net::HTTP::Patch.new(uri)
+    set_headers(request)
+    request["Content-Type"] = "application/json"
+    request.body = body.to_json
+
+    execute(uri, request)
+  end
+
+  def delete(path)
+    uri = URI("#{BASE_URL}#{path}")
+
+    request = Net::HTTP::Delete.new(uri)
+    set_headers(request)
+
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+      http.request(request)
+    end
+
+    # DELETE returns 204 No Content on success
+    return true if response.code.to_i == 204
+
+    handle_response(response)
+  end
+
+  def set_headers(request)
     request["Authorization"] = "Bearer #{@access_token}"
     request["Accept"] = "application/json"
+  end
 
+  def execute(uri, request)
     response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
       http.request(request)
     end
@@ -51,7 +134,8 @@ class MicrosoftGraphClient
   def handle_response(response)
     case response.code.to_i
     when 200..299
-      JSON.parse(response.body)
+      body = response.body
+      body.present? ? JSON.parse(body) : {}
     when 401
       raise TokenExpiredError, "Access token expired or invalid"
     else

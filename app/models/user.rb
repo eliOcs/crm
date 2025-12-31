@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :tasks, dependent: :destroy
   has_many :emails, dependent: :destroy
   has_one :microsoft_credential, dependent: :destroy
+  has_many :microsoft_subscriptions, dependent: :destroy
 
   def microsoft_connected?
     microsoft_credential.present?

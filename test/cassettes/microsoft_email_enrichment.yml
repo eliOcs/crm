@@ -1,0 +1,387 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.anthropic.com/v1/messages
+    body:
+      encoding: UTF-8
+      string: '{"model":"claude-haiku-4-5-20251001","max_tokens":2048,"temperature":0,"messages":[{"role":"user","content":"From:
+        Elio Capella <eliocapella@gmail.com>\nTo: Elio Capella Sánchez <admin@eliocapella.onmicrosoft.com>\nSubject:
+        Aquí va un nuevo correo\nDate: 2025-12-31 11:24:25 UTC\n\n--- Email Body (Markdown)
+        ---\nPor favor envía la factura del pedido 22211 a financiero"}],"system":"You
+        are a contact information extractor. Extract ALL people mentioned in emails.\n\n<instructions>\nExtract
+        ALL contacts from the email:\n1. From/To/Cc headers - extract every email
+        address\n2. Email signatures - extract detailed info (name, role, phone, etc.)\n3.
+        Forwarded email headers - extract sender/recipients from \"De:\", \"From:\",
+        \"Para:\", \"To:\" lines\n4. Email body mentions - any person referenced by
+        name or email\n\nFor each contact, extract:\n- email: Email address (required,
+        lowercase)\n- name: Full name (if available)\n- job_role: Job title - NOT
+        the department (see examples below)\n- department: Department or division
+        name\n- phone_numbers: Array of phone numbers with country codes\n\nDistinguishing
+        job_role vs department:\n- \"[Department] Manager\" -> extract the department
+        name, job_role is \"Manager\"\n- \"[Department] Technician\" -> extract the
+        department name, job_role is \"Technician\"\n- \"Senior Engineer\" -> job_role
+        only, no department\n- \"[Division] Director\" -> extract division as department,
+        job_role is \"Director\"\n</instructions>\n\n<output_format>\nReturn ONLY
+        a JSON array of contacts:\n[\n  {\"email\": \"john@example.com\", \"name\":
+        \"John Doe\", \"job_role\": \"Manager\", \"department\": \"Sales\", \"phone_numbers\":
+        [\"+1-555-1234\"]}\n]\n\nIf no contacts found, return: []\n</output_format>\n\n<guidelines>\n-
+        Extract EVERY email address mentioned, even if minimal info available\n- Use
+        null for unknown fields, never hallucinate\n- Normalize emails to lowercase\n-
+        Include country codes in phone numbers when visible\n</guidelines>\n"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Anthropic::Client/Ruby 1.16.0
+      Host:
+      - api.anthropic.com
+      X-Stainless-Arch:
+      - x64
+      X-Stainless-Lang:
+      - ruby
+      X-Stainless-Os:
+      - Linux
+      X-Stainless-Package-Version:
+      - 1.16.0
+      X-Stainless-Runtime:
+      - ruby
+      X-Stainless-Runtime-Version:
+      - 3.4.7
+      Content-Type:
+      - application/json
+      Anthropic-Version:
+      - '2023-06-01'
+      X-Api-Key:
+      - "<ANTHROPIC_API_KEY>"
+      X-Stainless-Retry-Count:
+      - '0'
+      X-Stainless-Timeout:
+      - '600.0'
+      Content-Length:
+      - '1987'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 31 Dec 2025 11:24:42 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Anthropic-Ratelimit-Input-Tokens-Limit:
+      - '450000'
+      Anthropic-Ratelimit-Input-Tokens-Remaining:
+      - '450000'
+      Anthropic-Ratelimit-Input-Tokens-Reset:
+      - '2025-12-31T11:24:42Z'
+      Anthropic-Ratelimit-Output-Tokens-Limit:
+      - '90000'
+      Anthropic-Ratelimit-Output-Tokens-Remaining:
+      - '90000'
+      Anthropic-Ratelimit-Output-Tokens-Reset:
+      - '2025-12-31T11:24:42Z'
+      Anthropic-Ratelimit-Requests-Limit:
+      - '1000'
+      Anthropic-Ratelimit-Requests-Remaining:
+      - '999'
+      Anthropic-Ratelimit-Requests-Reset:
+      - '2025-12-31T11:24:41Z'
+      Anthropic-Ratelimit-Tokens-Limit:
+      - '540000'
+      Anthropic-Ratelimit-Tokens-Remaining:
+      - '540000'
+      Anthropic-Ratelimit-Tokens-Reset:
+      - '2025-12-31T11:24:42Z'
+      Request-Id:
+      - req_011CWegTX9GmCEnDMk5wEgNU
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Anthropic-Organization-Id:
+      - 36f27efe-3e16-4c65-95cd-f21d3225017e
+      Server:
+      - cloudflare
+      X-Envoy-Upstream-Service-Time:
+      - '1329'
+      Cf-Cache-Status:
+      - DYNAMIC
+      X-Robots-Tag:
+      - none
+      Cf-Ray:
+      - 9b696976b8f7a613-MAD
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJtb2RlbCI6ImNsYXVkZS1oYWlrdS00LTUtMjAyNTEwMDEiLCJpZCI6Im1zZ18wMThaY2VBVTlmbjhVVWhDOGVES3BtSlAiLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJgYGBqc29uXG5bXG4gIHtcbiAgICBcImVtYWlsXCI6IFwiZWxpb2NhcGVsbGFAZ21haWwuY29tXCIsXG4gICAgXCJuYW1lXCI6IFwiRWxpbyBDYXBlbGxhXCIsXG4gICAgXCJqb2Jfcm9sZVwiOiBudWxsLFxuICAgIFwiZGVwYXJ0bWVudFwiOiBudWxsLFxuICAgIFwicGhvbmVfbnVtYmVyc1wiOiBbXVxuICB9LFxuICB7XG4gICAgXCJlbWFpbFwiOiBcImFkbWluQGVsaW9jYXBlbGxhLm9ubWljcm9zb2Z0LmNvbVwiLFxuICAgIFwibmFtZVwiOiBcIkVsaW8gQ2FwZWxsYSBTw6FuY2hlelwiLFxuICAgIFwiam9iX3JvbGVcIjogbnVsbCxcbiAgICBcImRlcGFydG1lbnRcIjogbnVsbCxcbiAgICBcInBob25lX251bWJlcnNcIjogW11cbiAgfVxuXVxuYGBgIn1dLCJzdG9wX3JlYXNvbiI6ImVuZF90dXJuIiwic3RvcF9zZXF1ZW5jZSI6bnVsbCwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjo1MDUsImNhY2hlX2NyZWF0aW9uX2lucHV0X3Rva2VucyI6MCwiY2FjaGVfcmVhZF9pbnB1dF90b2tlbnMiOjAsImNhY2hlX2NyZWF0aW9uIjp7ImVwaGVtZXJhbF81bV9pbnB1dF90b2tlbnMiOjAsImVwaGVtZXJhbF8xaF9pbnB1dF90b2tlbnMiOjB9LCJvdXRwdXRfdG9rZW5zIjoxMzgsInNlcnZpY2VfdGllciI6InN0YW5kYXJkIn19
+  recorded_at: Wed, 31 Dec 2025 11:24:42 GMT
+- request:
+    method: post
+    uri: https://api.anthropic.com/v1/messages
+    body:
+      encoding: UTF-8
+      string: '{"model":"claude-haiku-4-5-20251001","max_tokens":2048,"temperature":0,"messages":[{"role":"user","content":[{"type":"text","text":"From:
+        Elio Capella <eliocapella@gmail.com>\nTo: Elio Capella Sánchez <admin@eliocapella.onmicrosoft.com>\nSubject:
+        Aquí va un nuevo correo\nDate: 2025-12-31 11:24:25 UTC\n\n--- Email Body (Markdown)
+        ---\nPor favor envía la factura del pedido 22211 a financiero"}]}],"system":"You
+        are a company information extractor. Extract ALL companies/organizations mentioned
+        in emails.\n\n<instructions>\nExtract ALL companies from the email:\n1. Email
+        signatures - company names, addresses, websites\n2. Email domains - infer
+        company from contact email domains\n3. Legal notices/disclaimers - often contain
+        full legal names, addresses, and VAT IDs\n4. Forwarded emails - companies
+        mentioned in nested signatures\n\nFor each company, extract:\n- legal_name:
+        Full official/registered name (includes legal suffix like S.A., S.L., Inc.,
+        Ltd., GmbH)\n- commercial_name: Brand/trade name commonly used (shorter, without
+        legal suffix)\n- domain: Email domain for this company (e.g., \"example.com\"
+        from contacts @example.com)\n- website: Official website URL\n- location:
+        Physical address from signature or legal notice\n- vat_id: Tax/VAT identification
+        number (C.I.F., NIF, VAT, Tax ID, EIN, etc.)\n- logo_content_id: Content ID
+        of the company''s logo image (if visible in signature)\n\nImage references
+        in the email use markdown: ![alt](cid:image_id)\nMatch logo images to companies
+        by their position near company names in signatures.\n</instructions>\n\n<output_format>\nReturn
+        ONLY a JSON array of companies:\n[\n  {\"legal_name\": \"Example Corporation
+        Inc.\", \"commercial_name\": \"Example\", \"domain\": \"example.com\", \"website\":
+        \"https://example.com\", \"location\": \"123 Main St, City, Country\", \"vat_id\":
+        \"XX12345678\", \"logo_content_id\": \"image001.png\"}\n]\n\nIf no companies
+        found, return: []\n</output_format>\n\n<guidelines>\n- Extract both legal
+        and commercial names when available\n- IMPORTANT: Always extract domain from
+        contact emails associated with this company\n- Infer website from domain if
+        not explicit (e.g., domain \"example.com\" -> website \"https://example.com\")\n-
+        Look carefully at legal notices/disclaimers at the bottom of emails for VAT
+        IDs\n- Use null for unknown fields, never hallucinate\n- Only set logo_content_id
+        if you can identify a logo image for that company\n</guidelines>\n"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Anthropic::Client/Ruby 1.16.0
+      Host:
+      - api.anthropic.com
+      X-Stainless-Arch:
+      - x64
+      X-Stainless-Lang:
+      - ruby
+      X-Stainless-Os:
+      - Linux
+      X-Stainless-Package-Version:
+      - 1.16.0
+      X-Stainless-Runtime:
+      - ruby
+      X-Stainless-Runtime-Version:
+      - 3.4.7
+      Content-Type:
+      - application/json
+      Anthropic-Version:
+      - '2023-06-01'
+      X-Api-Key:
+      - "<ANTHROPIC_API_KEY>"
+      X-Stainless-Retry-Count:
+      - '0'
+      X-Stainless-Timeout:
+      - '600.0'
+      Content-Length:
+      - '2454'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 31 Dec 2025 11:24:44 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Anthropic-Ratelimit-Input-Tokens-Limit:
+      - '450000'
+      Anthropic-Ratelimit-Input-Tokens-Remaining:
+      - '450000'
+      Anthropic-Ratelimit-Input-Tokens-Reset:
+      - '2025-12-31T11:24:43Z'
+      Anthropic-Ratelimit-Output-Tokens-Limit:
+      - '90000'
+      Anthropic-Ratelimit-Output-Tokens-Remaining:
+      - '90000'
+      Anthropic-Ratelimit-Output-Tokens-Reset:
+      - '2025-12-31T11:24:44Z'
+      Anthropic-Ratelimit-Requests-Limit:
+      - '1000'
+      Anthropic-Ratelimit-Requests-Remaining:
+      - '999'
+      Anthropic-Ratelimit-Requests-Reset:
+      - '2025-12-31T11:24:42Z'
+      Anthropic-Ratelimit-Tokens-Limit:
+      - '540000'
+      Anthropic-Ratelimit-Tokens-Remaining:
+      - '540000'
+      Anthropic-Ratelimit-Tokens-Reset:
+      - '2025-12-31T11:24:43Z'
+      Request-Id:
+      - req_011CWegTdH7isfGdTZ3u2yhj
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Anthropic-Organization-Id:
+      - 36f27efe-3e16-4c65-95cd-f21d3225017e
+      Server:
+      - cloudflare
+      X-Envoy-Upstream-Service-Time:
+      - '1772'
+      Cf-Cache-Status:
+      - DYNAMIC
+      X-Robots-Tag:
+      - none
+      Cf-Ray:
+      - 9b69697fa849a613-MAD
+    body:
+      encoding: ASCII-8BIT
+      string: '{"model":"claude-haiku-4-5-20251001","id":"msg_01HoS2NJoGLzTUiyL23tKxWt","type":"message","role":"assistant","content":[{"type":"text","text":"```json\n[]\n```\n\n**Explanation:**
+        \n\nThis email does not contain any company information. While it includes
+        two email addresses:\n- `eliocapella@gmail.com` - a personal Gmail account
+        (not a company domain)\n- `admin@eliocapella.onmicrosoft.com` - a Microsoft
+        365 tenant domain, but no company legal name, website, location, or other
+        identifying information is provided\n\nThe email body is a simple request
+        in Spanish asking to send an invoice for order 22211 to the finance department.
+        There are no signatures, legal notices, disclaimers, or other company identifiers
+        present."}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":624,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":144,"service_tier":"standard"}}'
+  recorded_at: Wed, 31 Dec 2025 11:24:44 GMT
+- request:
+    method: post
+    uri: https://api.anthropic.com/v1/messages
+    body:
+      encoding: UTF-8
+      string: '{"model":"claude-haiku-4-5-20251001","max_tokens":1024,"temperature":0,"messages":[{"role":"user","content":"From:
+        Elio Capella <eliocapella@gmail.com>\nTo: Elio Capella Sánchez <admin@eliocapella.onmicrosoft.com>\nSubject:
+        Aquí va un nuevo correo\nDate: 2025-12-31 11:24:25 UTC\n\n--- Email Body (Markdown)
+        ---\nPor favor envía la factura del pedido 22211 a financiero"}],"system":"You
+        are a task extractor for a CRM system. Extract follow-up tasks ONLY when the
+        email explicitly requests action from the recipient.\nIMPORTANT: Write all
+        task names and descriptions in Spanish.\n\n<instructions>\nONLY extract tasks
+        when:\n1. The sender explicitly asks the recipient to do something\n2. There''s
+        a clear action item with an expected response or deliverable\n3. The email
+        requests a reply, document, decision, or meeting scheduling\n\nDO NOT extract
+        tasks for:\n1. Informational emails (newsletters, announcements, status updates)\n2.
+        Auto-generated emails (receipts, confirmations, notifications)\n3. Emails
+        where the sender is completing a task (delivering something, not requesting)\n4.
+        Simple acknowledgments or thank you emails\n5. Emails that are just forwarding
+        information without asking for action\n</instructions>\n\n<date_context>\nEmail
+        date: 2025-12-31 (Wednesday)\nUse this date to resolve relative deadlines:\n-
+        \"by Friday\" -> next Friday from email date\n- \"by end of week\" -> Friday
+        of email''s week\n- \"by end of month\" -> last day of email''s month\n- \"ASAP\"
+        / \"urgent\" -> email date\n- \"next week\" -> Monday of following week\n</date_context>\n\n<existing_tasks>\n[1]
+        Enviar resultados validació mostres T25 due:2025-01-24\n[2] Enviar Ficha técnica
+        due:2025-09-05\n[3] Montar reunión para discutir tema blockox due:2025-12-31\n</existing_tasks>\n\n<output_format>\nReturn
+        ONLY a JSON array of tasks:\n[\n  {\n    \"id\": null,\n    \"name\": \"Send
+        updated proposal\",\n    \"description\": \"Client requested revised pricing
+        for Q2\",\n    \"due_date\": \"2025-01-20\",\n    \"sender_email\": \"client@example.com\"\n  }\n]\n\nIf
+        updating an existing task (same topic from same sender), include the task
+        id:\n[\n  {\n    \"id\": 42,\n    \"name\": \"Send updated proposal\",\n    \"description\":
+        \"Follow-up: client needs it by Friday\",\n    \"due_date\": \"2025-01-17\",\n    \"sender_email\":
+        \"client@example.com\"\n  }\n]\n\nIf no actionable tasks found, return: []\n</output_format>\n\n<guidelines>\n-
+        Extract the MINIMUM number of tasks (prefer one clear task over multiple vague
+        ones)\n- Use imperative verb form: \"Send...\", \"Review...\", \"Schedule...\",
+        \"Reply to...\"\n- Keep task names under 60 characters\n- Only set id if the
+        email clearly relates to an existing task\n- When unsure between update vs
+        new task, prefer creating new task\n- Use null for unknown fields, never hallucinate\n</guidelines>\n"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Anthropic::Client/Ruby 1.16.0
+      Host:
+      - api.anthropic.com
+      X-Stainless-Arch:
+      - x64
+      X-Stainless-Lang:
+      - ruby
+      X-Stainless-Os:
+      - Linux
+      X-Stainless-Package-Version:
+      - 1.16.0
+      X-Stainless-Runtime:
+      - ruby
+      X-Stainless-Runtime-Version:
+      - 3.4.7
+      Content-Type:
+      - application/json
+      Anthropic-Version:
+      - '2023-06-01'
+      X-Api-Key:
+      - "<ANTHROPIC_API_KEY>"
+      X-Stainless-Retry-Count:
+      - '0'
+      X-Stainless-Timeout:
+      - '600.0'
+      Content-Length:
+      - '2859'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 31 Dec 2025 11:24:45 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Anthropic-Ratelimit-Input-Tokens-Limit:
+      - '450000'
+      Anthropic-Ratelimit-Input-Tokens-Remaining:
+      - '450000'
+      Anthropic-Ratelimit-Input-Tokens-Reset:
+      - '2025-12-31T11:24:45Z'
+      Anthropic-Ratelimit-Output-Tokens-Limit:
+      - '90000'
+      Anthropic-Ratelimit-Output-Tokens-Remaining:
+      - '90000'
+      Anthropic-Ratelimit-Output-Tokens-Reset:
+      - '2025-12-31T11:24:45Z'
+      Anthropic-Ratelimit-Requests-Limit:
+      - '1000'
+      Anthropic-Ratelimit-Requests-Remaining:
+      - '999'
+      Anthropic-Ratelimit-Requests-Reset:
+      - '2025-12-31T11:24:44Z'
+      Anthropic-Ratelimit-Tokens-Limit:
+      - '540000'
+      Anthropic-Ratelimit-Tokens-Remaining:
+      - '540000'
+      Anthropic-Ratelimit-Tokens-Reset:
+      - '2025-12-31T11:24:45Z'
+      Request-Id:
+      - req_011CWegTmPGuoeMsRgDqBTeK
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Anthropic-Organization-Id:
+      - 36f27efe-3e16-4c65-95cd-f21d3225017e
+      Server:
+      - cloudflare
+      X-Envoy-Upstream-Service-Time:
+      - '828'
+      Cf-Cache-Status:
+      - DYNAMIC
+      X-Robots-Tag:
+      - none
+      Cf-Ray:
+      - 9b69698b8d68a613-MAD
+    body:
+      encoding: ASCII-8BIT
+      string: '{"model":"claude-haiku-4-5-20251001","id":"msg_01CHqqgSJjDc5wuTMFY8FAMQ","type":"message","role":"assistant","content":[{"type":"text","text":"```json\n[\n  {\n    \"id\":
+        null,\n    \"name\": \"Enviar factura pedido 22211\",\n    \"description\":
+        \"Enviar factura del pedido 22211 al departamento de financiero\",\n    \"due_date\":
+        \"2025-12-31\",\n    \"sender_email\": \"eliocapella@gmail.com\"\n  }\n]\n```"}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":775,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":99,"service_tier":"standard"}}'
+  recorded_at: Wed, 31 Dec 2025 11:24:45 GMT
+recorded_with: VCR 6.3.1

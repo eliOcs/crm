@@ -1,0 +1,51 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/me/messages/AAMkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQBGAAAAAAB8L27KsQb5QbFNIxRaPgmzBwCsDrxp0draSoKqIjnY3vwLAAAAAAEMAACsDrxp0draSoKqIjnY3vwLAAABrdlmAAA=?$select=id,internetMessageId,conversationId,subject,sentDateTime,receivedDateTime,from,toRecipients,ccRecipients,body,hasAttachments
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Ruby
+      Host:
+      - graph.microsoft.com
+      Authorization:
+      - Bearer <FILTERED_TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - private
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - eb09df95-57e8-4fe7-80f1-b9ee7e13235c
+      Client-Request-Id:
+      - eb09df95-57e8-4fe7-80f1-b9ee7e13235c
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"France Central","Slice":"E","Ring":"5","ScaleUnit":"000","RoleInstance":"PA1PEPF000A962D"}}'
+      Date:
+      - Wed, 31 Dec 2025 11:21:07 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#users(''dcb75d6e-5dbf-4ed5-b82e-be9243b006b2'')/messages(id,internetMessageId,conversationId,subject,sentDateTime,receivedDateTime,from,toRecipients,ccRecipients,body,hasAttachments)/$entity","@odata.etag":"W/\"CQAAABYAAACsDrxp0draSoKqIjnY3vwLAAABq4ja\"","id":"AAMkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQBGAAAAAAB8L27KsQb5QbFNIxRaPgmzBwCsDrxp0draSoKqIjnY3vwLAAAAAAEMAACsDrxp0draSoKqIjnY3vwLAAABrdlmAAA=","receivedDateTime":"2025-12-31T11:21:07Z","sentDateTime":"2025-12-31T11:20:51Z","hasAttachments":false,"internetMessageId":"<CA+Bv32-S=Rd_Q-W16JfunnaSwVQL__-40MOtG0eZkqK3yMh9=g@mail.gmail.com>","subject":"Vamos
+        a enviar otro correo","conversationId":"AAQkAGQyN2YwZjEyLTA4YTYtNGUzNS05ZjRiLWFjZjE3ZThmNmEyMQAQAIMoyr74wFpAnBZnQR3z3RU=","body":{"contentType":"html","content":"<html><head>\r\n<meta
+        http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div
+        dir=\"ltr\">Solicita la factura a financiero por favor</div></body></html>"},"from":{"emailAddress":{"name":"Elio
+        Capella","address":"eliocapella@gmail.com"}},"toRecipients":[{"emailAddress":{"name":"Elio
+        Capella S\u00e1nchez","address":"admin@eliocapella.onmicrosoft.com"}}],"ccRecipients":[]}'
+  recorded_at: Wed, 31 Dec 2025 11:21:07 GMT
+recorded_with: VCR 6.3.1

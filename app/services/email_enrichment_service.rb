@@ -33,6 +33,22 @@ class EmailEnrichmentService
 
     # Extract contacts and companies
     extractor = LlmEmailExtractor.new(eml_path)
+    perform_extraction(extractor, email_date)
+  end
+
+  # Process an Email record directly (for Graph-imported emails)
+  def process_email_record(email)
+    @source_email = email
+    email_date = email.sent_at&.to_date || Date.current
+
+    # Extract contacts and companies using the Email record
+    extractor = LlmEmailExtractor.from_email(email)
+    perform_extraction(extractor, email_date)
+  end
+
+  private
+
+  def perform_extraction(extractor, email_date)
     result = extractor.extract
     @logger.info "  LLM: #{result[:contacts].count} contacts, #{result[:companies].count} companies"
 
@@ -63,8 +79,6 @@ class EmailEnrichmentService
       process_task(task_data, contact_map, domain_map, email_date)
     end
   end
-
-  private
 
   def process_company(company_data, result)
     # Use commercial_name as legal_name fallback if legal_name is blank
@@ -165,6 +179,9 @@ class EmailEnrichmentService
         field_changes: build_field_changes(contact),
         source_email: @source_email
       )
+
+      # Link source email to sender contact if this is the sender
+      link_email_to_sender_contact(contact)
     elsif updates.any?
       contact.update!(updates)
       @stats[:contacts_enriched] += 1
@@ -301,5 +318,17 @@ class EmailEnrichmentService
       field_changes: build_field_changes(task),
       source_email: @source_email
     )
+  end
+
+  # Link the source email to the newly created contact if this contact is the sender
+  def link_email_to_sender_contact(contact)
+    return unless @source_email
+    return if @source_email.contact_id.present?
+
+    sender_email = @source_email.from_address&.dig("email")&.downcase
+    return unless sender_email == contact.email
+
+    @source_email.update!(contact: contact)
+    @logger.info "  DB: LINK email_id=#{@source_email.id} contact_id=#{contact.id}"
   end
 end

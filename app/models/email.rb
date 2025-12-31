@@ -5,11 +5,17 @@ class Email < ApplicationRecord
   has_many :email_attachments, dependent: :destroy
   has_many :audit_logs, as: :auditable, dependent: :destroy
 
+  SOURCE_TYPES = %w[eml graph].freeze
+
   validates :sent_at, presence: true
   validates :from_address, presence: true
   validates :message_id, uniqueness: { scope: :user_id }, allow_nil: true
+  validates :graph_id, uniqueness: { scope: :user_id }, allow_nil: true
+  validates :source_type, inclusion: { in: SOURCE_TYPES }
 
   scope :ordered, -> { order(sent_at: :desc) }
+  scope :from_eml, -> { where(source_type: "eml") }
+  scope :from_graph, -> { where(source_type: "graph") }
   scope :inline_attachments, -> { email_attachments.where(inline: true) }
   scope :file_attachments, -> { email_attachments.where(inline: false) }
 

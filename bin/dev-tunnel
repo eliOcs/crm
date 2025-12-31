@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -e
+
+# Start Rails server with Cloudflare tunnel for webhook testing
+#
+# This script starts a cloudflared tunnel to expose your local Rails server
+# to the internet, allowing Microsoft Graph to send webhook notifications.
+#
+# Usage: bin/dev-tunnel
+
+echo "Starting Cloudflare tunnel..."
+
+# Create a temporary file to capture cloudflared output
+TUNNEL_LOG=$(mktemp)
+
+# Start cloudflared in background
+cloudflared tunnel --url http://localhost:3000 > "$TUNNEL_LOG" 2>&1 &
+TUNNEL_PID=$!
+
+# Wait for tunnel URL to be available
+echo "Waiting for tunnel URL..."
+for i in {1..30}; do
+  TUNNEL_URL=$(grep -o 'https://[a-z0-9-]*\.trycloudflare\.com' "$TUNNEL_LOG" 2>/dev/null | head -1 || true)
+  if [ -n "$TUNNEL_URL" ]; then
+    break
+  fi
+  sleep 1
+done
+
+if [ -z "$TUNNEL_URL" ]; then
+  echo "ERROR: Could not get tunnel URL after 30 seconds"
+  kill $TUNNEL_PID 2>/dev/null || true
+  rm -f "$TUNNEL_LOG"
+  exit 1
+fi
+
+echo ""
+echo "==========================================="
+echo "Tunnel URL: $TUNNEL_URL"
+echo "==========================================="
+echo ""
+echo "Use this URL for Microsoft Graph webhooks."
+echo "The tunnel will close when you stop the Rails server."
+echo ""
+
+# Cleanup function
+cleanup() {
+  echo "Stopping tunnel..."
+  kill $TUNNEL_PID 2>/dev/null || true
+  rm -f "$TUNNEL_LOG"
+}
+trap cleanup EXIT
+
+# Export APP_URL for the Rails process
+export APP_URL="$TUNNEL_URL"
+
+# Start Rails server
+exec ./bin/rails server "$@"
