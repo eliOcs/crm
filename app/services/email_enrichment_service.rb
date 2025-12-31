@@ -22,7 +22,8 @@ class EmailEnrichmentService
 
   def process_email(eml_path)
     # Store path relative to EMAILS_DIR for portability across environments
-    @source_email = eml_path.to_s.sub("#{EmlReader::EMAILS_DIR}/", "")
+    source_path = eml_path.to_s.sub("#{EmlReader::EMAILS_DIR}/", "")
+    @source_email = @user.emails.find_by(source_path: source_path)
 
     # Read email data for date
     email_data = EmlReader.new(eml_path).read
@@ -66,19 +67,20 @@ class EmailEnrichmentService
   private
 
   def process_company(company_data, result)
-    display_name = company_data[:commercial_name] || company_data[:legal_name]
-    return nil unless display_name
+    # Use commercial_name as legal_name fallback if legal_name is blank
+    legal_name = company_data[:legal_name].presence || company_data[:commercial_name].presence
+    return nil unless legal_name
 
     domain = company_data[:domain]
     company = @user.companies.find_by(domain: domain) if domain.present?
-    company ||= @user.companies.find_by(legal_name: company_data[:legal_name]) if company_data[:legal_name].present?
+    company ||= @user.companies.find_by(legal_name: legal_name)
     company ||= @user.companies.find_by(commercial_name: company_data[:commercial_name]) if company_data[:commercial_name].present?
 
     if company
       @logger.info "  Found existing: #{company.display_name} (id=#{company.id})"
     else
       company = @user.companies.create!(
-        legal_name: company_data[:legal_name],
+        legal_name: legal_name,
         commercial_name: company_data[:commercial_name],
         domain: domain,
         website: company_data[:website],
@@ -93,7 +95,7 @@ class EmailEnrichmentService
         action: "create",
         message: "email extraction",
         field_changes: build_field_changes(company),
-        metadata: { source_email: @source_email }
+        source_email: @source_email
       )
     end
 
@@ -161,7 +163,7 @@ class EmailEnrichmentService
         action: "create",
         message: "email extraction",
         field_changes: build_field_changes(contact),
-        metadata: { source_email: @source_email }
+        source_email: @source_email
       )
     elsif updates.any?
       contact.update!(updates)
@@ -172,7 +174,7 @@ class EmailEnrichmentService
         action: "update",
         message: "email extraction",
         field_changes: build_field_changes(contact),
-        metadata: { source_email: @source_email }
+        source_email: @source_email
       )
     else
       @stats[:contacts_skipped] += 1
@@ -195,7 +197,7 @@ class EmailEnrichmentService
             action: "link",
             message: "company link",
             field_changes: { "company_id" => { "from" => nil, "to" => company.id } },
-            metadata: { source_email: @source_email }
+            source_email: @source_email
           )
         end
       end
@@ -237,7 +239,7 @@ class EmailEnrichmentService
     # Append new context to description
     if task_data[:description].present?
       existing_desc = task.description || ""
-      new_context = "\n\n---\nUpdate from #{@source_email}:\n#{task_data[:description]}"
+      new_context = "\n\n---\nUpdate from #{@source_email&.source_path || 'unknown'}:\n#{task_data[:description]}"
       updates[:description] = existing_desc + new_context
     end
 
@@ -265,7 +267,7 @@ class EmailEnrichmentService
         action: "update",
         message: "email extraction",
         field_changes: build_field_changes(task),
-        metadata: { source_email: @source_email }
+        source_email: @source_email
       )
     else
       @stats[:tasks_skipped] += 1
@@ -297,7 +299,7 @@ class EmailEnrichmentService
       action: "create",
       message: "email extraction",
       field_changes: build_field_changes(task),
-      metadata: { source_email: @source_email }
+      source_email: @source_email
     )
   end
 end

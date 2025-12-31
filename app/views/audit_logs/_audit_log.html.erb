@@ -10,9 +10,8 @@
     <% end %>
   </td>
   <td>
-    <% if audit_log.metadata["source_email"].present? %>
-      <% full_path = EmlReader::EMAILS_DIR.join(audit_log.metadata["source_email"]).to_s %>
-      <%= link_to audit_log.metadata["source_email"], email_path(EmlReader.encode_path(full_path)), class: "txt-sm" %>
+    <% if audit_log.source_email.present? %>
+      <%= link_to truncate(audit_log.source_email.subject, length: 50), email_path(audit_log.source_email), class: "txt-sm" %>
     <% end %>
   </td>
   <td>

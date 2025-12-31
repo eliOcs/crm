@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1 class="page-header__title"><%= t("emails.title") %></h1>
-  <span class="page-header__subtitle txt-muted"><%= t("emails.total", count: @total) %></span>
+  <span class="page-header__subtitle txt-muted"><%= t("emails.total", count: @pagy.count) %></span>
 </div>
 
 <% if @emails.any? %>
@@ -18,13 +18,13 @@
         <% @emails.each do |email| %>
           <tr>
             <td>
-              <%= link_to email_path(email[:encoded_path]) do %>
-                <%= email.dig(:from, :name).presence || email.dig(:from, :email) || t("emails.unknown") %>
+              <%= link_to email_path(email) do %>
+                <%= email.sender_display_name %>
               <% end %>
             </td>
-            <td class="txt-sm"><%= email[:subject].presence || t("emails.no_subject") %></td>
-            <td class="txt-sm txt-nowrap txt-subtle"><%= email[:date]&.strftime("%Y-%m-%d %H:%M") %></td>
-            <td class="txt-end txt-sm"><%= email[:attachments].any? { |a| !a[:inline] } ? t("emails.yes") : "" %></td>
+            <td class="txt-sm"><%= email.subject.presence || t("emails.no_subject") %></td>
+            <td class="txt-sm txt-nowrap txt-subtle"><%= email.sent_at&.strftime("%Y-%m-%d %H:%M") %></td>
+            <td class="txt-end txt-sm"><%= email.has_file_attachments? ? t("emails.yes") : "" %></td>
           </tr>
         <% end %>
       </tbody>
@@ -32,13 +32,13 @@
   </div>
 
   <div class="pagination">
-    <span class="pagination__info"><%= t("pagination.page", current: @page, total: @total_pages) %></span>
+    <span class="pagination__info"><%= t("pagination.page", current: @pagy.page, total: @pagy.pages) %></span>
     <nav class="pagination__nav">
-      <% if @page > 1 %>
-        <%= link_to t("pagination.previous"), emails_path(page: @page - 1), class: "pagination__link pagination__link--prev" %>
+      <% if @pagy.prev %>
+        <%= link_to t("pagination.previous"), emails_path(page: @pagy.prev), class: "pagination__link pagination__link--prev" %>
       <% end %>
-      <% if @page < @total_pages %>
-        <%= link_to t("pagination.next"), emails_path(page: @page + 1), class: "pagination__link pagination__link--next" %>
+      <% if @pagy.next %>
+        <%= link_to t("pagination.next"), emails_path(page: @pagy.next), class: "pagination__link pagination__link--next" %>
       <% end %>
     </nav>
   </div>

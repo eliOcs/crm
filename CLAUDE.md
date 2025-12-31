@@ -39,7 +39,7 @@ bin/rails db:migrate      # Run migrations
 bin/rails db:reset        # Reset database
 
 # Production
-bin/sync-to-production    # Sync database, logos, and referenced EML files to production
+bin/sync-to-production    # Sync database and Active Storage files to production
 bin/kamal deploy          # Deploy to production
 bin/kamal console         # Rails console on production
 bin/kamal logs            # Tail production logs
@@ -59,15 +59,18 @@ app/
 │   ├── registrations_controller.rb
 │   └── sessions_controller.rb
 ├── models/
-│   ├── user.rb                   # has_many :contacts, :companies, :sessions
+│   ├── user.rb                   # has_many :contacts, :companies, :emails, :sessions
+│   ├── email.rb                  # belongs_to :user, has_many :email_attachments
+│   ├── email_attachment.rb       # belongs_to :email, has_one_attached :file (with dedup)
 │   ├── company.rb                # belongs_to :user, has_and_belongs_to_many :contacts
 │   ├── contact.rb                # belongs_to :user, has_and_belongs_to_many :companies
 │   ├── session.rb                # Auth sessions
 │   └── current.rb                # CurrentAttributes for request context
 ├── services/
 │   ├── eml_reader.rb             # Parse EML files, extract attachments
+│   ├── email_import_service.rb   # Import EML files to database
 │   ├── llm_email_extractor.rb    # LLM-powered extraction (contacts, companies, logos)
-│   └── contact_enrichment_service.rb # Orchestrates contact/company enrichment from emails
+│   └── email_enrichment_service.rb # Orchestrates contact/company enrichment from emails
 └── views/
     ├── shared/_navbar.html.erb   # Navigation (shown when authenticated)
     └── ...
@@ -104,17 +107,26 @@ result = LlmEmailExtractor.new(path).extract
 ### LLM Models Used
 - **Claude Haiku 4.5** (`claude-haiku-4-5-20251001`): Email extraction (fast, cost-effective)
 
-### File-based Email Storage
-Emails are read directly from EML files on disk (not stored in database):
-- Files located in `db/seeds/emails/`
-- Base64-encoded paths used in URLs for safety
-- Pagination handled by slicing file list
+### Database-backed Email Storage
+Emails are stored in the database with attachments in Active Storage:
+- `Email` model stores parsed email content (from, to, subject, body, etc.)
+- `EmailAttachment` model with per-user deduplication via MD5 checksum
+- Threading support via `message_id`, `in_reply_to`, `references` headers
+- EML files are imported via `EmailImportService` during processing
+
+### Email Import Service
+```ruby
+# Import EML file to database
+import_service = EmailImportService.new(user, logger: logger)
+email = import_service.import_from_eml(eml_path)
+# => Email record with attachments stored in Active Storage
+```
 
 ### CID Attachments
 Inline images in emails use Content-ID references:
-- Extracted via `EmlReader#attachment(content_id)`
-- Served through `emails#attachment` action
-- HTML `cid:xxx` references replaced with attachment URLs
+- Stored as `EmailAttachment` records with `inline: true`
+- Served through `emails#attachment` action from Active Storage
+- HTML `cid:xxx` references replaced with attachment URLs via `EmailsHelper#render_email_html`
 
 ### InlineEditable Concern
 Controllers that support inline field editing include `InlineEditable`:
@@ -237,6 +249,33 @@ contacts
 ├── job_role
 ├── department
 ├── phone_numbers (JSON array)
+└── timestamps
+
+emails
+├── user_id (FK)
+├── contact_id (FK, optional) - sender contact
+├── subject
+├── sent_at
+├── body_plain (text)
+├── body_html (text)
+├── from_address (JSON: {email, name})
+├── to_addresses (JSON array: [{email, name}, ...])
+├── cc_addresses (JSON array)
+├── message_id (unique per user for dedup)
+├── in_reply_to (threading)
+├── references (JSON array, threading)
+├── source_path (original EML path for audit)
+└── timestamps
+
+email_attachments
+├── email_id (FK)
+├── filename
+├── content_type
+├── byte_size
+├── content_id (for inline images)
+├── inline (boolean)
+├── checksum (MD5 for per-user dedup)
+├── file (Active Storage attachment)
 └── timestamps
 
 companies_contacts (join table, many-to-many)

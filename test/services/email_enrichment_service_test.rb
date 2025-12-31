@@ -59,10 +59,32 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
     assert_equal 1, belagrolex_companies.count, "Should not create duplicate companies - name matching should work"
   end
 
+  test "creates company with commercial_name as legal_name fallback" do
+    # Pre-create ITPSA so it's found and doesn't trigger the error
+    @user.companies.create!(legal_name: "Industrial Técnica Pecuaria, S.A.", domain: "itpsa.com")
+
+    VCR.use_cassette("enrichment_commercial_name_fallback") do
+      service = EmailEnrichmentService.new(@user, logger: @logger)
+      # This email mentions "Idealsa" which LLM extracts with only commercial_name
+      service.process_email(file_fixture("emails/idealsa_47.eml").to_s)
+    end
+
+    # Should create company using commercial_name as legal_name
+    idealsa = @user.companies.find_by("legal_name LIKE ? OR commercial_name LIKE ?", "%Idealsa%", "%Idealsa%")
+    assert_not_nil idealsa, "Should create Idealsa company"
+    assert_not_nil idealsa.legal_name, "Company must have legal_name (required field)"
+  end
+
   test "extracts tasks from emails requesting action" do
+    eml_path = file_fixture("emails/webmail_1.eml").to_s
+
+    # First import the email to the database
+    import_service = EmailImportService.new(@user, logger: @logger)
+    imported_email = import_service.import_from_eml(eml_path)
+
     VCR.use_cassette("enrichment_task_extraction") do
       service = EmailEnrichmentService.new(@user, logger: @logger)
-      service.process_email(file_fixture("emails/webmail_1.eml").to_s)
+      service.process_email(eml_path)
     end
 
     # Should have created at least one task
@@ -77,9 +99,10 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
       assert_not_nil task.contact.email, "Linked contact should have email"
     end
 
-    # Audit log should be created with source email
+    # Audit log should be created with source email reference
     audit_log = task.audit_logs.find_by(action: "create")
     assert_not_nil audit_log, "Should create audit log for task"
-    assert_not_nil audit_log.metadata["source_email"], "Audit log should have source_email in metadata"
+    assert_not_nil audit_log.source_email, "Audit log should reference source email"
+    assert_equal imported_email.id, audit_log.source_email.id
   end
 end

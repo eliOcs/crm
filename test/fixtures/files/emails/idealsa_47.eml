@@ -1,0 +1,151 @@
+Received: from PAWP195MB2202.EURP195.PROD.OUTLOOK.COM (2603:10a6:102:337::18)
+ by PR3P195MB0732.EURP195.PROD.OUTLOOK.COM with HTTPS; Wed, 3 Sep 2025
+ 07:23:30 +0000
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=itpsa.com;
+Received: from AM9P195MB0949.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:1f8::5)
+ by PAWP195MB2202.EURP195.PROD.OUTLOOK.COM (2603:10a6:102:337::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Wed, 3 Sep
+ 2025 07:23:29 +0000
+Received: from AM9P195MB0949.EURP195.PROD.OUTLOOK.COM
+ ([fe80::aedb:148d:101f:4604]) by AM9P195MB0949.EURP195.PROD.OUTLOOK.COM
+ ([fe80::aedb:148d:101f:4604%6]) with mapi id 15.20.9073.026; Wed, 3 Sep 2025
+ 07:23:29 +0000
+From: Monica Paraira <moparaira@itpsa.com>
+To: Maria Moreno <mmoreno@itpsa.com>
+Subject: Aceptada: Aromas para Idealsa
+Thread-Topic: Aromas para Idealsa
+Thread-Index:
+ AQHcEgy8g7ZGZgrdhEOmcqBdaUbJZbRswWnngAB+TtCAEOalEIABhB2wgAAgP+CAAALq8IAACS6wgAAhJeCAAQyXoIAAAv4wgAAAHyCAABuICg==
+Date: Wed, 3 Sep 2025 07:23:29 +0000
+Message-ID:
+ <AM9P195MB094925BC2F528FC93583F1BFB001A@AM9P195MB0949.EURP195.PROD.OUTLOOK.COM>
+Accept-Language: es-ES, en-US
+Content-Language: es-ES
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-SCL: 1
+X-MS-TNEF-Correlator:
+ <AM9P195MB094925BC2F528FC93583F1BFB001A@AM9P195MB0949.EURP195.PROD.OUTLOOK.COM>
+X-MS-Exchange-Organization-MessageDirectionality: Originating
+X-MS-Exchange-Organization-AuthSource: AM9P195MB0949.EURP195.PROD.OUTLOOK.COM
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-Network-Message-Id:
+ 968d15c0-dfd7-4f6a-16ae-08ddeabac7e3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic:
+ AM9P195MB0949:EE_|PAWP195MB2202:EE_|PR3P195MB0732:EE_
+Return-Path: moparaira@itpsa.com
+X-MS-Exchange-Organization-ExpirationStartTime: 03 Sep 2025 07:23:29.6952
+ (UTC)
+X-MS-Exchange-Organization-ExpirationStartTimeReason: OriginalSubmit
+X-MS-Exchange-Organization-ExpirationInterval: 1:00:00:00.0000000
+X-MS-Exchange-Organization-ExpirationIntervalReason: OriginalSubmit
+X-MS-Office365-Filtering-Correlation-Id: 968d15c0-dfd7-4f6a-16ae-08ddeabac7e3
+X-MS-Exchange-AtpMessageProperties: SA|SL
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|8096899003|41050700001;
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:es;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9P195MB0949.EURP195.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(8096899003)(41050700001);DIR:INT;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2025 07:23:29.4820
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3d32edda-431c-47d7-9947-76e9c2f4e742
+X-MS-Exchange-CrossTenant-AuthSource: AM9P195MB0949.EURP195.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-Network-Message-Id: 968d15c0-dfd7-4f6a-16ae-08ddeabac7e3
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 44sClBw9Qy2+NRCPaVFHjxG9w2C59l2alGmWkC/eIg6pupaBQTVZUIdo+YmS4XUWWsgY94sNoimw02uVsihqmQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWP195MB2202
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:01.0035002
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.9073.026
+X-Microsoft-Antispam-Mailbox-Delivery:
+	ucf:0;jmr:0;auth:0;dest:I;ENG:(910005)(944506478)(944626604)(920097)(425001)(930097)(140003)(1420198);
+X-Microsoft-Antispam-Message-Info:
+	EqRD2lQSUrVGV2Nw5c3t/5JCUvu5sGht5G7+5n0s1n6khPeeFv+mpFkq20+XjC6sY6Nv+wAZgeCj5dLm4pWTAWxvrAQRN3BHsILyQ2mpMP7FNeSDpra7XRLIYYjeDy5yhK4A49yVLXLpetlFTxq2EVkE1dJ5tf2nRU7qMmS/AMWUoqrpOke8MHS7eCLpcPwa8C4bsyKvIZ/wWP2thv99sG6UrykFPTfatgGDyWB7HseYNkKAXueS0xVxyHofyxS76ZJI7X/wS6CvS0IkFbO9GFX1gY8qP1ymbOT1UwAd2S29cU0ouBCMh9U4tVVN9ieM4OcLivj/N0jU7mAp0LwGKP36DIHAi5x5Ym5BfjQclrzH/Ys3nxyzSxvI735G4Mhcn97UvSQq/cr3gatsUKXWjDiksmWlSsUxFIaNJURX8AGF9efb4pU/fWvNjepTk7x/ITqSClyHs50OMhOzWkKfT0t5jsLs5xIsuOuYMYjgF9yzHQv4kgVBFW09B5KGkxpkni6NmEMs+vO4dKDk0rtINVRAsv2ijowSImyAw+Bd/vw=
+Status: RO
+X-libpst-forensic-sender: /O=EXCHANGELABS/OU=EXCHANGE ADMINISTRATIVE GROUP (FYDIBOHF23SPDLT)/CN=RECIPIENTS/CN=7501484C3B84464FBFC63E032EFAC776-98E1AC59-FC
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="--boundary-LibPST-iamunique-400612768_-_-"
+
+
+----boundary-LibPST-iamunique-400612768_-_-
+Content-Type: text/html; charset="us-ascii"
+
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/12/omml" xmlns="http://www.w3.org/TR/REC-html40"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii"><meta name="Generator" content="Microsoft Word 15 (filtered medium)"><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Aptos;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	font-size:11.0pt;
+	font-family:"Aptos",sans-serif;
+	mso-ligatures:standardcontextual;
+	mso-fareast-language:EN-US;}
+span.EstiloCorreo17
+	{mso-style-type:personal-compose;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:11.0pt;
+	mso-fareast-language:EN-US;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:70.85pt 3.0cm 70.85pt 3.0cm;}
+div.WordSection1
+	{page:WordSection1;}
+--></style></head><body lang="CA" link="#467886" vlink="#96607D" style="word-wrap:break-word"><div class="WordSection1"><p class="MsoNormal"><o:p>&nbsp;</o:p></p></div></body></html>
+----boundary-LibPST-iamunique-400612768_-_-
+Content-Type: text/calendar; method="REQUEST"; charset="utf-8"
+
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:LibPST v0.6.76
+METHOD:REQUEST
+BEGIN:VEVENT
+ORGANIZER;CN="Monica Paraira":MAILTO:moparaira@itpsa.com
+UID:0xf7c
+DTSTAMP:20251129T100717Z
+CREATED:20250903T072330Z
+LAST-MOD:20250903T072432Z
+SUMMARY:Aceptada: Aromas para Idealsa
+DTSTART;VALUE=DATE-TIME:20250903T110000Z
+DTEND;VALUE=DATE-TIME:20250903T113000Z
+LOCATION:Reunión de Microsoft Teams
+STATUS:CONFIRMED
+CATEGORIES:NONE
+END:VEVENT
+END:VCALENDAR
+
+
+----boundary-LibPST-iamunique-400612768_-_-
+Content-Type: text/calendar; charset="utf-8"; name="i465385341.ics"
+Content-Disposition: attachment; filename="i465385341.ics"
+
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:LibPST v0.6.76
+METHOD:REQUEST
+BEGIN:VEVENT
+ORGANIZER;CN="Monica Paraira":MAILTO:moparaira@itpsa.com
+UID:0xf7c
+DTSTAMP:20251129T100717Z
+CREATED:20250903T072330Z
+LAST-MOD:20250903T072432Z
+SUMMARY:Aceptada: Aromas para Idealsa
+DTSTART;VALUE=DATE-TIME:20250903T110000Z
+DTEND;VALUE=DATE-TIME:20250903T113000Z
+LOCATION:Reunión de Microsoft Teams
+STATUS:CONFIRMED
+CATEGORIES:NONE
+END:VEVENT
+END:VCALENDAR
+
+
+----boundary-LibPST-iamunique-400612768_-_---
+

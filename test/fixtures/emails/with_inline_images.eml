@@ -1,0 +1,39 @@
+From: sender@example.com
+To: recipient@example.com
+Subject: Test email with inline images
+Date: Mon, 1 Jan 2025 12:00:00 +0000
+Message-ID: <test123@example.com>
+In-Reply-To: <previous@example.com>
+References: <original@example.com> <previous@example.com>
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="boundary123"
+
+--boundary123
+Content-Type: text/html; charset="utf-8"
+
+<html>
+<body>
+<p>Hello, here is an image:</p>
+<img src="cid:image001.png@01ABC123" alt="Test image">
+<p>And another:</p>
+<img src="cid:image002.jpg@01ABC123" alt="Second image">
+</body>
+</html>
+
+--boundary123
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-ID: <image001.png@01ABC123>
+Content-Disposition: inline; filename="image001.png"
+
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==
+
+--boundary123
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-ID: <image002.jpg@01ABC123>
+Content-Disposition: inline; filename="image002.jpg"
+
+/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRof
+
+--boundary123--
