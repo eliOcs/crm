@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   resource :session
   resource :registration, only: %i[ new create ]
-  resource :settings, only: %i[ edit update ]
+  resource :settings, only: %i[ edit update ] do
+    post :start_microsoft_import
+    delete "microsoft_import/:id", action: :cancel_microsoft_import, as: :cancel_microsoft_import
+    get :microsoft_import_status
+  end
   resources :passwords, param: :token
 
   namespace :auth do

@@ -19,6 +19,27 @@ class MicrosoftGraphClient
     get("/me/messages", query)
   end
 
+  # Get messages from a specific folder (inbox, sentitems, etc.)
+  def folder_messages(folder, options = {})
+    query = build_query(options)
+    query["$count"] = "true" if options[:count]
+    get("/me/mailFolders/#{folder}/messages", query, headers: options[:count] ? { "ConsistencyLevel" => "eventual" } : {})
+  end
+
+  # Count messages in a folder with filter
+  def count_folder_messages(folder, filter:)
+    response = folder_messages(folder, filter: filter, top: 1, count: true)
+    response["@odata.count"] || 0
+  end
+
+  # Follow @odata.nextLink for pagination
+  def get_next_page(next_link)
+    uri = URI(next_link)
+    request = Net::HTTP::Get.new(uri)
+    set_headers(request)
+    execute(uri, request)
+  end
+
   def message(id, options = {})
     query = {}
     query["$select"] = options[:select].join(",") if options[:select]
@@ -60,12 +81,13 @@ class MicrosoftGraphClient
 
   private
 
-  def get(path, query = {})
+  def get(path, query = {}, headers: {})
     uri = URI("#{BASE_URL}#{path}")
     uri.query = URI.encode_www_form(query) if query.any?
 
     request = Net::HTTP::Get.new(uri)
     set_headers(request)
+    headers.each { |key, value| request[key] = value }
 
     execute(uri, request)
   end

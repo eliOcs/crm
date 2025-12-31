@@ -1,0 +1,159 @@
+@layer components {
+  /* ==========================================================================
+     Progress Bar Component
+     ========================================================================== */
+
+  .progress-bar {
+    inline-size: 100%;
+    block-size: 0.5rem;
+    background-color: oklch(var(--lch-border));
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .progress-bar__fill {
+    block-size: 100%;
+    background-color: oklch(var(--lch-primary));
+    border-radius: var(--radius-sm);
+    transition: inline-size 0.3s ease-out;
+  }
+
+  /* ==========================================================================
+     Import Progress Component
+     ========================================================================== */
+
+  .import-progress {
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-space);
+  }
+
+  .import-progress__header {
+    display: flex;
+    align-items: center;
+    gap: var(--inline-space);
+  }
+
+  .import-progress__range {
+    color: var(--color-ink-subtle);
+    font-size: var(--text-sm);
+  }
+
+  .import-progress__stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    color: var(--color-ink-subtle);
+  }
+
+  .import-progress__details {
+    display: flex;
+    gap: var(--inline-space-double);
+  }
+
+  .import-progress__counting {
+    color: var(--color-ink-subtle);
+    font-size: var(--text-sm);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .import-progress__actions {
+    margin-block-start: var(--block-space-half);
+  }
+
+  /* ==========================================================================
+     Import Form Component
+     ========================================================================== */
+
+  .import-form__row {
+    display: flex;
+    align-items: center;
+    gap: var(--inline-space);
+  }
+
+  .import-form__row .select {
+    flex: 1;
+    max-inline-size: 20ch;
+  }
+
+  /* ==========================================================================
+     Import History Component
+     ========================================================================== */
+
+  .import-history__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-space-half);
+  }
+
+  .import-history__item {
+    display: flex;
+    align-items: center;
+    gap: var(--inline-space);
+    font-size: var(--text-sm);
+  }
+
+  .import-history__range {
+    flex: 1;
+  }
+
+  .import-history__date {
+    margin-inline-start: auto;
+  }
+
+  /* ==========================================================================
+     Badge Component (generic)
+     ========================================================================== */
+
+  .badge {
+    display: inline-block;
+    padding-block: 0.2em;
+    padding-inline: 0.6em;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    border-radius: var(--btn-radius);
+    white-space: nowrap;
+  }
+
+  /* Import status badges */
+  .badge--pending,
+  .badge--counting {
+    background-color: oklch(var(--lch-canvas-alt));
+    color: oklch(var(--lch-ink-muted));
+  }
+
+  .badge--importing {
+    background-color: oklch(92% 0.06 260);
+    color: oklch(45% 0.12 260);
+  }
+
+  .badge--enriching {
+    background-color: oklch(var(--lch-orange-light));
+    color: oklch(50% 0.12 55);
+  }
+
+  .badge--completed {
+    background-color: oklch(var(--lch-positive-light));
+    color: oklch(40% 0.15 145);
+  }
+
+  .badge--failed {
+    background-color: oklch(var(--lch-negative-light));
+    color: oklch(45% 0.15 25);
+  }
+
+  .badge--cancelled {
+    background-color: oklch(var(--lch-canvas-alt));
+    color: oklch(var(--lch-ink-subtle));
+  }
+}

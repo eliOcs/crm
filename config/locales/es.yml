@@ -198,6 +198,7 @@ es:
     cancel: "Cancelar"
     not_provided: "No proporcionado"
     total: "%{count} en total"
+    ago: ""
 
   # Pagination
   pagination:
@@ -446,6 +447,41 @@ es:
       contact:
         title: "Contacto"
         description: "Para preguntas sobre estos términos, contáctanos:"
+
+  # Microsoft Email Import
+  microsoft_import:
+    title: "Importar Correos Históricos"
+    description: "Importa correos de tu cuenta de Microsoft conectada. Esto puede tardar según la cantidad de correos."
+    start: "Iniciar Importación"
+    started: "Importación de correos iniciada. Esto puede tardar unos minutos."
+    cancelled: "Importación de correos cancelada."
+    already_running: "Ya hay una importación en progreso."
+    not_connected: "Por favor, conecta tu cuenta de Microsoft primero."
+    invalid_time_range: "Rango de tiempo seleccionado no válido."
+    cannot_cancel: "Esta importación no se puede cancelar."
+    cancel_confirm: "¿Estás seguro de que quieres cancelar esta importación?"
+    counting: "Contando correos..."
+    progress: "%{processed} de %{total} correos procesados"
+    skipped:
+      one: "%{count} omitido (duplicado)"
+      other: "%{count} omitidos (duplicados)"
+    failed:
+      one: "%{count} fallido"
+      other: "%{count} fallidos"
+    history: "Importaciones Recientes"
+    history_stats: "%{imported} importados, %{skipped} omitidos"
+    time_ranges:
+      3_months: "Últimos 3 meses"
+      1_year: "Último año"
+      3_years: "Últimos 3 años"
+    statuses:
+      pending: "Pendiente"
+      counting: "Contando"
+      importing: "Importando"
+      enriching: "Enriqueciendo"
+      completed: "Completado"
+      failed: "Fallido"
+      cancelled: "Cancelado"
 
   # Date/time formats
   date:

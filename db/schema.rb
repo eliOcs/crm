@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_31_103029) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_31_153827) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -150,6 +150,26 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_31_103029) do
     t.index ["user_id"], name: "index_microsoft_credentials_on_user_id", unique: true
   end
 
+  create_table "microsoft_email_imports", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.string "current_folder"
+    t.integer "enriched_emails", default: 0
+    t.text "error_message"
+    t.integer "failed_emails", default: 0
+    t.integer "imported_emails", default: 0
+    t.text "next_link"
+    t.integer "skipped_emails", default: 0
+    t.datetime "started_at"
+    t.string "status", default: "pending", null: false
+    t.string "time_range", null: false
+    t.integer "total_emails", default: 0
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "status"], name: "index_microsoft_email_imports_on_user_id_and_status"
+    t.index ["user_id"], name: "index_microsoft_email_imports_on_user_id"
+  end
+
   create_table "microsoft_subscriptions", force: :cascade do |t|
     t.string "client_state"
     t.datetime "created_at", null: false
@@ -212,6 +232,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_31_103029) do
   add_foreign_key "emails", "contacts"
   add_foreign_key "emails", "users"
   add_foreign_key "microsoft_credentials", "users"
+  add_foreign_key "microsoft_email_imports", "users"
   add_foreign_key "microsoft_subscriptions", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "companies"

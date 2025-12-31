@@ -1,0 +1,79 @@
+<% if @active_import %>
+  <div class="import-progress" data-controller="auto-refresh" data-auto-refresh-url-value="<%= microsoft_import_status_settings_path %>" data-auto-refresh-interval-value="3000">
+    <div class="import-progress__header">
+      <span class="import-progress__status badge badge--<%= @active_import.status %>">
+        <%= @active_import.status_label %>
+      </span>
+      <span class="import-progress__range"><%= @active_import.time_range_label %></span>
+    </div>
+
+    <% if @active_import.total_emails > 0 %>
+      <div class="progress-bar">
+        <div class="progress-bar__fill" style="width: <%= @active_import.progress_percentage %>%"></div>
+      </div>
+      <div class="import-progress__stats">
+        <span><%= t("microsoft_import.progress", processed: @active_import.processed_emails, total: @active_import.total_emails) %></span>
+        <span><%= @active_import.progress_percentage %>%</span>
+      </div>
+    <% else %>
+      <div class="import-progress__counting">
+        <%= t("microsoft_import.counting") %>
+      </div>
+    <% end %>
+
+    <% if @active_import.skipped_emails > 0 || @active_import.failed_emails > 0 %>
+      <div class="import-progress__details txt-subtle txt-sm">
+        <% if @active_import.skipped_emails > 0 %>
+          <span><%= t("microsoft_import.skipped", count: @active_import.skipped_emails) %></span>
+        <% end %>
+        <% if @active_import.failed_emails > 0 %>
+          <span><%= t("microsoft_import.failed", count: @active_import.failed_emails) %></span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="import-progress__actions">
+      <%= button_to t("common.cancel"),
+            cancel_microsoft_import_settings_path(id: @active_import.id),
+            method: :delete,
+            class: "btn btn--secondary btn--sm",
+            data: { turbo_confirm: t("microsoft_import.cancel_confirm") } %>
+    </div>
+  </div>
+<% else %>
+  <%= form_with url: start_microsoft_import_settings_path, method: :post, class: "import-form" do |form| %>
+    <div class="import-form__row">
+      <%= form.select :time_range,
+            options_for_select([
+              [t("microsoft_import.time_ranges.3_months"), "3_months"],
+              [t("microsoft_import.time_ranges.1_year"), "1_year"],
+              [t("microsoft_import.time_ranges.3_years"), "3_years"]
+            ], "1_year"),
+            {},
+            class: "select" %>
+      <%= form.submit t("microsoft_import.start"), class: "btn btn--primary" %>
+    </div>
+  <% end %>
+
+  <% if @recent_imports.present? %>
+    <div class="import-history mar-t-lg">
+      <h3 class="txt-sm txt-subtle mar-b-sm"><%= t("microsoft_import.history") %></h3>
+      <ul class="import-history__list">
+        <% @recent_imports.each do |import| %>
+          <li class="import-history__item">
+            <span class="badge badge--<%= import.status %>"><%= import.status_label %></span>
+            <span class="import-history__range"><%= import.time_range_label %></span>
+            <span class="import-history__stats txt-subtle">
+              <%= t("microsoft_import.history_stats",
+                    imported: import.imported_emails,
+                    skipped: import.skipped_emails) %>
+            </span>
+            <span class="import-history__date txt-subtle">
+              <%= time_ago_in_words(import.completed_at || import.created_at) %> <%= t("common.ago") %>
+            </span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>

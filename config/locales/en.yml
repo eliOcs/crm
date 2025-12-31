@@ -198,6 +198,7 @@ en:
     cancel: "Cancel"
     not_provided: "Not provided"
     total: "%{count} total"
+    ago: "ago"
 
   # Pagination
   pagination:
@@ -446,6 +447,41 @@ en:
       contact:
         title: "Contact"
         description: "For questions about these terms, please contact us:"
+
+  # Microsoft Email Import
+  microsoft_import:
+    title: "Import Historical Emails"
+    description: "Import emails from your connected Microsoft account. This may take some time depending on the number of emails."
+    start: "Start Import"
+    started: "Email import started. This may take a few minutes."
+    cancelled: "Email import cancelled."
+    already_running: "An import is already in progress."
+    not_connected: "Please connect your Microsoft account first."
+    invalid_time_range: "Invalid time range selected."
+    cannot_cancel: "This import cannot be cancelled."
+    cancel_confirm: "Are you sure you want to cancel this import?"
+    counting: "Counting emails..."
+    progress: "%{processed} of %{total} emails processed"
+    skipped:
+      one: "%{count} skipped (duplicate)"
+      other: "%{count} skipped (duplicates)"
+    failed:
+      one: "%{count} failed"
+      other: "%{count} failed"
+    history: "Recent Imports"
+    history_stats: "%{imported} imported, %{skipped} skipped"
+    time_ranges:
+      3_months: "Last 3 months"
+      1_year: "Last year"
+      3_years: "Last 3 years"
+    statuses:
+      pending: "Pending"
+      counting: "Counting"
+      importing: "Importing"
+      enriching: "Enriching"
+      completed: "Completed"
+      failed: "Failed"
+      cancelled: "Cancelled"
 
   # Date/time formats
   date:
