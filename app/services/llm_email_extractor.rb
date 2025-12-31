@@ -341,26 +341,15 @@ class LlmEmailExtractor
   # === SHARED HELPERS ===
 
   def build_email_text(email_data)
-    parts = []
-    parts << "From: #{format_address(email_data[:from])}" if email_data[:from]
-    parts << "To: #{email_data[:to].map { |a| format_address(a) }.join(', ')}" if email_data[:to].present?
-    parts << "Cc: #{email_data[:cc].map { |a| format_address(a) }.join(', ')}" if email_data[:cc].present?
-    parts << "Subject: #{email_data[:subject]}" if email_data[:subject]
-    parts << "Date: #{email_data[:date]}" if email_data[:date]
-    parts << ""
-
-    if email_data[:html_body].present?
-      markdown = HtmlToMarkdown.new(email_data[:html_body]).convert
-      parts << "--- Email Body (Markdown) ---"
-      parts << markdown.truncate(12000)
-    elsif email_data[:body].present?
-      parts << "--- Email Body ---"
-      parts << email_data[:body]
-    else
-      parts << "(no body)"
-    end
-
-    parts.join("\n")
+    build_email_text_common(
+      from: format_address(email_data[:from]),
+      to: email_data[:to]&.map { |a| format_address(a) },
+      cc: email_data[:cc]&.map { |a| format_address(a) },
+      subject: email_data[:subject],
+      date: email_data[:date],
+      html_body: email_data[:html_body],
+      plain_body: email_data[:body]
+    )
   end
 
   def format_address(addr)
@@ -370,6 +359,29 @@ class LlmEmailExtractor
     else
       addr[:email].to_s
     end
+  end
+
+  def build_email_text_common(from:, to:, cc:, subject:, date:, html_body:, plain_body:)
+    parts = []
+    parts << "From: #{from}" if from.present?
+    parts << "To: #{to.join(', ')}" if to.present?
+    parts << "Cc: #{cc.join(', ')}" if cc.present?
+    parts << "Subject: #{subject}" if subject.present?
+    parts << "Date: #{date}" if date.present?
+    parts << ""
+
+    if html_body.present?
+      markdown = HtmlToMarkdown.new(html_body).convert
+      parts << "--- Email Body (Markdown) ---"
+      parts << markdown.truncate(12000)
+    elsif plain_body.present?
+      parts << "--- Email Body ---"
+      parts << plain_body
+    else
+      parts << "(no body)"
+    end
+
+    parts.join("\n")
   end
 
   def extract_inline_images(email_data)
@@ -438,26 +450,15 @@ class LlmEmailExtractor
   end
 
   def build_email_text_from_record(email)
-    parts = []
-    parts << "From: #{format_db_address(email.from_address)}" if email.from_address
-    parts << "To: #{email.to_addresses.map { |a| format_db_address(a) }.join(', ')}" if email.to_addresses.present?
-    parts << "Cc: #{email.cc_addresses.map { |a| format_db_address(a) }.join(', ')}" if email.cc_addresses.present?
-    parts << "Subject: #{email.subject}" if email.subject
-    parts << "Date: #{email.sent_at}" if email.sent_at
-    parts << ""
-
-    if email.body_html.present?
-      markdown = HtmlToMarkdown.new(email.body_html).convert
-      parts << "--- Email Body (Markdown) ---"
-      parts << markdown.truncate(12000)
-    elsif email.body_plain.present?
-      parts << "--- Email Body ---"
-      parts << email.body_plain
-    else
-      parts << "(no body)"
-    end
-
-    parts.join("\n")
+    build_email_text_common(
+      from: format_db_address(email.from_address),
+      to: email.to_addresses&.map { |a| format_db_address(a) },
+      cc: email.cc_addresses&.map { |a| format_db_address(a) },
+      subject: email.subject,
+      date: email.sent_at,
+      html_body: email.body_html,
+      plain_body: email.body_plain
+    )
   end
 
   def format_db_address(addr)

@@ -71,30 +71,15 @@ class MicrosoftGraphClient
   end
 
   def post(path, body)
-    uri = URI("#{BASE_URL}#{path}")
-
-    request = Net::HTTP::Post.new(uri)
-    set_headers(request)
-    request["Content-Type"] = "application/json"
-    request.body = body.to_json
-
-    execute(uri, request)
+    request_with_body(Net::HTTP::Post, path, body)
   end
 
   def patch(path, body)
-    uri = URI("#{BASE_URL}#{path}")
-
-    request = Net::HTTP::Patch.new(uri)
-    set_headers(request)
-    request["Content-Type"] = "application/json"
-    request.body = body.to_json
-
-    execute(uri, request)
+    request_with_body(Net::HTTP::Patch, path, body)
   end
 
   def delete(path)
     uri = URI("#{BASE_URL}#{path}")
-
     request = Net::HTTP::Delete.new(uri)
     set_headers(request)
 
@@ -106,6 +91,16 @@ class MicrosoftGraphClient
     return true if response.code.to_i == 204
 
     handle_response(response)
+  end
+
+  def request_with_body(http_method, path, body)
+    uri = URI("#{BASE_URL}#{path}")
+    request = http_method.new(uri)
+    set_headers(request)
+    request["Content-Type"] = "application/json"
+    request.body = body.to_json
+
+    execute(uri, request)
   end
 
   def set_headers(request)
