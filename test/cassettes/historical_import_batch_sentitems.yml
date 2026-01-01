@@ -473,4 +473,52 @@ http_interactions:
         the recipient. There''s no clear deliverable, decision needed, or response
         requested."}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":787,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":58,"service_tier":"standard"}}'
   recorded_at: Wed, 31 Dec 2025 17:03:16 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/me/mailFolders/sentitems/messages?$filter=receivedDateTime%20ge%202025-01-01T00:00:00Z&$orderby=receivedDateTime%20asc&$select=id&$top=50
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Ruby
+      Host:
+      - graph.microsoft.com
+      Authorization:
+      - Bearer test_access_token
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - b844571d-289a-4c88-9557-5a1ba98fb123
+      Client-Request-Id:
+      - b844571d-289a-4c88-9557-5a1ba98fb123
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"France Central","Slice":"E","Ring":"5","ScaleUnit":"000","RoleInstance":"PA1PEPF0006B220"}}'
+      Www-Authenticate:
+      - Bearer realm="", authorization_uri="https://login.microsoftonline.com/common/oauth2/authorize",
+        client_id="00000003-0000-0000-c000-000000000000"
+      Date:
+      - Thu, 01 Jan 2026 16:55:28 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"error":{"code":"InvalidAuthenticationToken","message":"IDX14100:
+        JWT is not well formed, there are no dots (.).\nThe token needs to be in JWS
+        or JWE Compact Serialization Format. (JWS): ''EncodedHeader.EncodedPayload.EncodedSignature''.
+        (JWE): ''EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag''.","innerError":{"date":"2026-01-01T16:55:28","request-id":"b844571d-289a-4c88-9557-5a1ba98fb123","client-request-id":"b844571d-289a-4c88-9557-5a1ba98fb123"}}}'
+  recorded_at: Thu, 01 Jan 2026 16:55:28 GMT
 recorded_with: VCR 6.3.1

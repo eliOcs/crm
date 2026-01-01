@@ -332,7 +332,7 @@ bin/kamal shell               # SSH into container
 ```
 
 ### Configuration (`config/deploy.yml`)
-- **Host**: `52.30.167.17` (crm.eliocapella.com)
+- **Host**: `52.30.167.17` (mercuriocrm.es)
 - **Registry**: AWS ECR (eu-west-1)
 - **SSL**: Auto via Let's Encrypt
 - **Architecture**: ARM64 (Graviton)

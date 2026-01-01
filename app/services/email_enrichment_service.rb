@@ -16,6 +16,7 @@ class EmailEnrichmentService
       tasks_new: 0,
       tasks_updated: 0,
       tasks_skipped: 0,
+      llm_skipped: 0,
       errors: 0
     }
   end
@@ -31,6 +32,14 @@ class EmailEnrichmentService
 
     email_date = email_data[:date] || Date.current
 
+    # Check if email has meaningful content for LLM processing
+    if @source_email && !@source_email.has_meaningful_content?
+      @stats[:llm_skipped] += 1
+      @logger.info "  Skipping LLM (no meaningful content), extracting from headers only"
+      extract_contacts_from_headers(@source_email)
+      return
+    end
+
     # Extract contacts and companies
     extractor = LlmEmailExtractor.new(eml_path)
     perform_extraction(extractor, email_date)
@@ -41,12 +50,76 @@ class EmailEnrichmentService
     @source_email = email
     email_date = email.sent_at&.to_date || Date.current
 
+    # Check if email has meaningful content for LLM processing
+    unless email.has_meaningful_content?
+      @stats[:llm_skipped] += 1
+      @logger.info "  Skipping LLM (no meaningful content), extracting from headers only"
+      extract_contacts_from_headers(email)
+      return
+    end
+
     # Extract contacts and companies using the Email record
     extractor = LlmEmailExtractor.from_email(email)
     perform_extraction(extractor, email_date)
   end
 
   private
+
+  # Extract contacts from email headers without LLM
+  # Used for emails with no meaningful content (calendar notifications, etc.)
+  def extract_contacts_from_headers(email)
+    email.header_addresses.each do |address|
+      email_addr = address["email"]&.strip&.downcase
+      next unless email_addr.present?
+
+      contact = @user.contacts.find_or_initialize_by(email: email_addr)
+
+      if contact.new_record?
+        # Set name from header if available
+        contact.name = address["name"]&.strip.presence
+        contact.save!
+        @stats[:contacts_new] += 1
+        @logger.info "  DB: CREATE contact id=#{contact.id} email=#{contact.email} (from headers)"
+
+        log_audit(
+          record: contact,
+          action: "create",
+          message: "email headers",
+          field_changes: build_field_changes(contact),
+          source_email: email
+        )
+
+        # Link email to sender contact
+        link_email_to_sender_contact(contact)
+
+        # Link to existing company by domain
+        link_contact_to_company_by_domain(contact)
+      else
+        @stats[:contacts_skipped] += 1
+      end
+    end
+  end
+
+  # Link a contact to an existing company based on email domain
+  def link_contact_to_company_by_domain(contact)
+    domain = contact.email.split("@").last&.downcase
+    return unless domain.present?
+
+    company = @user.companies.find_by(domain: domain)
+    return unless company
+    return if contact.companies.include?(company)
+
+    contact.companies << company
+    @logger.info "  DB: LINK contact_id=#{contact.id} company_id=#{company.id}"
+
+    log_audit(
+      record: contact,
+      action: "link",
+      message: "company link by domain",
+      field_changes: { "company_id" => { "from" => nil, "to" => company.id } },
+      source_email: @source_email
+    )
+  end
 
   def perform_extraction(extractor, email_date)
     result = extractor.extract

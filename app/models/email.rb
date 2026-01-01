@@ -56,4 +56,36 @@ class Email < ApplicationRecord
   def file_attachments
     email_attachments.where(inline: false)
   end
+
+  # Check if email has meaningful content worth analyzing with LLM
+  # Returns false for empty emails, calendar notifications, etc.
+  def has_meaningful_content?
+    extract_text_content.length > 0
+  end
+
+  # Extract plain text content from email, stripping HTML
+  # Uses the same HtmlToMarkdown converter used for LLM processing
+  def extract_text_content
+    text = if body_plain.present? && !body_plain.include?("Unable to decode")
+      body_plain
+    elsif body_html.present?
+      HtmlToMarkdown.new(body_html).convert
+    else
+      ""
+    end
+
+    # Strip all whitespace including Unicode non-breaking spaces
+    text.gsub(/\A[[:space:]]+|[[:space:]]+\z/, "")
+  end
+
+  # Extract all email addresses from headers (from, to, cc)
+  def header_addresses
+    addresses = []
+
+    addresses << from_address if from_address.present?
+    addresses.concat(to_addresses) if to_addresses.present?
+    addresses.concat(cc_addresses) if cc_addresses.present?
+
+    addresses.compact.uniq { |a| a["email"]&.downcase }
+  end
 end

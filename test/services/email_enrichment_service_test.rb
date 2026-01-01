@@ -75,6 +75,46 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
     assert_not_nil idealsa.legal_name, "Company must have legal_name (required field)"
   end
 
+  test "skips LLM for calendar notification emails and extracts contacts from headers" do
+    eml_path = file_fixture("emails/itpsa_11.eml").to_s
+
+    # First import the email to the database
+    import_service = EmailImportService.new(@user, logger: @logger)
+    imported_email = import_service.import_from_eml(eml_path)
+
+    # Verify the email is detected as no meaningful content
+    assert_not imported_email.has_meaningful_content?, "Empty email should not have meaningful content"
+
+    # Run enrichment - should NOT call LLM
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    service.process_email(eml_path)
+
+    # Should have created contacts from headers (From + To)
+    assert_equal 1, service.stats[:llm_skipped], "Should skip LLM"
+    assert @user.contacts.exists?(email: "moparaira@itpsa.com"), "Should create contact from From header"
+    assert @user.contacts.exists?(email: "mmoreno@itpsa.com"), "Should create contact from To header"
+
+    # Check contact has name from header
+    monica = @user.contacts.find_by(email: "moparaira@itpsa.com")
+    assert_equal "Monica Paraira", monica.name
+  end
+
+  test "calendar notification contact is linked to existing company by domain" do
+    # Pre-create ITPSA company
+    itpsa = @user.companies.create!(legal_name: "ITPSA S.A.", domain: "itpsa.com")
+
+    eml_path = file_fixture("emails/itpsa_11.eml").to_s
+    import_service = EmailImportService.new(@user, logger: @logger)
+    import_service.import_from_eml(eml_path)
+
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    service.process_email(eml_path)
+
+    # Contacts should be linked to ITPSA
+    monica = @user.contacts.find_by(email: "moparaira@itpsa.com")
+    assert monica.companies.include?(itpsa), "Contact should be linked to ITPSA by domain"
+  end
+
   test "extracts tasks from emails requesting action" do
     eml_path = file_fixture("emails/webmail_1.eml").to_s
 
