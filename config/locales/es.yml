@@ -137,7 +137,7 @@ es:
     total: "%{count} en total"
     empty: "Aún no hay tareas."
     overdue: "(vencida)"
-    ago: "hace"
+    updated_ago: "hace %{time}"
     fields:
       status: "Estado"
       name: "Nombre"

@@ -105,6 +105,7 @@
     font: inherit;
     cursor: pointer;
     outline: none;
+    inline-size: auto;
 
     &:focus,
     &:focus-visible,
@@ -140,6 +141,11 @@
       background: transparent;
       padding: 0;
       cursor: pointer;
+    }
+
+    /* Ensure selectedcontent displays the cloned option content */
+    & selectedcontent {
+      display: inline-block;
     }
   }
 

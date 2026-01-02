@@ -137,7 +137,7 @@ en:
     total: "%{count} total"
     empty: "No tasks yet."
     overdue: "(overdue)"
-    ago: "ago"
+    updated_ago: "%{time} ago"
     fields:
       status: "Status"
       name: "Name"

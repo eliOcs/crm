@@ -90,6 +90,11 @@
     white-space: nowrap;
   }
 
+  .table .col-fit {
+    inline-size: 1%;
+    white-space: nowrap;
+  }
+
   /* Logo cell */
   .table__logo {
     inline-size: 64px;

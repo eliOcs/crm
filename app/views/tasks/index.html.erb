@@ -8,7 +8,7 @@
     <table class="table table--hover">
       <thead>
         <tr>
-          <th><%= t("tasks.fields.status") %></th>
+          <th class="col-fit"><%= t("tasks.fields.status") %></th>
           <th><%= t("tasks.fields.name") %></th>
           <th><%= t("tasks.fields.due_date") %></th>
           <th><%= t("tasks.fields.contact") %></th>
@@ -18,7 +18,7 @@
       <tbody>
         <% @tasks.each do |task| %>
           <tr>
-            <td>
+            <td class="col-fit">
               <%= render "shared/inline_select_field",
                   url: task_path(task),
                   field: :status,
@@ -33,7 +33,7 @@
                   id: dom_id(task, :due_date) %>
             </td>
             <td class="txt-sm txt-muted"><%= task.contact&.name || task.contact&.email %></td>
-            <td class="txt-sm txt-muted"><%= time_ago_in_words(task.updated_at) %> <%= t("tasks.ago") %></td>
+            <td class="txt-sm txt-muted"><%= t("tasks.updated_ago", time: time_ago_in_words(task.updated_at)) %></td>
           </tr>
         <% end %>
       </tbody>
