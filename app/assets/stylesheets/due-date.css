@@ -1,0 +1,306 @@
+/* ==========================================================================
+   Due Date Component
+   Displays and edits due dates with urgency-based colors and picker modal
+   ========================================================================== */
+
+@layer components {
+  /* -------------------------------------------------------------------------
+     Display State - The clickable due date trigger
+     ------------------------------------------------------------------------- */
+
+  .due-date {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--inline-space-half);
+    padding: 0.25em 0.5em;
+    border-radius: var(--btn-radius);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .due-date:hover {
+    background: var(--color-canvas-alt);
+  }
+
+  .due-date:focus-visible {
+    outline: var(--focus-ring-size) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .due-date__icon {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .due-date__icon svg {
+    inline-size: 1em;
+    block-size: 1em;
+  }
+
+  /* Urgency color variants */
+  .due-date--urgent {
+    color: var(--color-negative);
+  }
+
+  .due-date--soon {
+    color: oklch(65% 0.15 50); /* Orange */
+  }
+
+  .due-date--week {
+    color: var(--color-positive); /* Green */
+  }
+
+  .due-date--later {
+    color: var(--color-ink-muted);
+  }
+
+  /* Placeholder when no due date set */
+  .due-date--empty {
+    color: var(--color-ink-muted);
+  }
+
+  .due-date--empty:hover {
+    color: var(--color-ink-subtle);
+  }
+
+  /* -------------------------------------------------------------------------
+     Modal Backdrop
+     ------------------------------------------------------------------------- */
+
+  .due-date-picker__backdrop {
+    position: fixed;
+    inset: 0;
+    background: oklch(20% 0 0 / 50%);
+    z-index: var(--z-modal);
+    animation: fade-in var(--duration-fast) var(--ease-out);
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* -------------------------------------------------------------------------
+     Modal Container
+     ------------------------------------------------------------------------- */
+
+  .due-date-picker__modal {
+    position: fixed;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-canvas);
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-md), 0 8px 32px oklch(20% 0 0 / 20%);
+    z-index: calc(var(--z-modal) + 1);
+    min-inline-size: 580px;
+    max-inline-size: 95vw;
+    max-block-size: 95vh;
+    overflow: auto;
+    animation: modal-in var(--duration-normal) var(--ease-out);
+  }
+
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -48%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Modal Header
+     ------------------------------------------------------------------------- */
+
+  .due-date-picker__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--block-space) var(--inline-space-double);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .due-date-picker__title {
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .due-date-picker__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em;
+    border: none;
+    background: transparent;
+    color: var(--color-ink-muted);
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: color var(--duration-fast), background-color var(--duration-fast);
+  }
+
+  .due-date-picker__close:hover {
+    color: var(--color-ink);
+    background: var(--color-canvas-alt);
+  }
+
+  .due-date-picker__close svg {
+    inline-size: 1.25em;
+    block-size: 1.25em;
+  }
+
+  /* -------------------------------------------------------------------------
+     Calendar Section
+     ------------------------------------------------------------------------- */
+
+  .due-date-picker__body {
+    padding: var(--block-space-double) var(--inline-space-double);
+  }
+
+  .due-date-picker__calendars {
+    display: flex;
+    gap: var(--inline-space-triple);
+  }
+
+  .due-date-picker__month {
+    flex: 1;
+  }
+
+  .due-date-picker__month-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-end: var(--block-space);
+  }
+
+  .due-date-picker__month-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .due-date-picker__nav {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .due-date-picker__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375em;
+    border: none;
+    background: transparent;
+    color: var(--color-ink-muted);
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: color var(--duration-fast), background-color var(--duration-fast);
+  }
+
+  .due-date-picker__nav-btn:hover {
+    color: var(--color-ink);
+    background: var(--color-canvas-alt);
+  }
+
+  .due-date-picker__nav-btn svg {
+    inline-size: 1em;
+    block-size: 1em;
+  }
+
+  /* Calendar Grid */
+  .due-date-picker__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-block-end: var(--block-space-half);
+  }
+
+  .due-date-picker__weekday {
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--color-ink-muted);
+    text-align: center;
+    padding-block-end: 0.5em;
+  }
+
+  .due-date-picker__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  .due-date-picker__day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color var(--duration-fast), color var(--duration-fast);
+  }
+
+  .due-date-picker__day:hover:not(.due-date-picker__day--selected) {
+    background: var(--color-canvas-alt);
+  }
+
+  .due-date-picker__day:focus-visible {
+    outline: var(--focus-ring-size) solid var(--focus-ring-color);
+    outline-offset: 1px;
+  }
+
+  .due-date-picker__day--other-month {
+    color: var(--color-ink-muted);
+    opacity: 0.5;
+  }
+
+  .due-date-picker__day--today {
+    font-weight: 600;
+    box-shadow: inset 0 0 0 2px var(--color-primary);
+  }
+
+  .due-date-picker__day--selected {
+    background: var(--color-primary);
+    color: white;
+    font-weight: 500;
+  }
+
+  .due-date-picker__day--selected.due-date-picker__day--today {
+    box-shadow: none;
+  }
+
+  /* -------------------------------------------------------------------------
+     Actions Footer
+     ------------------------------------------------------------------------- */
+
+  .due-date-picker__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--block-space) var(--inline-space-double);
+    border-block-start: 1px solid var(--color-border);
+    background: var(--color-canvas-alt);
+    border-end-start-radius: var(--card-radius);
+    border-end-end-radius: var(--card-radius);
+  }
+
+  .due-date-picker__quick-actions {
+    display: flex;
+    gap: var(--inline-space-half);
+  }
+
+  .due-date-picker__save-actions {
+    display: flex;
+    gap: var(--inline-space-half);
+  }
+}

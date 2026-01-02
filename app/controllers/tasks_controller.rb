@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   include InlineEditable
 
-  inline_editable :name, :description, :status
+  inline_editable :name, :description, :status, :due_date
 
   def index
     @tasks = Current.user.tasks.includes(:contact, :company).order(created_at: :desc)
@@ -17,5 +17,16 @@ class TasksController < ApplicationController
   def update
     @task = Current.user.tasks.find(params[:id])
     inline_update(@task)
+  end
+
+  private
+
+  def transform_value(field, value)
+    case field
+    when "due_date"
+      value.present? ? Date.parse(value) : nil
+    else
+      super
+    end
   end
 end

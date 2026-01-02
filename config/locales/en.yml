@@ -483,12 +483,45 @@ en:
       failed: "Failed"
       cancelled: "Cancelled"
 
+  # Due Date Component
+  due_date:
+    today: "Today"
+    tomorrow: "Tomorrow"
+    add: "Add due date"
+    edit_title: "Edit due date"
+    remove: "Remove due date"
+    next_week: "Next Week"
+    save: "Save due date"
+    weekdays:
+      - "Su"
+      - "Mo"
+      - "Tu"
+      - "We"
+      - "Th"
+      - "Fr"
+      - "Sa"
+    months:
+      - "January"
+      - "February"
+      - "March"
+      - "April"
+      - "May"
+      - "June"
+      - "July"
+      - "August"
+      - "September"
+      - "October"
+      - "November"
+      - "December"
+
   # Date/time formats
   date:
     formats:
       default: "%Y-%m-%d"
       short: "%b %d"
       long: "%B %d, %Y"
+      short_no_year: "%b %-d"
+      short_with_year: "%b %Y"
   time:
     formats:
       default: "%Y-%m-%d %H:%M"

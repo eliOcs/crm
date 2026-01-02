@@ -1,7 +1,13 @@
 require "test_helper"
 
 class MicrosoftHistoricalImportServiceTest < ActiveSupport::TestCase
+  # Freeze time to Dec 31, 2025 so cutoff_date is always 2024-12-31T00:00:00Z
+  # This ensures VCR cassettes match the recorded date filter
+  FROZEN_TIME = Time.zone.parse("2025-12-31 17:00:00 UTC")
+
   setup do
+    travel_to FROZEN_TIME
+
     @user = User.create!(email_address: "test@example.com", password: "password123")
     @credential = @user.create_microsoft_credential!(
       microsoft_user_id: "dcb75d6e-5dbf-4ed5-b82e-be9243b006b2",
@@ -15,6 +21,10 @@ class MicrosoftHistoricalImportServiceTest < ActiveSupport::TestCase
       status: "pending"
     )
     @logger = Logger.new("/dev/null")
+  end
+
+  teardown do
+    travel_back
   end
 
   test "counts emails across inbox and sentitems folders" do

@@ -42,17 +42,15 @@
     </span>
   </div>
 
-  <% if @task.due_date %>
-    <div class="info-card__row">
-      <span class="info-card__label"><%= t("tasks.fields.due_date") %></span>
-      <span class="info-card__value <%= 'txt-danger' if @task.due_date < Date.current && @task.status != 'done' %>">
-        <%= l(@task.due_date, format: :long) %>
-        <% if @task.due_date < Date.current && @task.status != 'done' %>
-          <span class="txt-sm"><%= t("tasks.overdue") %></span>
-        <% end %>
-      </span>
-    </div>
-  <% end %>
+  <div class="info-card__row">
+    <span class="info-card__label"><%= t("tasks.fields.due_date") %></span>
+    <span class="info-card__value">
+      <%= render "shared/due_date_field",
+          url: task_path(@task),
+          date: @task.due_date,
+          id: dom_id(@task, :due_date) %>
+    </span>
+  </div>
 
   <% if @task.contact %>
     <div class="info-card__row">

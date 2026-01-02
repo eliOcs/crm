@@ -1,0 +1,40 @@
+<%# Due Date Picker Component
+    locals:
+      - url: the update URL (PATCH endpoint)
+      - date: current due date (Date or nil)
+      - id: DOM id for Turbo Stream targeting (optional)
+      - field: field name for the request body (default: "due_date")
+%>
+<% id ||= "due_date_#{SecureRandom.hex(4)}" %>
+<% field ||= "due_date" %>
+<% urgency = due_date_urgency(date) %>
+
+<div id="<%= id %>"
+     class="due-date-picker-wrapper"
+     data-controller="due-date-picker"
+     data-due-date-picker-url-value="<%= url %>"
+     data-due-date-picker-field-value="<%= field %>"
+     data-due-date-picker-date-value="<%= date&.iso8601 %>"
+     data-due-date-picker-translations-value="<%= {
+       today: t('due_date.today'),
+       tomorrow: t('due_date.tomorrow'),
+       add: t('due_date.add'),
+       editTitle: t('due_date.edit_title'),
+       remove: t('due_date.remove'),
+       nextWeek: t('due_date.next_week'),
+       save: t('due_date.save'),
+       weekdays: t('due_date.weekdays'),
+       months: t('due_date.months')
+     }.to_json %>">
+
+  <%# Display trigger %>
+  <button type="button"
+          class="<%= due_date_class(date) %>"
+          data-action="click->due-date-picker#open"
+          data-due-date-picker-target="display">
+    <span class="due-date__icon" data-due-date-picker-target="icon">
+      <%= due_date_icon(urgency) %>
+    </span>
+    <span data-due-date-picker-target="label"><%= format_due_date(date) || t('due_date.add') %></span>
+  </button>
+</div>

@@ -26,8 +26,11 @@
                   options: Task::STATUSES.index_with { |s| t("tasks.statuses.#{s}") } %>
             </td>
             <td><%= link_to task.name, task %></td>
-            <td class="txt-sm <%= 'txt-danger' if task.due_date && task.due_date < Date.current && task.status != 'done' %>">
-              <%= l(task.due_date, format: :short) if task.due_date %>
+            <td>
+              <%= render "shared/due_date_field",
+                  url: task_path(task),
+                  date: task.due_date,
+                  id: dom_id(task, :due_date) %>
             </td>
             <td class="txt-sm txt-muted"><%= task.contact&.name || task.contact&.email %></td>
             <td class="txt-sm txt-muted"><%= time_ago_in_words(task.updated_at) %> <%= t("tasks.ago") %></td>
