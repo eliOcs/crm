@@ -3,6 +3,9 @@ source "https://rubygems.org"
 # Fix OpenSSL 3.6 CRL checking issue (https://github.com/ruby/openssl/issues/949)
 gem "openssl", ">= 3.3.1"
 
+# Minitest 6.x breaks Rails 8.1 (ArgumentError in line_filtering.rb)
+gem "minitest", "< 6"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
