@@ -6,6 +6,20 @@ This document outlines an email integration approach that works without requirin
 
 **Goal:** Provide a low-friction way for users to get emails into the CRM while the full Microsoft Graph API integration awaits IT approval.
 
+## Current Status: ✅ Infrastructure Complete
+
+**Inbound email is fully operational.** Emails sent to `*@inbox.mercuriocrm.es` are received by Postfix and processed by Rails ActionMailbox.
+
+Tested successfully on 2026-01-04:
+```
+curl --url "smtp://52.30.167.17:25" \
+  --mail-from "test@example.com" \
+  --mail-rcpt "user@inbox.mercuriocrm.es" \
+  --upload-file email.txt
+# → 250 2.0.0 Ok: queued as D21DB8004F
+# → Rails log: [InboundMailbox] Email processed successfully
+```
+
 ## Architecture
 
 Self-hosted approach using Postfix on the same server. No external dependencies, no data ping-ponging between services, portable across cloud providers.
@@ -61,6 +75,23 @@ Self-hosted approach using Postfix on the same server. No external dependencies,
 - No per-email costs
 - Lower latency (direct pipe to Rails)
 
+### Why HTTP Relay Instead of Maildir?
+
+We considered having Rails watch the filesystem for new emails (Maildir approach), but HTTP relay is better:
+
+| Aspect | HTTP Relay | Maildir Watch |
+|--------|------------|---------------|
+| Feedback loop | ✅ Postfix knows if Rails accepted/rejected | ❌ No feedback after Postfix accepts |
+| Retry logic | ✅ Postfix handles retries with backoff | ❌ Must implement custom retry |
+| State management | ✅ Postfix queue handles it | ❌ Track processed/failed files |
+| Processing delay | ✅ Immediate | ❌ Polling interval or inotify complexity |
+| Bounce handling | ✅ Proper SMTP bounce to sender | ❌ Email already accepted |
+
+The synchronous HTTP response lets Postfix manage the queue:
+- `204` → Email accepted, delete from queue
+- `500` → Temporary failure, retry with backoff
+- `422` → Permanent failure, bounce to sender
+
 ## User Experience
 
 ### Setup (One-time)
@@ -102,12 +133,15 @@ mercuriocrm.es.        IN  A   52.30.167.17
 
 #### Port 25 Access
 
-Most cloud providers block port 25 by default to prevent spam:
+**Important discovery:** AWS only blocks **outbound** port 25 (to prevent spam sending). **Inbound** port 25 is controlled by security groups and works immediately.
 
-- **AWS EC2:** Request port 25 unblock via support ticket (usually approved for legitimate use)
+- **AWS EC2 Inbound:** ✅ Works - just add port 25 to security group
+- **AWS EC2 Outbound:** Blocked by default, requires support ticket (not needed for receiving)
 - **DigitalOcean:** Unblocked by default after account age/verification
 - **Hetzner:** Unblocked by default
 - **Self-hosted/VPS:** Usually unblocked
+
+No AWS support ticket needed for our use case (receiving only).
 
 #### Postfix Installation
 
@@ -149,24 +183,42 @@ rails unix - n n - - pipe
   flags=DRXhu user=deploy argv=/home/deploy/crm/bin/rails action_mailbox:ingress:postfix
 ```
 
-#### Kamal Integration
+#### Kamal Integration (Implemented)
 
-Add Postfix to the Docker deployment:
+Custom Postfix container deployed as Kamal accessory:
 
 ```yaml
 # config/deploy.yml
 accessories:
   postfix:
-    image: boky/postfix  # or build custom
+    image: 225656797743.dkr.ecr.eu-west-1.amazonaws.com/crm-postfix
     host: 52.30.167.17
     port: "25:25"
     env:
-      ALLOWED_SENDER_DOMAINS: inbox.mercuriocrm.es
-    volumes:
-      - /var/spool/postfix:/var/spool/postfix
+      clear:
+        RAILS_INBOUND_HOST: crm-web:3000
+      secret:
+        - RAILS_INBOUND_EMAIL_PASSWORD
+    directories:
+      - postfix_spool:/var/spool/postfix
 ```
 
-Alternative: Run Postfix directly on host, outside Docker.
+**Key learnings:**
+- Use `network-alias: crm-web` on the Rails container for stable DNS (Kamal container names include a hash suffix)
+- ActionMailbox expects `RAILS_INBOUND_EMAIL_PASSWORD` env var (not a custom name)
+- Postfix needs `import_environment` and `export_environment` in main.cf to pass env vars to pipe scripts
+
+Docker files in `docker/postfix/`:
+- `Dockerfile` - Alpine-based with Postfix + curl
+- `main.cf` - Virtual domain config, rate limiting, relay rejection
+- `master.cf` - Defines `rails` transport piping to relay script
+- `relay-to-rails.sh` - POSTs email to ActionMailbox via HTTP
+
+Build and deploy:
+```bash
+bin/build-postfix   # Build and push to ECR
+bin/kamal accessory reboot postfix
+```
 
 ### Phase 2: Rails Integration
 
@@ -598,10 +650,12 @@ When Graph API is approved:
 ## Implementation Phases
 
 ### MVP (Phase 1-2)
-- [ ] Request AWS port 25 unblock
-- [ ] Install and configure Postfix
-- [ ] DNS MX record for inbox.mercuriocrm.es
-- [ ] ActionMailbox relay ingress setup
+- [x] ~~Request AWS port 25 unblock~~ Not needed - inbound works without approval
+- [x] Install and configure Postfix (Docker container as Kamal accessory)
+- [x] DNS MX record for inbox.mercuriocrm.es (Terraform)
+- [x] ActionMailbox relay ingress setup
+- [x] Rate limiting (10 conn/min, 30 msg/min per client)
+- [x] Relay rejection verified (`554 5.7.1 Relay access denied`)
 - [ ] User inbound email token migration
 - [ ] Basic email parsing (non-forwarded)
 - [ ] Settings UI to show/copy address
@@ -615,7 +669,7 @@ When Graph API is approved:
 
 ### Polish (Phase 5)
 - [ ] Approved sender addresses config
-- [ ] Rate limiting
+- [ ] Application-level rate limiting (per user)
 - [ ] Token rotation UI
 - [ ] Mail rule setup instructions per client (Outlook, Gmail)
 - [ ] Postfix TLS configuration
