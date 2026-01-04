@@ -145,4 +145,32 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
     assert_not_nil audit_log.source_email, "Audit log should reference source email"
     assert_equal imported_email.id, audit_log.source_email.id
   end
+
+  test "task description is replaced, not appended, on update" do
+    # Create initial task with description
+    task = @user.tasks.create!(
+      name: "Test Task",
+      description: "Original description from first email",
+      status: "incoming"
+    )
+
+    # Simulate enrichment service updating an existing task
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+
+    # Call the private method directly to test the replacement behavior
+    task_data = {
+      id: task.id,
+      description: "Updated description with latest info"
+    }
+
+    service.send(:update_existing_task, task_data, nil, nil, Time.current)
+
+    task.reload
+    description_text = task.description.to_plain_text
+
+    # Description should be replaced, not appended
+    assert_equal "Updated description with latest info", description_text
+    assert_not_includes description_text, "Original description"
+    assert_not_includes description_text, "---"  # No separator from old appending behavior
+  end
 end

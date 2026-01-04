@@ -326,11 +326,10 @@ class EmailEnrichmentService
 
     updates = {}
 
-    # Append new context to description
+    # Replace description with latest, most accurate information
+    # (audit log preserves history of changes)
     if task_data[:description].present?
-      existing_desc = task.description&.to_plain_text || ""
-      new_context = "\n\n---\nUpdate from #{@source_email&.source_path || 'unknown'}:\n#{task_data[:description]}"
-      updates[:description] = existing_desc + new_context
+      updates[:description] = task_data[:description]
     end
 
     # Update due date if new one is more urgent
