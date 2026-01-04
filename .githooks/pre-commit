@@ -16,6 +16,10 @@ npm run lint:css
 echo "=> Running ESLint..."
 npm run lint:js
 
+# Run Prettier format check
+echo "=> Checking Prettier formatting..."
+npm run format:check
+
 # Terraform checks (only if terraform files are staged)
 if git diff --cached --name-only | grep -q '^terraform/'; then
   echo "=> Running Terraform fmt..."

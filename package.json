@@ -9,12 +9,16 @@
     "lint:js": "eslint 'app/javascript/**/*.js'",
     "lint:js:fix": "eslint 'app/javascript/**/*.js' --fix",
     "lint": "npm run lint:css && npm run lint:js",
-    "lint:fix": "npm run lint:css:fix && npm run lint:js:fix"
+    "lint:fix": "npm run lint:css:fix && npm run lint:js:fix",
+    "format": "prettier --write 'app/javascript/**/*.js'",
+    "format:check": "prettier --check 'app/javascript/**/*.js'"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
     "globals": "^17.0.0",
+    "prettier": "^3.7.4",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1"
   }

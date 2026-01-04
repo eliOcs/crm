@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 // Polling controller - periodically reloads a Turbo Frame
 // Usage: data-controller="polling"
@@ -9,55 +9,58 @@ export default class extends Controller {
   static values = {
     interval: { type: Number, default: 5000 },
     active: { type: Boolean, default: true },
-    frame: { type: String, default: "" }
-  }
+    frame: { type: String, default: "" },
+  };
 
   connect() {
     if (this.activeValue) {
-      this.startPolling()
+      this.startPolling();
     }
   }
 
   disconnect() {
-    this.stopPolling()
+    this.stopPolling();
   }
 
   startPolling() {
     // Initial poll after short delay
     this.timer = setInterval(() => {
-      this.reload()
-    }, this.intervalValue)
+      this.reload();
+    }, this.intervalValue);
   }
 
   stopPolling() {
     if (this.timer) {
-      clearInterval(this.timer)
-      this.timer = null
+      clearInterval(this.timer);
+      this.timer = null;
     }
   }
 
   activeValueChanged() {
     if (this.activeValue) {
-      this.startPolling()
+      this.startPolling();
     } else {
-      this.stopPolling()
+      this.stopPolling();
     }
   }
 
   reload() {
-    const frame = this.findFrame()
-    if (!frame) return
+    const frame = this.findFrame();
+    if (!frame) return;
 
     // Get the base URL without any cache-busting params
-    const url = new URL(frame.src || frame.dataset.src, window.location.origin)
-    url.searchParams.set("_t", Date.now())
-    frame.src = url.toString()
+    const url = new URL(frame.src || frame.dataset.src, window.location.origin);
+    url.searchParams.set("_t", Date.now());
+    frame.src = url.toString();
   }
 
   findFrame() {
     if (this.frameValue) {
-      return document.getElementById(this.frameValue)
+      return document.getElementById(this.frameValue);
     }
-    return this.element.querySelector("turbo-frame") || this.element.closest("turbo-frame")
+    return (
+      this.element.querySelector("turbo-frame") ||
+      this.element.closest("turbo-frame")
+    );
   }
 }

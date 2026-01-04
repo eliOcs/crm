@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 // Auto-refresh controller - refreshes the parent turbo-frame periodically
 // Usage: data-controller="auto-refresh"
@@ -7,23 +7,23 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static values = {
     url: String,
-    interval: { type: Number, default: 3000 }
-  }
+    interval: { type: Number, default: 3000 },
+  };
 
   connect() {
-    this.timer = setTimeout(() => this.refresh(), this.intervalValue)
+    this.timer = setTimeout(() => this.refresh(), this.intervalValue);
   }
 
   disconnect() {
     if (this.timer) {
-      clearTimeout(this.timer)
+      clearTimeout(this.timer);
     }
   }
 
   refresh() {
-    const frame = this.element.closest("turbo-frame")
+    const frame = this.element.closest("turbo-frame");
     if (frame && this.urlValue) {
-      frame.src = this.urlValue + "?_t=" + Date.now()
+      frame.src = this.urlValue + "?_t=" + Date.now();
     }
   }
 }
