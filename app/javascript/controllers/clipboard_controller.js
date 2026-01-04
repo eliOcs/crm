@@ -5,9 +5,11 @@ import { Controller } from "@hotwired/stimulus"
 //        data-clipboard-target="source" on the element containing text to copy
 //        data-clipboard-target="button" on the button (optional)
 //        data-clipboard-target="label" on the button's label span
+//        data-clipboard-target="icon" on the copy icon (optional)
+//        data-clipboard-target="checkIcon" on the check icon (optional)
 //        data-action="clipboard#copy" on the button
 export default class extends Controller {
-  static targets = ["source", "button", "label"]
+  static targets = ["source", "button", "label", "icon", "checkIcon"]
 
   async copy(event) {
     event.preventDefault()
@@ -36,19 +38,33 @@ export default class extends Controller {
   }
 
   showCopiedFeedback() {
-    if (!this.hasLabelTarget) return
+    // Update label text
+    if (this.hasLabelTarget) {
+      this.originalText = this.originalText || this.labelTarget.textContent
+      this.labelTarget.textContent = this.labelTarget.dataset.copiedText || "Copied!"
+    }
 
-    const originalText = this.labelTarget.textContent
-    this.labelTarget.textContent = this.labelTarget.dataset.copiedText || "Copied!"
+    // Swap icons
+    if (this.hasIconTarget && this.hasCheckIconTarget) {
+      this.iconTarget.classList.add("hidden")
+      this.checkIconTarget.classList.remove("hidden")
+    }
 
+    // Add success state to button
     if (this.hasButtonTarget) {
-      this.buttonTarget.classList.add("btn--success")
+      this.buttonTarget.classList.add("copied")
     }
 
     setTimeout(() => {
-      this.labelTarget.textContent = originalText
+      if (this.hasLabelTarget) {
+        this.labelTarget.textContent = this.originalText
+      }
+      if (this.hasIconTarget && this.hasCheckIconTarget) {
+        this.iconTarget.classList.remove("hidden")
+        this.checkIconTarget.classList.add("hidden")
+      }
       if (this.hasButtonTarget) {
-        this.buttonTarget.classList.remove("btn--success")
+        this.buttonTarget.classList.remove("copied")
       }
     }, 2000)
   }
