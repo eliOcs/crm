@@ -69,6 +69,10 @@
     padding: var(--card-padding);
   }
 
+  .info-card + .info-card {
+    margin-block-start: var(--block-space-double);
+  }
+
   .info-card__header {
     display: flex;
     align-items: center;
