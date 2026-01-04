@@ -1,0 +1,13 @@
+{
+  "name": "crm",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "lint:css": "stylelint 'app/assets/stylesheets/**/*.css'",
+    "lint:css:fix": "stylelint 'app/assets/stylesheets/**/*.css' --fix"
+  },
+  "devDependencies": {
+    "stylelint": "^16.26.1",
+    "stylelint-config-standard": "^39.0.1"
+  }
+}

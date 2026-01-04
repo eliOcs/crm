@@ -140,7 +140,7 @@
     overflow-x: auto;
     margin-block-end: var(--block-space);
     white-space: pre-wrap;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     & code {
       background: none;

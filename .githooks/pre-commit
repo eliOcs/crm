@@ -8,6 +8,10 @@ echo "=> Running Rubocop..."
 bin/rubocop --force-exclusion -A
 git add -u
 
+# Run Stylelint for CSS
+echo "=> Running Stylelint..."
+npm run lint:css
+
 # Terraform checks (only if terraform files are staged)
 if git diff --cached --name-only | grep -q '^terraform/'; then
   echo "=> Running Terraform fmt..."
