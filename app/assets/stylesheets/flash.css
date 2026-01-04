@@ -1,43 +1,97 @@
 @layer components {
-  .flash {
-    padding: var(--block-space) var(--inline-space);
-    border-radius: var(--input-radius);
-    font-size: var(--text-sm);
-    margin-block-end: var(--block-space);
-  }
-
-  .flash--notice,
-  .flash--success {
-    background-color: var(--color-positive-light);
-    color: var(--color-positive);
-    border: 1px solid oklch(var(--lch-positive) / 30%);
-  }
-
-  .flash--alert,
-  .flash--error {
-    background-color: var(--color-negative-light);
-    color: var(--color-negative);
-    border: 1px solid oklch(var(--lch-negative) / 30%);
-  }
-
-  .flash--warning {
-    background-color: oklch(var(--lch-orange-light));
-    color: oklch(60% 0.12 55);
-    border: 1px solid oklch(var(--lch-orange) / 30%);
-  }
-
-  .flash--info {
-    background-color: oklch(var(--lch-beige));
-    color: var(--color-ink);
-    border: 1px solid var(--color-border);
-  }
-
-  /* Flash container for stacking multiple flashes */
-  .flash-container {
-    margin-block-end: var(--block-space);
+  /* Toast container - fixed bottom right */
+  .toast-container {
+    position: fixed;
+    inset-block-end: var(--block-space);
+    inset-inline-end: var(--inline-space);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    pointer-events: none;
 
     &:empty {
       display: none;
+    }
+  }
+
+  /* Individual toast */
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--input-radius);
+    font-size: var(--text-sm);
+    box-shadow: 0 4px 12px oklch(0% 0 0 / 15%);
+    pointer-events: auto;
+    max-inline-size: 24rem;
+    animation: toast-in 0.3s ease-out;
+  }
+
+  .toast--notice,
+  .toast--success {
+    background-color: var(--color-positive);
+    color: white;
+  }
+
+  .toast--alert,
+  .toast--error {
+    background-color: var(--color-negative);
+    color: white;
+  }
+
+  .toast--warning {
+    background-color: oklch(var(--lch-orange));
+    color: white;
+  }
+
+  .toast--info {
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  .toast__close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 0;
+    margin-inline-start: auto;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  /* Exit animation class */
+  .toast--exiting {
+    animation: toast-out 0.2s ease-in forwards;
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateX(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes toast-out {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(1rem);
     }
   }
 }
