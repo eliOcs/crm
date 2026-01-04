@@ -69,8 +69,11 @@
      Typography
      Swiss Style: clean sans-serif, high readability
      ------------------------------------------------------------------------- */
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+  --font-mono:
+    ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -92,7 +95,11 @@
      Layout
      ------------------------------------------------------------------------- */
   --container-max: 72rem;
-  --container-padding: clamp(var(--inline-space), 4vw, var(--inline-space-triple));
+  --container-padding: clamp(
+    var(--inline-space),
+    4vw,
+    var(--inline-space-triple)
+  );
 
   /* -------------------------------------------------------------------------
      Components
@@ -127,8 +134,8 @@
 
   /* Shadows - subtle for flat design */
   --shadow-sm: 0 1px 2px oklch(var(--lch-ink) / 5%);
-  --shadow-md: 0 2px 4px oklch(var(--lch-ink) / 5%),
-               0 4px 8px oklch(var(--lch-ink) / 5%);
+  --shadow-md:
+    0 2px 4px oklch(var(--lch-ink) / 5%), 0 4px 8px oklch(var(--lch-ink) / 5%);
 
   /* Transitions */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);

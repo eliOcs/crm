@@ -10,8 +10,8 @@
     "lint:js:fix": "eslint 'app/javascript/**/*.js' --fix",
     "lint": "npm run lint:css && npm run lint:js",
     "lint:fix": "npm run lint:css:fix && npm run lint:js:fix",
-    "format": "prettier --write 'app/javascript/**/*.js'",
-    "format:check": "prettier --check 'app/javascript/**/*.js'"
+    "format": "prettier --write 'app/javascript/**/*.js' 'app/assets/stylesheets/**/*.css'",
+    "format:check": "prettier --check 'app/javascript/**/*.js' 'app/assets/stylesheets/**/*.css'"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

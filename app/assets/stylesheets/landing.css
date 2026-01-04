@@ -33,7 +33,7 @@
   .landing__hero::before {
     inline-size: 35rem;
     block-size: 35rem;
-    background-color: oklch(70% 0.10 230); /* Blue */
+    background-color: oklch(70% 0.1 230); /* Blue */
     inset-block-start: -10rem;
     inset-inline-end: -5rem;
   }
@@ -41,7 +41,7 @@
   .landing__hero::after {
     inline-size: 30rem;
     block-size: 30rem;
-    background-color: oklch(80% 0.10 55); /* Warm peach/orange */
+    background-color: oklch(80% 0.1 55); /* Warm peach/orange */
     inset-block-end: -10rem;
     inset-inline-start: 10%;
   }
@@ -276,7 +276,7 @@
   .landing__cta-section::before {
     inline-size: 25rem;
     block-size: 25rem;
-    background-color: oklch(80% 0.10 55); /* Warm peach */
+    background-color: oklch(80% 0.1 55); /* Warm peach */
     inset-block-start: -8rem;
     inset-inline-start: -5rem;
   }
@@ -284,7 +284,7 @@
   .landing__cta-section::after {
     inline-size: 30rem;
     block-size: 30rem;
-    background-color: oklch(70% 0.10 230); /* Blue */
+    background-color: oklch(70% 0.1 230); /* Blue */
     inset-block-end: -12rem;
     inset-inline-end: -8rem;
   }
