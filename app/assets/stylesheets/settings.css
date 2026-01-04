@@ -1,5 +1,55 @@
 @layer components {
   /* -------------------------------------------------------------------------
+     Toggle switch
+     ------------------------------------------------------------------------- */
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--inline-space);
+    cursor: pointer;
+  }
+
+  .toggle__input {
+    appearance: none;
+    position: relative;
+    inline-size: 2.5rem;
+    block-size: 1.5rem;
+    background-color: var(--color-border);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 0.125rem;
+      inset-inline-start: 0.125rem;
+      inline-size: 1.25rem;
+      block-size: 1.25rem;
+      background-color: oklch(var(--lch-white));
+      border-radius: 50%;
+      transition: transform 0.2s ease;
+    }
+
+    &:checked {
+      background-color: var(--color-primary);
+
+      &::before {
+        transform: translateX(1rem);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  .toggle__label {
+    font-weight: var(--weight-medium);
+  }
+
+  /* -------------------------------------------------------------------------
      Inbound email address (copy-to-clipboard)
      ------------------------------------------------------------------------- */
   .inbound-email-address {

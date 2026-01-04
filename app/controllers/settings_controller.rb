@@ -63,6 +63,6 @@ class SettingsController < ApplicationController
   private
 
   def settings_params
-    params.expect(user: [ :locale ])
+    params.expect(user: [ :locale, :inbound_email_enabled ])
   end
 end

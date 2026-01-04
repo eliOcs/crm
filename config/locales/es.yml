@@ -238,6 +238,8 @@ es:
     inbound_email:
       title: "Reenvío de Correos"
       description: "Reenvía correos a Mercurio para extraer automáticamente contactos y tareas. Configura una regla en Outlook o Gmail para reenviar correos a tu dirección única."
+      enabled: "Activar reenvío de correos"
+      enabled_hint: "Cuando está desactivado, los correos reenviados se descartarán silenciosamente. Desactívalo si usas la integración de Microsoft para el mismo buzón."
       your_address: "Tu dirección Mercurio"
       copy: "Copiar"
       copied: "¡Copiado!"

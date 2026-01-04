@@ -238,6 +238,8 @@ en:
     inbound_email:
       title: "Email Forwarding"
       description: "Forward emails to Mercurio to automatically extract contacts and tasks. Set up a mail rule in Outlook or Gmail to forward emails to your unique address."
+      enabled: "Enable email forwarding"
+      enabled_hint: "When disabled, forwarded emails will be silently discarded. Disable this if you're using the Microsoft integration for the same mailbox."
       your_address: "Your Mercurio address"
       copy: "Copy"
       copied: "Copied!"

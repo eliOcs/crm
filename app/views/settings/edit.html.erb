@@ -26,42 +26,54 @@
   <h2><%= t("settings.inbound_email.title") %></h2>
   <p class="field__hint mar-b-md"><%= t("settings.inbound_email.description") %></p>
 
-  <div class="field">
-    <label><%= t("settings.inbound_email.your_address") %></label>
-    <div class="inbound-email-address" data-controller="clipboard">
-      <code class="inbound-email-address__value" data-clipboard-target="source"><%= Current.user.inbound_email_address %></code>
-      <button type="button" class="btn btn--secondary btn--small" data-action="clipboard#copy" data-clipboard-target="button">
-        <span data-clipboard-target="label"><%= t("settings.inbound_email.copy") %></span>
-      </button>
+  <%= form_with model: Current.user, url: settings_path, method: :patch, class: "form", data: { controller: "auto-submit" } do |form| %>
+    <div class="field">
+      <label class="toggle">
+        <%= form.check_box :inbound_email_enabled, class: "toggle__input", data: { action: "change->auto-submit#submit" } %>
+        <span class="toggle__label"><%= t("settings.inbound_email.enabled") %></span>
+      </label>
+      <p class="field__hint"><%= t("settings.inbound_email.enabled_hint") %></p>
     </div>
-  </div>
+  <% end %>
 
-  <details class="forwarding-instructions mar-t-md">
-    <summary class="forwarding-instructions__summary"><%= t("settings.inbound_email.instructions") %></summary>
-    <div class="forwarding-instructions__content">
-      <h4><%= t("settings.inbound_email.instructions_outlook.title") %></h4>
-      <ol>
-        <% t("settings.inbound_email.instructions_outlook.steps").each do |step| %>
-          <li><%= step %></li>
-        <% end %>
-      </ol>
-
-      <h4><%= t("settings.inbound_email.instructions_gmail.title") %></h4>
-      <ol>
-        <% t("settings.inbound_email.instructions_gmail.steps").each do |step| %>
-          <li><%= step %></li>
-        <% end %>
-      </ol>
+  <% if Current.user.inbound_email_enabled? %>
+    <div class="field mar-t-md">
+      <label><%= t("settings.inbound_email.your_address") %></label>
+      <div class="inbound-email-address" data-controller="clipboard">
+        <code class="inbound-email-address__value" data-clipboard-target="source"><%= Current.user.inbound_email_address %></code>
+        <button type="button" class="btn btn--secondary btn--small" data-action="clipboard#copy" data-clipboard-target="button">
+          <span data-clipboard-target="label"><%= t("settings.inbound_email.copy") %></span>
+        </button>
+      </div>
     </div>
-  </details>
 
-  <div class="mar-t-md">
-    <%= button_to t("settings.inbound_email.regenerate"),
-          regenerate_inbound_email_settings_path,
-          method: :post,
-          class: "btn btn--secondary btn--small",
-          data: { turbo_confirm: t("settings.inbound_email.regenerate_confirm") } %>
-  </div>
+    <details class="forwarding-instructions mar-t-md">
+      <summary class="forwarding-instructions__summary"><%= t("settings.inbound_email.instructions") %></summary>
+      <div class="forwarding-instructions__content">
+        <h4><%= t("settings.inbound_email.instructions_outlook.title") %></h4>
+        <ol>
+          <% t("settings.inbound_email.instructions_outlook.steps").each do |step| %>
+            <li><%= step %></li>
+          <% end %>
+        </ol>
+
+        <h4><%= t("settings.inbound_email.instructions_gmail.title") %></h4>
+        <ol>
+          <% t("settings.inbound_email.instructions_gmail.steps").each do |step| %>
+            <li><%= step %></li>
+          <% end %>
+        </ol>
+      </div>
+    </details>
+
+    <div class="mar-t-md">
+      <%= button_to t("settings.inbound_email.regenerate"),
+            regenerate_inbound_email_settings_path,
+            method: :post,
+            class: "btn btn--secondary btn--small",
+            data: { turbo_confirm: t("settings.inbound_email.regenerate_confirm") } %>
+    </div>
+  <% end %>
 </div>
 
 <div class="info-card">

@@ -7,6 +7,11 @@ class InboundMailbox < ApplicationMailbox
       return
     end
 
+    unless user.inbound_email_enabled?
+      Rails.logger.info "[InboundMailbox] Inbound email disabled for user #{user.id}, discarding"
+      return
+    end
+
     email = create_email_record(user)
     if email
       import_attachments(email)

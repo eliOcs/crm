@@ -98,4 +98,17 @@ class InboundMailboxTest < ActionMailbox::TestCase
     assert_equal "Plain text version", email.body_plain
     assert_includes email.body_html, "<p>HTML version</p>"
   end
+
+  test "discards email when inbound_email_enabled is false" do
+    @user.update!(inbound_email_enabled: false)
+
+    assert_no_difference -> { @user.emails.count } do
+      receive_inbound_email_from_mail(
+        to: @user.inbound_email_address,
+        from: "sender@example.com",
+        subject: "Should be discarded",
+        body: "This email should not be saved"
+      )
+    end
+  end
 end
