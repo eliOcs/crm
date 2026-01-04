@@ -244,21 +244,20 @@ en:
       your_address: "Your unique forwarding address"
       copy: "Copy"
       copied: "Copied!"
-      regenerate: "Generate new address"
-      regenerate_confirm: "Are you sure? Your current forwarding rules will stop working until you update them with the new address."
-      regenerated: "New address generated. Update your forwarding rules."
       instructions: "How to set up"
+      active: "Active"
+      inactive: "Inactive"
       instructions_outlook:
         title: "Outlook"
         steps:
-          - "Go to <strong>Settings</strong> → <strong>Mail</strong> → <strong>Rules</strong>"
+          - "Go to <strong>Settings</strong> › <strong>Mail</strong> › <strong>Rules</strong>"
           - "Create a new rule for <strong>all incoming messages</strong>"
-          - "Add action: <strong>Forward to</strong> and paste your address"
+          - "Add action: <strong>Forward to</strong> and paste <strong>your address above</strong>"
       instructions_gmail:
         title: "Gmail"
         steps:
-          - "Go to <strong>Settings</strong> → <strong>See all settings</strong> → <strong>Forwarding</strong>"
-          - "Click <strong>Add a forwarding address</strong> and paste your address"
+          - "Go to <strong>Settings</strong> › <strong>See all settings</strong> › <strong>Forwarding</strong>"
+          - "Click <strong>Add a forwarding address</strong> and paste <strong>your address above</strong>"
           - "Verify the address, then set <strong>Forward a copy</strong>"
     microsoft:
       title: "Microsoft 365"

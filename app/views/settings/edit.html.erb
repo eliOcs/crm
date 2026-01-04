@@ -31,7 +31,9 @@
     <%= form_with model: Current.user, url: settings_path, method: :patch, data: { controller: "auto-submit" } do |form| %>
       <label class="toggle">
         <%= form.check_box :inbound_email_enabled, class: "toggle__input", data: { action: "change->auto-submit#submit" } %>
-        <span class="sr-only"><%= t("settings.inbound_email.enabled") %></span>
+        <span class="toggle__status <%= 'toggle__status--active' if Current.user.inbound_email_enabled? %>">
+          <%= Current.user.inbound_email_enabled? ? t("settings.inbound_email.active") : t("settings.inbound_email.inactive") %>
+        </span>
       </label>
     <% end %>
   </div>
@@ -49,19 +51,8 @@
           <svg data-clipboard-target="checkIcon" class="forwarding-address__icon forwarding-address__icon--check hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          <span data-clipboard-target="label" class="forwarding-address__copy-label"><%= t("settings.inbound_email.copy") %></span>
+          <span data-clipboard-target="label" data-copied-text="<%= t("settings.inbound_email.copied") %>" class="forwarding-address__copy-label"><%= t("settings.inbound_email.copy") %></span>
         </button>
-      </div>
-      <div class="forwarding-address__actions">
-        <%= button_to regenerate_inbound_email_settings_path,
-              method: :post,
-              class: "forwarding-address__regenerate",
-              data: { turbo_confirm: t("settings.inbound_email.regenerate_confirm") } do %>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="forwarding-address__regenerate-icon">
-            <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/>
-          </svg>
-          <%= t("settings.inbound_email.regenerate") %>
-        <% end %>
       </div>
     </div>
 
@@ -70,16 +61,37 @@
         <span class="forwarding-setup__title"><%= t("settings.inbound_email.instructions") %></span>
         <div class="forwarding-setup__tabs">
           <button type="button" class="forwarding-setup__tab forwarding-setup__tab--active" data-tabs-target="tab" data-action="tabs#switch" data-tab="outlook">
-            <svg class="forwarding-setup__tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="4" width="20" height="16" rx="2"/>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            <svg class="forwarding-setup__tab-icon" viewBox="0 0 1831 1703">
+              <path fill="#0A2767" d="M1831.083,894.25c0.1-14.318-7.298-27.644-19.503-35.131h-0.213l-0.767-0.426l-634.492-375.585c-2.74-1.851-5.583-3.543-8.517-5.067c-24.498-12.639-53.599-12.639-78.098,0c-2.934,1.525-5.777,3.216-8.517,5.067L446.486,858.693l-0.766,0.426c-19.392,12.059-25.337,37.556-13.278,56.948c3.553,5.714,8.447,10.474,14.257,13.868l634.492,375.585c2.749,1.835,5.592,3.527,8.517,5.068c24.498,12.639,53.599,12.639,78.098,0c2.925-1.541,5.767-3.232,8.517-5.068l634.492-375.585C1823.49,922.545,1831.228,908.923,1831.083,894.25z"/>
+              <path fill="#0364B8" d="M520.453,643.477h416.38v381.674h-416.38V643.477z M1745.917,255.5V80.908c1-43.652-33.552-79.862-77.203-80.908H588.204C544.552,1.046,510,37.256,511,80.908V255.5l638.75,170.333L1745.917,255.5z"/>
+              <path fill="#0078D4" d="M511,255.5h425.833v383.25H511V255.5z"/>
+              <path fill="#28A8EA" d="M1362.667,255.5H936.833v383.25L1362.667,1022h383.25V638.75L1362.667,255.5z"/>
+              <path fill="#0078D4" d="M936.833,638.75h425.833V1022H936.833V638.75z"/>
+              <path fill="#0364B8" d="M936.833,1022h425.833v383.25H936.833V1022z"/>
+              <path fill="#14447D" d="M520.453,1025.151h416.38v346.969h-416.38V1025.151z"/>
+              <path fill="#0078D4" d="M1362.667,1022h383.25v383.25h-383.25V1022z"/>
+              <path fill="#1490DF" d="M1811.58,927.593l-0.809,0.468l-634.492,356.848c-2.768,1.703-5.578,3.321-8.517,4.769c-24.641,12.038-53.457,12.038-78.098,0c-2.918-1.445-5.76-3.037-8.517-4.769L446.657,928.061l-0.766-0.468c-12.25-6.642-19.93-19.409-20.057-33.343v722.384c0.305,48.188,39.616,87.004,87.803,86.7c0.001,0,0.002,0,0.004,0h1229.636c48.188,0.307,87.5-38.509,87.807-86.696c0-0.001,0-0.002,0-0.004V894.25C1831.068,908.067,1823.616,920.807,1811.58,927.593z"/>
+              <path fill="#28A8EA" d="M514.833,1703.333h1228.316c18.901,0.096,37.335-5.874,52.59-17.033l-697.089-408.331c-2.929-1.47-5.773-3.105-8.517-4.897L447.125,906.088h-0.298l-20.993-11.838v719.914C425.786,1663.364,465.632,1703.286,514.833,1703.333z"/>
+              <path fill="url(#outlook-gradient)" d="M78.055,383.25h780.723c43.109,0,78.055,34.947,78.055,78.055v780.723c0,43.109-34.946,78.055-78.055,78.055H78.055c-43.109,0-78.055-34.947-78.055-78.055V461.305C0,418.197,34.947,383.25,78.055,383.25z"/>
+              <path fill="#FFFFFF" d="M243.96,710.631c19.238-40.988,50.29-75.289,89.17-98.495c43.057-24.651,92.081-36.94,141.675-35.515c45.965-0.997,91.321,10.655,131.114,33.683c37.414,22.312,67.547,55.004,86.742,94.109c20.904,43.09,31.322,90.512,30.405,138.396c1.013,50.043-9.706,99.628-31.299,144.783c-19.652,40.503-50.741,74.36-89.425,97.388c-41.327,23.734-88.367,35.692-136.011,34.578c-46.947,1.133-93.303-10.651-134.01-34.067c-37.738-22.341-68.249-55.07-87.892-94.28c-21.028-42.467-31.57-89.355-30.745-136.735C212.808,804.859,223.158,755.686,243.96,710.631z M339.006,941.858c10.257,25.912,27.651,48.385,50.163,64.812c22.93,16.026,50.387,24.294,78.353,23.591c29.783,1.178,59.14-7.372,83.634-24.358c22.227-16.375,39.164-38.909,48.715-64.812c10.677-28.928,15.946-59.572,15.543-90.404c0.33-31.127-4.623-62.084-14.649-91.554c-8.855-26.607-25.246-50.069-47.182-67.537c-23.88-17.79-53.158-26.813-82.91-25.55c-28.572-0.74-56.644,7.593-80.184,23.804c-22.893,16.496-40.617,39.168-51.1,65.365c-23.255,60.049-23.376,126.595-0.341,186.728L339.006,941.858z"/>
+              <path fill="#50D9FF" d="M1362.667,255.5h383.25v383.25h-383.25V255.5z"/>
+              <defs>
+                <linearGradient id="outlook-gradient" x1="162.75" y1="322.26" x2="774.09" y2="1381.07" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#1784D9"/>
+                  <stop offset="0.5" stop-color="#107AD5"/>
+                  <stop offset="1" stop-color="#0A63C9"/>
+                </linearGradient>
+              </defs>
             </svg>
             Outlook
           </button>
           <button type="button" class="forwarding-setup__tab" data-tabs-target="tab" data-action="tabs#switch" data-tab="gmail">
-            <svg class="forwarding-setup__tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="4" width="20" height="16" rx="2"/>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            <svg class="forwarding-setup__tab-icon" viewBox="0 0 134 100">
+              <path d="M9.09091 100H30.303V48.4848L0 25.7576V90.9091C0 95.9394 4.07576 100 9.09091 100Z" fill="#4285F4"/>
+              <path d="M103.03 100H124.242C129.273 100 133.333 95.9242 133.333 90.9091V25.7576L103.03 48.4848" fill="#34A853"/>
+              <path d="M103.03 9.09091V48.4848L133.333 25.7576V13.6364C133.333 2.39394 120.5 -4.01515 111.515 2.72727" fill="#FBBC04"/>
+              <path d="M30.303 48.4848V9.09091L66.6667 36.3636L103.03 9.09091V48.4848L66.6667 75.7576" fill="#EA4335"/>
+              <path d="M0 13.6364V25.7576L30.303 48.4848V9.09091L21.8182 2.72727C12.8182 -4.01515 0 2.39394 0 13.6364" fill="#C5221F"/>
             </svg>
             Gmail
           </button>

@@ -244,21 +244,20 @@ es:
       your_address: "Tu dirección de reenvío única"
       copy: "Copiar"
       copied: "¡Copiado!"
-      regenerate: "Generar nueva dirección"
-      regenerate_confirm: "¿Estás seguro? Tus reglas de reenvío actuales dejarán de funcionar hasta que las actualices."
-      regenerated: "Nueva dirección generada. Actualiza tus reglas de reenvío."
       instructions: "Cómo configurar"
+      active: "Activado"
+      inactive: "Desactivado"
       instructions_outlook:
         title: "Outlook"
         steps:
-          - "Ve a <strong>Configuración</strong> → <strong>Correo</strong> → <strong>Reglas</strong>"
+          - "Ve a <strong>Configuración</strong> › <strong>Correo</strong> › <strong>Reglas</strong>"
           - "Crea una nueva regla para <strong>todos los mensajes entrantes</strong>"
-          - "Añade acción: <strong>Reenviar a</strong> y pega tu dirección"
+          - "Añade acción: <strong>Reenviar a</strong> y pega <strong>la dirección de arriba</strong>"
       instructions_gmail:
         title: "Gmail"
         steps:
-          - "Ve a <strong>Configuración</strong> → <strong>Ver todos los ajustes</strong> → <strong>Reenvío</strong>"
-          - "Haz clic en <strong>Añadir dirección de reenvío</strong> y pega tu dirección"
+          - "Ve a <strong>Configuración</strong> › <strong>Ver todos los ajustes</strong> › <strong>Reenvío</strong>"
+          - "Haz clic en <strong>Añadir dirección de reenvío</strong> y pega <strong>la dirección de arriba</strong>"
           - "Verifica la dirección, luego configura <strong>Reenviar una copia</strong>"
     microsoft:
       title: "Microsoft 365"

@@ -5,7 +5,6 @@ Rails.application.routes.draw do
     post :start_microsoft_import
     delete "microsoft_import/:id", action: :cancel_microsoft_import, as: :cancel_microsoft_import
     get :microsoft_import_status
-    post :regenerate_inbound_email
   end
   resources :passwords, param: :token
 

@@ -21,13 +21,6 @@ class UserTest < ActiveSupport::TestCase
     assert_equal expected, user.inbound_email_address
   end
 
-  test "regenerate_inbound_email_token! changes the token" do
-    user = users(:one)
-    old_token = user.inbound_email_token
-    user.regenerate_inbound_email_token!
-    assert_not_equal old_token, user.inbound_email_token
-  end
-
   test "find_by_inbound_email returns user by token" do
     user = users(:one)
     recipient = "whatever.#{user.inbound_email_token}@inbox.mercuriocrm.es"

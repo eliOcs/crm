@@ -55,11 +55,6 @@ class SettingsController < ApplicationController
     render partial: "microsoft_import_status"
   end
 
-  def regenerate_inbound_email
-    Current.user.regenerate_inbound_email_token!
-    redirect_to edit_settings_path, notice: t("settings.inbound_email.regenerated")
-  end
-
   private
 
   def settings_params

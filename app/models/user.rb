@@ -23,12 +23,6 @@ class User < ApplicationRecord
     "#{email_prefix}.#{inbound_email_token}@#{INBOUND_EMAIL_DOMAIN}"
   end
 
-  # Regenerate the token (e.g., if compromised)
-  def regenerate_inbound_email_token!
-    generate_inbound_email_token
-    save!
-  end
-
   # Find user by the local part of an inbound email (before @)
   def self.find_by_inbound_email(recipient)
     return nil unless recipient.to_s.downcase.end_with?("@#{INBOUND_EMAIL_DOMAIN}")
