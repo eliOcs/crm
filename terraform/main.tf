@@ -204,3 +204,19 @@ resource "aws_route53_record" "main_mx" {
   ttl     = 300
   records = ["10 ${var.domain_name}"]
 }
+
+# A record for mail server hostname (required for reverse DNS)
+resource "aws_route53_record" "mail_a" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = "mail.${var.domain_name}"
+  type    = "A"
+  ttl     = 300
+  records = [aws_eip.crm.public_ip]
+}
+
+# Reverse DNS for Elastic IP (PTR record: IP -> mail.mercuriocrm.es)
+# Required for proper email server identification
+resource "aws_eip_domain_name" "crm_rdns" {
+  allocation_id = aws_eip.crm.allocation_id
+  domain_name   = "mail.${var.domain_name}"
+}
