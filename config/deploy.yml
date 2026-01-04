@@ -32,7 +32,7 @@ env:
     - ANTHROPIC_API_KEY
     - MICROSOFT_CLIENT_ID
     - MICROSOFT_CLIENT_SECRET
-    - ACTION_MAILBOX_RELAY_PASSWORD
+    - RAILS_INBOUND_EMAIL_PASSWORD
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
@@ -92,6 +92,6 @@ accessories:
       clear:
         RAILS_INBOUND_HOST: crm-web:3000
       secret:
-        - ACTION_MAILBOX_RELAY_PASSWORD
+        - RAILS_INBOUND_EMAIL_PASSWORD
     directories:
       - postfix_spool:/var/spool/postfix

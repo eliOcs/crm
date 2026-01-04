@@ -2,8 +2,8 @@
 # and forwarding to Rails ActionMailbox
 
 # Import and export environment variables for pipe commands
-import_environment = ACTION_MAILBOX_RELAY_PASSWORD RAILS_INBOUND_HOST
-export_environment = ACTION_MAILBOX_RELAY_PASSWORD RAILS_INBOUND_HOST
+import_environment = RAILS_INBOUND_EMAIL_PASSWORD RAILS_INBOUND_HOST
+export_environment = RAILS_INBOUND_EMAIL_PASSWORD RAILS_INBOUND_HOST
 
 # Basic identity
 myhostname = mail.mercuriocrm.es

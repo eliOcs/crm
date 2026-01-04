@@ -9,10 +9,10 @@
 set -e
 
 RAILS_HOST="${RAILS_INBOUND_HOST:-crm-web:3000}"
-RAILS_PASSWORD="${ACTION_MAILBOX_RELAY_PASSWORD:-}"
+RAILS_PASSWORD="${RAILS_INBOUND_EMAIL_PASSWORD:-}"
 
 if [ -z "$RAILS_PASSWORD" ]; then
-  echo "ERROR: ACTION_MAILBOX_RELAY_PASSWORD not set" >&2
+  echo "ERROR: RAILS_INBOUND_EMAIL_PASSWORD not set" >&2
   exit 75  # Temp failure, retry later
 fi
 

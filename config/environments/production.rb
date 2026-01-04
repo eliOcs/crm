@@ -77,8 +77,8 @@ Rails.application.configure do
   config.i18n.fallbacks = true
 
   # ActionMailbox: receive inbound emails via Postfix relay
+  # Password is read from ENV["RAILS_INBOUND_EMAIL_PASSWORD"] or credentials
   config.action_mailbox.ingress = :relay
-  config.action_mailbox.ingress_password = ENV["ACTION_MAILBOX_RELAY_PASSWORD"]
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
