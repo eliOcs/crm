@@ -8,6 +8,16 @@ echo "=> Running Rubocop..."
 bin/rubocop --force-exclusion -A
 git add -u
 
+# Terraform checks (only if terraform files are staged)
+if git diff --cached --name-only | grep -q '^terraform/'; then
+  echo "=> Running Terraform fmt..."
+  terraform -chdir=terraform fmt
+  git add terraform/
+
+  echo "=> Running Terraform validate..."
+  terraform -chdir=terraform validate
+fi
+
 # Security scans
 echo "=> Running Brakeman security scan..."
 bin/brakeman --no-pager -q
