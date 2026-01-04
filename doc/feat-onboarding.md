@@ -1,0 +1,2 @@
+- Make use of empty states (tasks, companies, contacts) to explain how these get populated and when
+- If no integrations to feed the CRM have been setup show the integrations screens so they can be set right there

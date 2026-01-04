@@ -1,0 +1,3 @@
+- explain to the user how to create a email backups from popular email clients like outlook and gmail (inbox + sent folders)
+- allow the user to upload an email backup
+- process the email backup
