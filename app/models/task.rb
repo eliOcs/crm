@@ -6,6 +6,7 @@ class Task < ApplicationRecord
   belongs_to :company, optional: true
 
   has_many :audit_logs, as: :auditable, dependent: :destroy
+  has_rich_text :description
 
   validates :name, presence: true
   validates :status, presence: true, inclusion: { in: STATUSES }

@@ -1,0 +1,21 @@
+<% field ||= :notes %>
+<% title ||= t("rich_text.#{field}.title", default: t("notes.title")) %>
+<%= turbo_frame_tag dom_id(record, field) do %>
+  <%= form_with model: record,
+                url: polymorphic_path(record),
+                method: :patch do |form| %>
+    <div class="section__header">
+      <h2 class="section__title"><%= title %></h2>
+      <div class="section__actions">
+        <%= link_to t("common.cancel"),
+            polymorphic_path(record),
+            class: "btn btn--ghost btn--sm",
+            data: { turbo_frame: dom_id(record, field) } %>
+        <%= form.submit t("common.save"), class: "btn btn--primary btn--sm" %>
+      </div>
+    </div>
+
+    <%= form.rich_text_area field,
+        placeholder: t("rich_text.#{field}.placeholder", default: t("notes.placeholder")) %>
+  <% end %>
+<% end %>

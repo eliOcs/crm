@@ -192,13 +192,32 @@ en:
       source: "Source"
       changes: "Changes"
 
+  # Notes
+  notes:
+    title: "Notes"
+    add: "Add notes"
+    edit: "Edit"
+    save: "Save"
+    cancel: "Cancel"
+    placeholder: "Add notes about this record..."
+    empty: "No notes yet."
+
   # Common / Shared
   common:
+    add: "Add"
+    edit: "Edit"
     save: "Save"
     cancel: "Cancel"
     not_provided: "Not provided"
     total: "%{count} total"
     ago: "ago"
+
+  # Rich Text Fields (field-specific overrides for _notes_section partial)
+  rich_text:
+    description:
+      title: "Description"
+      placeholder: "Add a description..."
+      empty: "No description yet."
 
   # Pagination
   pagination:

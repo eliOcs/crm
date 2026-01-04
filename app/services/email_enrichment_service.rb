@@ -328,7 +328,7 @@ class EmailEnrichmentService
 
     # Append new context to description
     if task_data[:description].present?
-      existing_desc = task.description || ""
+      existing_desc = task.description&.to_plain_text || ""
       new_context = "\n\n---\nUpdate from #{@source_email&.source_path || 'unknown'}:\n#{task_data[:description]}"
       updates[:description] = existing_desc + new_context
     end

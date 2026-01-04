@@ -4,6 +4,7 @@ class Company < ApplicationRecord
   has_many :tasks
   has_and_belongs_to_many :contacts
   has_one_attached :logo
+  has_rich_text :notes
 
   validates :legal_name, presence: true
   validates :domain, uniqueness: { scope: :user_id }, allow_nil: true

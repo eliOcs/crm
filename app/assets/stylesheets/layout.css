@@ -92,6 +92,12 @@
     font-weight: 400;
   }
 
+  .section__actions {
+    display: flex;
+    gap: var(--inline-space-half);
+    margin-inline-start: auto;
+  }
+
   /* -------------------------------------------------------------------------
      Auth layout (centered form)
      ------------------------------------------------------------------------- */

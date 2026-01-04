@@ -3,6 +3,7 @@ class Contact < ApplicationRecord
   has_many :audit_logs, as: :auditable, dependent: :destroy
   has_many :tasks
   has_and_belongs_to_many :companies
+  has_rich_text :notes
 
   normalizes :email, with: ->(e) { e.strip.downcase }
 

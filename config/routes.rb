@@ -19,9 +19,15 @@ Rails.application.routes.draw do
   # Webhooks (unauthenticated)
   post "webhooks/microsoft", to: "webhooks#microsoft"
 
-  resources :contacts, only: %i[ index show update ]
-  resources :companies, only: %i[ index show update ]
-  resources :tasks, only: %i[ index show update ]
+  resources :contacts, only: %i[ index show update ] do
+    get :edit_notes, on: :member
+  end
+  resources :companies, only: %i[ index show update ] do
+    get :edit_notes, on: :member
+  end
+  resources :tasks, only: %i[ index show update ] do
+    get :edit_description, on: :member
+  end
   resources :emails, only: %i[ index show ] do
     get "attachment/:cid", action: :attachment, as: :attachment, on: :member, cid: /.+/
     get "download/:index", action: :download, as: :download, on: :member

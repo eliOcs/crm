@@ -1,0 +1,153 @@
+/* ==========================================================================
+   Notes Component
+   Rich text notes section with Lexxy editor integration
+   ========================================================================== */
+
+@layer components {
+  .notes-section {
+    margin-block-start: var(--block-space-double);
+  }
+
+  .notes-content {
+    padding: var(--block-space) var(--inline-space-double);
+    background: var(--color-canvas-alt);
+    border-radius: var(--card-radius);
+    margin-block-end: var(--block-space);
+  }
+
+  .notes-content:empty::before {
+    content: attr(data-placeholder);
+    color: var(--color-ink-muted);
+  }
+
+}
+
+/* ==========================================================================
+   Lexxy Editor Customization
+   Override Lexxy CSS variables to match our design system.
+   Unlayered to override Lexxy's unlayered CSS.
+   ========================================================================== */
+
+lexxy-editor {
+  /* Map Lexxy's color system to our design tokens */
+  --lexxy-color-ink: var(--color-ink);
+  --lexxy-color-ink-medium: var(--color-ink-subtle);
+  --lexxy-color-ink-light: var(--color-ink-muted);
+  --lexxy-color-ink-lighter: var(--color-border);
+  --lexxy-color-ink-lightest: oklch(var(--lch-canvas-alt));
+  --lexxy-color-ink-inverted: oklch(var(--lch-white));
+
+  --lexxy-color-canvas: oklch(var(--lch-white));
+  --lexxy-color-text: var(--color-ink);
+  --lexxy-color-text-subtle: var(--color-ink-subtle);
+  --lexxy-color-link: var(--color-primary);
+
+  /* Selection/active states - use subtle neutral instead of accent */
+  --lexxy-color-selected: oklch(var(--lch-canvas-alt));
+  --lexxy-color-selected-hover: var(--color-border);
+  --lexxy-color-selected-dark: var(--color-primary);
+
+  /* Accent colors for buttons, focus states */
+  --lexxy-color-accent-dark: var(--color-primary);
+  --lexxy-color-accent-medium: var(--color-primary-hover);
+  --lexxy-color-accent-light: oklch(var(--lch-primary-light));
+  --lexxy-color-accent-lightest: oklch(var(--lch-canvas-alt));
+
+  /* Typography */
+  --lexxy-font-base: var(--font-base);
+  --lexxy-text-small: var(--text-sm);
+  --lexxy-content-margin: var(--block-space);
+
+  /* Shape */
+  --lexxy-radius: var(--input-radius);
+  --lexxy-shadow: 0 4px 12px oklch(var(--lch-ink) / 0.1);
+
+  /* Focus ring */
+  --lexxy-focus-ring-color: var(--color-primary);
+  --lexxy-focus-ring-size: 2px;
+  --lexxy-focus-ring-offset: 1px;
+
+  /* Editor sizing */
+  --lexxy-editor-padding: var(--block-space);
+  --lexxy-editor-rows: 8lh;
+  --lexxy-toolbar-gap: 0.25em;
+  --lexxy-toolbar-icon-size: 0.8em;
+}
+
+/* Toolbar customization */
+lexxy-toolbar {
+  --lexxy-toolbar-icon-size: 0.8em;
+  border-block-end: none;
+
+  /* Hide buttons not needed for CRM notes */
+  [name="code"],
+  [name="table"],
+  [name="highlight"],
+  [name="upload"] {
+    display: none;
+  }
+}
+
+.lexxy-editor__toolbar-button {
+  block-size: 1.5lh;
+  border-radius: 50%;
+}
+
+/* Link dropdown styling */
+lexxy-link-dropdown {
+  input[type="url"] {
+    background: oklch(var(--lch-white));
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--input-radius);
+    color: var(--color-ink);
+    font-family: inherit;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    padding-block: 0.375em;
+    padding-inline: 0.75em;
+
+    &:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px oklch(var(--lch-primary) / 15%);
+      outline: none;
+    }
+  }
+
+  button {
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--btn-radius);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    line-height: 1;
+    padding-block: 0.5em;
+    padding-inline: 1em;
+  }
+
+  button[value="link"] {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: oklch(var(--lch-white));
+  }
+}
+
+lexxy-editor button[value="link"]:hover {
+  background-color: var(--color-primary);
+  filter: brightness(var(--btn-hover-brightness));
+}
+
+/* Hide code language picker */
+lexxy-code-language-picker,
+.lexxy-code-language-picker {
+  display: none;
+}
+
+/* Rendered content styling */
+.lexxy-content {
+  --lexxy-color-link: var(--color-link);
+  --lexxy-color-ink: var(--color-ink);
+  --lexxy-color-ink-lighter: var(--color-border);
+
+  a:hover {
+    color: var(--color-ink);
+  }
+}

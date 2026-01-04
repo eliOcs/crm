@@ -1,0 +1,33 @@
+<% field ||= :notes %>
+<% title ||= t("rich_text.#{field}.title", default: t("notes.title")) %>
+<% edit_action ||= :"edit_#{field}" %>
+<% content = record.public_send(field) %>
+
+<section class="section notes-section">
+  <%= turbo_frame_tag dom_id(record, field) do %>
+    <div class="section__header">
+      <h2 class="section__title"><%= title %></h2>
+      <div class="section__actions">
+        <% if content.present? %>
+          <%= link_to t("common.edit"),
+              polymorphic_path(record, action: edit_action),
+              class: "btn btn--ghost btn--sm",
+              data: { turbo_frame: dom_id(record, field) } %>
+        <% else %>
+          <%= link_to t("common.add"),
+              polymorphic_path(record, action: edit_action),
+              class: "btn btn--ghost btn--sm",
+              data: { turbo_frame: dom_id(record, field) } %>
+        <% end %>
+      </div>
+    </div>
+
+    <% if content.present? %>
+      <div class="notes-content lexxy-content">
+        <%= content %>
+      </div>
+    <% else %>
+      <p class="txt-subtle"><%= t("rich_text.#{field}.empty", default: t("notes.empty")) %></p>
+    <% end %>
+  <% end %>
+</section>

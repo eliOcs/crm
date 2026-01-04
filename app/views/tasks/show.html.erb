@@ -32,17 +32,6 @@
   </div>
 
   <div class="info-card__row">
-    <span class="info-card__label"><%= t("tasks.fields.description") %></span>
-    <span class="info-card__value">
-      <%= render "shared/inline_edit_field",
-          url: task_path(@task),
-          field: :description,
-          value: @task.description,
-          placeholder: t("tasks.placeholders.no_description") %>
-    </span>
-  </div>
-
-  <div class="info-card__row">
     <span class="info-card__label"><%= t("tasks.fields.due_date") %></span>
     <span class="info-card__value">
       <%= render "shared/due_date_field",
@@ -80,5 +69,11 @@
     <span class="info-card__value txt-muted"><%= l(@task.updated_at, format: :long) %></span>
   </div>
 </div>
+
+<%= render "shared/notes_section",
+    record: @task,
+    field: :description,
+    title: t("tasks.fields.description"),
+    edit_action: :edit_description %>
 
 <%= render "shared/audit_log_section", record: @task %>

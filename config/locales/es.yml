@@ -192,13 +192,32 @@ es:
       source: "Origen"
       changes: "Cambios"
 
+  # Notes
+  notes:
+    title: "Notas"
+    add: "Agregar notas"
+    edit: "Editar"
+    save: "Guardar"
+    cancel: "Cancelar"
+    placeholder: "Agregar notas sobre este registro..."
+    empty: "Aún no hay notas."
+
   # Common / Shared
   common:
+    add: "Agregar"
+    edit: "Editar"
     save: "Guardar"
     cancel: "Cancelar"
     not_provided: "No proporcionado"
     total: "%{count} en total"
     ago: ""
+
+  # Rich Text Fields (field-specific overrides for _notes_section partial)
+  rich_text:
+    description:
+      title: "Descripción"
+      placeholder: "Agregar una descripción..."
+      empty: "Aún no hay descripción."
 
   # Pagination
   pagination:

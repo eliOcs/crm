@@ -86,7 +86,7 @@ class MicrosoftWebhookFlowTest < ActionDispatch::IntegrationTest
     task = @user.tasks.find_by(name: "Enviar factura pedido 22211")
 
     assert_not_nil task, "Task should be created"
-    assert_includes task.description, "financiero"
+    assert_includes task.description.to_plain_text, "financiero"
     assert_equal sender_contact, task.contact
   end
 
