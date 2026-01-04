@@ -1,0 +1,29 @@
+#!/bin/bash
+# Build and push the Postfix Docker image to ECR
+# Uses registry cache - fast no-op if nothing changed
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+REGION="eu-west-1"
+ACCOUNT_ID="225656797743"
+REPO="crm-postfix"
+IMAGE="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REPO}"
+
+echo "==> Logging into ECR..."
+aws ecr get-login-password --region ${REGION} --profile personal | \
+  docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com
+
+echo "==> Pulling existing image for cache..."
+docker pull ${IMAGE}:latest 2>/dev/null || true
+
+echo "==> Building Postfix image for ARM64..."
+docker buildx build --platform linux/arm64 \
+  --cache-from ${IMAGE}:latest \
+  --cache-to type=inline \
+  -t ${IMAGE}:latest \
+  -f ${PROJECT_DIR}/docker/postfix/Dockerfile \
+  --push \
+  ${PROJECT_DIR}/docker/postfix
+
+echo "==> Done!"

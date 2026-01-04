@@ -1,6 +1,9 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  # Prepare the ingress controller used to receive mail
+  # config.action_mailbox.ingress = :relay
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -72,6 +75,10 @@ Rails.application.configure do
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
+
+  # ActionMailbox: receive inbound emails via Postfix relay
+  config.action_mailbox.ingress = :relay
+  config.action_mailbox.ingress_password = ENV["ACTION_MAILBOX_RELAY_PASSWORD"]
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false

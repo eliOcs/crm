@@ -42,3 +42,4 @@
 # Ignore test coverage reports
 /coverage/
 .playwright-mcp/
+.kamal/secrets

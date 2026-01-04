@@ -1,0 +1,45 @@
+# Postfix configuration for receiving inbound email
+# and forwarding to Rails ActionMailbox
+
+# Import and export environment variables for pipe commands
+import_environment = ACTION_MAILBOX_RELAY_PASSWORD RAILS_INBOUND_HOST
+export_environment = ACTION_MAILBOX_RELAY_PASSWORD RAILS_INBOUND_HOST
+
+# Basic identity
+myhostname = mail.mercuriocrm.es
+mydomain = mercuriocrm.es
+myorigin = $mydomain
+
+# Only accept mail for our inbound subdomain
+mydestination =
+virtual_mailbox_domains = inbox.mercuriocrm.es
+virtual_transport = rails
+
+# Security: only accept mail, never relay
+mynetworks = 127.0.0.0/8
+smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination
+relay_domains =
+
+# Reject mail not addressed to us
+smtpd_recipient_restrictions =
+    permit_mynetworks,
+    reject_unauth_destination
+
+# Rate limiting
+smtpd_client_connection_rate_limit = 10
+smtpd_client_message_rate_limit = 30
+anvil_rate_time_unit = 60s
+
+# Size limits (25MB)
+message_size_limit = 26214400
+mailbox_size_limit = 0
+
+# Require proper HELO
+smtpd_helo_required = yes
+smtpd_helo_restrictions = reject_invalid_helo_hostname
+
+# Logging
+maillog_file = /dev/stdout
+
+# Accept all mail for our virtual domain and pipe to Rails
+virtual_alias_maps =

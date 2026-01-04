@@ -7,7 +7,10 @@ image: crm
 # Deploy to these servers.
 servers:
   web:
-    - 52.30.167.17
+    hosts:
+      - 52.30.167.17
+    options:
+      network-alias: crm-web
 
 # Enable SSL auto certification via Let's Encrypt.
 # Requires config.assume_ssl and config.force_ssl in production.rb
@@ -29,6 +32,7 @@ env:
     - ANTHROPIC_API_KEY
     - MICROSOFT_CLIENT_ID
     - MICROSOFT_CLIENT_SECRET
+    - ACTION_MAILBOX_RELAY_PASSWORD
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
@@ -78,26 +82,16 @@ builder:
 ssh:
   user: root
 
-# Use accessory services (secrets come from .kamal/secrets).
-# accessories:
-#   db:
-#     image: mysql:8.0
-#     host: 192.168.0.2
-#     # Change to 3306 to expose port to the world instead of just local network.
-#     port: "127.0.0.1:3306:3306"
-#     env:
-#       clear:
-#         MYSQL_ROOT_HOST: '%'
-#       secret:
-#         - MYSQL_ROOT_PASSWORD
-#     files:
-#       - config/mysql/production.cnf:/etc/mysql/my.cnf
-#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
-#     directories:
-#       - data:/var/lib/mysql
-#   redis:
-#     image: valkey/valkey:8
-#     host: 192.168.0.2
-#     port: 6379
-#     directories:
-#       - data:/data
+# Accessory services
+accessories:
+  postfix:
+    image: 225656797743.dkr.ecr.eu-west-1.amazonaws.com/crm-postfix
+    host: 52.30.167.17
+    port: "25:25"
+    env:
+      clear:
+        RAILS_INBOUND_HOST: crm-web:3000
+      secret:
+        - ACTION_MAILBOX_RELAY_PASSWORD
+    directories:
+      - postfix_spool:/var/spool/postfix

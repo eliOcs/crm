@@ -1,0 +1,19 @@
+#!/bin/bash
+# Full deployment: build postfix + deploy main app
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+echo "==> Building Postfix image (skips if unchanged)..."
+"${SCRIPT_DIR}/build-postfix"
+
+echo ""
+echo "==> Deploying Rails app with Kamal..."
+bin/kamal deploy "$@"
+
+echo ""
+echo "==> Ensuring Postfix accessory is running..."
+bin/kamal accessory reboot postfix 2>/dev/null || bin/kamal accessory boot postfix
+
+echo ""
+echo "==> Deployment complete!"

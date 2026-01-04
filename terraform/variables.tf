@@ -21,3 +21,9 @@ variable "ssh_public_key_path" {
   type        = string
   default     = "~/.ssh/id_rsa.pub"
 }
+
+variable "domain_name" {
+  description = "Domain name for the CRM (must have Route 53 hosted zone)"
+  type        = string
+  default     = "mercuriocrm.es"
+}

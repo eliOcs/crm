@@ -26,9 +26,19 @@ data "aws_subnets" "default" {
   }
 }
 
-# ECR Repository
+# ECR Repository for Rails app
 resource "aws_ecr_repository" "crm" {
   name                 = "crm"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = false
+  }
+}
+
+# ECR Repository for Postfix mail server
+resource "aws_ecr_repository" "crm_postfix" {
+  name                 = "crm-postfix"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -67,6 +77,15 @@ resource "aws_security_group" "crm" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     description = "HTTPS access"
+  }
+
+  # SMTP (inbound email)
+  ingress {
+    from_port   = 25
+    to_port     = 25
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "SMTP inbound email"
   }
 
   # Outbound (allow all)
@@ -137,4 +156,51 @@ resource "aws_eip" "crm" {
   tags = {
     Name = "crm-ip"
   }
+}
+
+# =============================================================================
+# Route 53 DNS for Email
+# =============================================================================
+
+data "aws_route53_zone" "main" {
+  name = var.domain_name
+}
+
+# MX record for inbox subdomain - receives forwarded emails
+resource "aws_route53_record" "inbox_mx" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = "inbox.${var.domain_name}"
+  type    = "MX"
+  ttl     = 300
+  records = ["10 ${var.domain_name}"]
+}
+
+# SPF for inbox subdomain - declares we don't send from this subdomain
+resource "aws_route53_record" "inbox_spf" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = "inbox.${var.domain_name}"
+  type    = "TXT"
+  ttl     = 300
+  records = ["v=spf1 -all"]
+}
+
+# SPF for main domain - allows the server to send email
+resource "aws_route53_record" "main_spf" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = var.domain_name
+  type    = "TXT"
+  ttl     = 300
+  records = [
+    "v=spf1 a mx -all",
+    "google-site-verification=Aa9EFFs_vyO5B-lNNg_UPc--O4tJKXhqooUpuRYk0_I"
+  ]
+}
+
+# MX for main domain (optional - in case someone emails user@mercuriocrm.es)
+resource "aws_route53_record" "main_mx" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = var.domain_name
+  type    = "MX"
+  ttl     = 300
+  records = ["10 ${var.domain_name}"]
 }
