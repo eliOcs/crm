@@ -5,7 +5,7 @@ class Email < ApplicationRecord
   has_many :email_attachments, dependent: :destroy
   has_many :audit_logs, as: :auditable, dependent: :destroy
 
-  SOURCE_TYPES = %w[eml graph].freeze
+  SOURCE_TYPES = %w[eml graph forwarded].freeze
 
   validates :sent_at, presence: true
   validates :from_address, presence: true

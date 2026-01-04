@@ -235,6 +235,28 @@ en:
       es: "Español"
     saved: "Settings saved successfully."
     integrations: "Integrations"
+    inbound_email:
+      title: "Email Forwarding"
+      description: "Forward emails to Mercurio to automatically extract contacts and tasks. Set up a mail rule in Outlook or Gmail to forward emails to your unique address."
+      your_address: "Your Mercurio address"
+      copy: "Copy"
+      copied: "Copied!"
+      regenerate: "Regenerate address"
+      regenerate_confirm: "Are you sure? Your current forwarding rules will need to be updated with the new address."
+      regenerated: "Email address regenerated. Update your forwarding rules."
+      instructions: "Set up forwarding"
+      instructions_outlook:
+        title: "Outlook"
+        steps:
+          - "Go to Settings → Mail → Rules"
+          - "Create a new rule: 'Apply to all messages'"
+          - "Add action: 'Forward to' with your Mercurio address"
+      instructions_gmail:
+        title: "Gmail"
+        steps:
+          - "Go to Settings → See all settings → Filters"
+          - "Create a new filter with your criteria"
+          - "Choose 'Forward to' and add your Mercurio address"
     microsoft:
       title: "Microsoft 365"
       description: "Connect your Microsoft account to import emails, contacts, and calendar events."

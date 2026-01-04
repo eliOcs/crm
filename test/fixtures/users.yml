@@ -3,7 +3,9 @@
 one:
   email_address: one@example.com
   password_digest: <%= password_digest %>
+  inbound_email_token: abc12345
 
 two:
   email_address: two@example.com
   password_digest: <%= password_digest %>
+  inbound_email_token: xyz98765

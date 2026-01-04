@@ -235,6 +235,28 @@ es:
       es: "Español"
     saved: "Configuración guardada correctamente."
     integrations: "Integraciones"
+    inbound_email:
+      title: "Reenvío de Correos"
+      description: "Reenvía correos a Mercurio para extraer automáticamente contactos y tareas. Configura una regla en Outlook o Gmail para reenviar correos a tu dirección única."
+      your_address: "Tu dirección Mercurio"
+      copy: "Copiar"
+      copied: "¡Copiado!"
+      regenerate: "Regenerar dirección"
+      regenerate_confirm: "¿Estás seguro? Tendrás que actualizar tus reglas de reenvío con la nueva dirección."
+      regenerated: "Dirección regenerada. Actualiza tus reglas de reenvío."
+      instructions: "Configurar reenvío"
+      instructions_outlook:
+        title: "Outlook"
+        steps:
+          - "Ve a Configuración → Correo → Reglas"
+          - "Crea una nueva regla: 'Aplicar a todos los mensajes'"
+          - "Añade acción: 'Reenviar a' con tu dirección Mercurio"
+      instructions_gmail:
+        title: "Gmail"
+        steps:
+          - "Ve a Configuración → Ver todos los ajustes → Filtros"
+          - "Crea un nuevo filtro con tus criterios"
+          - "Elige 'Reenviar a' y añade tu dirección Mercurio"
     microsoft:
       title: "Microsoft 365"
       description: "Conecta tu cuenta de Microsoft para importar correos, contactos y eventos de calendario."

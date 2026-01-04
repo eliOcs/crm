@@ -656,9 +656,9 @@ When Graph API is approved:
 - [x] ActionMailbox relay ingress setup
 - [x] Rate limiting (10 conn/min, 30 msg/min per client)
 - [x] Relay rejection verified (`554 5.7.1 Relay access denied`)
-- [ ] User inbound email token migration
-- [ ] Basic email parsing (non-forwarded)
-- [ ] Settings UI to show/copy address
+- [x] User inbound email token migration
+- [x] Basic email parsing (non-forwarded)
+- [x] Settings UI to show/copy address
 
 ### Enhanced (Phase 3-4)
 - [ ] ForwardedEmailParser service
