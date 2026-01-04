@@ -12,6 +12,10 @@ git add -u
 echo "=> Running Stylelint..."
 npm run lint:css
 
+# Run ESLint for JavaScript
+echo "=> Running ESLint..."
+npm run lint:js
+
 # Terraform checks (only if terraform files are staged)
 if git diff --cached --name-only | grep -q '^terraform/'; then
   echo "=> Running Terraform fmt..."

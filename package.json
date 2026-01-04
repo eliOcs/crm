@@ -2,11 +2,19 @@
   "name": "crm",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "lint:css": "stylelint 'app/assets/stylesheets/**/*.css'",
-    "lint:css:fix": "stylelint 'app/assets/stylesheets/**/*.css' --fix"
+    "lint:css:fix": "stylelint 'app/assets/stylesheets/**/*.css' --fix",
+    "lint:js": "eslint 'app/javascript/**/*.js'",
+    "lint:js:fix": "eslint 'app/javascript/**/*.js' --fix",
+    "lint": "npm run lint:css && npm run lint:js",
+    "lint:fix": "npm run lint:css:fix && npm run lint:js:fix"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "globals": "^17.0.0",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1"
   }

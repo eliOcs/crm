@@ -12,7 +12,7 @@ export default class extends Controller {
     field: String
   }
 
-  async select(event) {
+  async select(_event) {
     const newValue = this.element.value
     const previousValue = this.element.dataset.previousValue || ""
 

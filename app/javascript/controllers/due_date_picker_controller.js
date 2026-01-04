@@ -331,7 +331,6 @@ export default class extends Controller {
 
   renderCalendars() {
     const container = this.modal.querySelector("[data-calendars]")
-    const t = this.translationsValue
 
     const leftMonth = new Date(this.viewingDate.getFullYear(), this.viewingDate.getMonth(), 1)
     const rightMonth = new Date(this.viewingDate.getFullYear(), this.viewingDate.getMonth() + 1, 1)

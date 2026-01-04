@@ -19,7 +19,7 @@ export default class extends Controller {
     try {
       await navigator.clipboard.writeText(text)
       this.showCopiedFeedback()
-    } catch (error) {
+    } catch (_error) {
       // Fallback for older browsers
       this.fallbackCopy(text)
     }
