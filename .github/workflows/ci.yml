@@ -39,7 +39,7 @@ jobs:
       - name: Scan for security vulnerabilities in JavaScript dependencies
         run: bin/importmap audit
 
-  lint:
+  lint_ruby:
     runs-on: ubuntu-latest
     env:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
@@ -62,8 +62,32 @@ jobs:
           restore-keys: |
             rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-
 
-      - name: Lint code for consistent style
+      - name: Lint Ruby code
         run: bin/rubocop -f github
+
+  lint_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint CSS (Stylelint)
+        run: npm run lint:css
+
+      - name: Lint JavaScript (ESLint)
+        run: npm run lint:js
+
+      - name: Check formatting (Prettier)
+        run: npm run format:check
 
   test:
     runs-on: ubuntu-latest
