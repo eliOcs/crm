@@ -577,6 +577,17 @@ es:
         - "Exporta las carpetas <strong>Bandeja de entrada</strong> y <strong>Elementos enviados</strong> por separado para mejores resultados"
         - "Usa el <strong>filtro de fecha</strong> para limitar la exportación solo a correos recientes"
         - "Los archivos grandes pueden tardar varios minutos en procesarse"
+    background_hint: "El procesamiento continúa en segundo plano. Puedes cerrar esta página."
+    time_remaining:
+      seconds:
+        one: "queda %{count} segundo"
+        other: "quedan %{count} segundos"
+      minutes:
+        one: "queda %{count} minuto"
+        other: "quedan %{count} minutos"
+      hours:
+        one: "queda %{count} hora"
+        other: "quedan %{count} horas"
 
   # Date/time formats
   date:

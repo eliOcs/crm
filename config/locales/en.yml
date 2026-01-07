@@ -576,6 +576,17 @@ en:
       completed: "Completed"
       failed: "Failed"
       cancelled: "Cancelled"
+    background_hint: "Processing continues in the background. You can close this page."
+    time_remaining:
+      seconds:
+        one: "%{count} second left"
+        other: "%{count} seconds left"
+      minutes:
+        one: "%{count} minute left"
+        other: "%{count} minutes left"
+      hours:
+        one: "%{count} hour left"
+        other: "%{count} hours left"
 
   # Due Date Component
   due_date:

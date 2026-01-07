@@ -40,6 +40,35 @@ class PstEmailImport < ApplicationRecord
     ((processed_emails.to_f / total_emails) * 100).round
   end
 
+  # Returns estimated time remaining in seconds, or nil if not enough data
+  def estimated_time_remaining
+    return nil unless status == "importing" && started_at.present?
+    return nil if processed_emails < 5 # Need some data for estimate
+
+    elapsed = Time.current - started_at
+    rate = processed_emails.to_f / elapsed # emails per second
+    remaining = total_emails - processed_emails
+
+    return nil if rate.zero?
+    (remaining / rate).to_i
+  end
+
+  # Human-readable time remaining
+  def time_remaining_text
+    seconds = estimated_time_remaining
+    return nil unless seconds
+
+    if seconds < 60
+      I18n.t("pst_import.time_remaining.seconds", count: seconds)
+    elsif seconds < 3600
+      minutes = (seconds / 60.0).round
+      I18n.t("pst_import.time_remaining.minutes", count: minutes)
+    else
+      hours = (seconds / 3600.0).round
+      I18n.t("pst_import.time_remaining.hours", count: hours)
+    end
+  end
+
   def status_label
     I18n.t("pst_import.statuses.#{status}")
   end

@@ -22,7 +22,12 @@
       </div>
       <div class="import-progress__stats">
         <span><%= t("pst_import.progress", processed: import.processed_emails, total: import.total_emails) %></span>
-        <span><%= import.progress_percentage %>%</span>
+        <span>
+          <%= import.progress_percentage %>%
+          <% if import.time_remaining_text %>
+            (<%= import.time_remaining_text %>)
+          <% end %>
+        </span>
       </div>
     <% end %>
 
@@ -36,6 +41,10 @@
         <% end %>
       </div>
     <% end %>
+
+    <p class="import-progress__hint txt-subtle txt-sm mar-t-sm">
+      <%= t("pst_import.background_hint") %>
+    </p>
 
     <div class="import-progress__actions">
       <%= button_to t("common.cancel"),
