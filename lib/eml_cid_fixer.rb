@@ -60,7 +60,7 @@ class EmlCidFixer
     fixes << "#{cid_fixes} CIDs" if cid_fixes > 0
 
     if new_content != content
-      File.write(file_path, new_content)
+      File.binwrite(file_path, new_content)
       log("  Fixed: #{File.basename(file_path)} (#{fixes.join(', ')})")
       true
     else
