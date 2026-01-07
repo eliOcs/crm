@@ -77,15 +77,13 @@ class PstEmailImport < ApplicationRecord
   def broadcast_progress
     recent = active? ? [] : user.pst_email_imports.recent.where.not(status: "pending")
 
-    I18n.with_locale(user.locale || I18n.default_locale) do
-      broadcast_replace_to(
-        user,
-        :pst_import,
-        target: "pst-import-status",
-        partial: "settings/pst_import_status",
-        locals: { active_import: self, recent_imports: recent }
-      )
-    end
+    broadcast_replace_to(
+      user,
+      :pst_import,
+      target: "pst-import-status",
+      partial: "settings/pst_import_status",
+      locals: { active_import: self, recent_imports: recent }
+    )
   end
 
   # Cleanup temp PST file
