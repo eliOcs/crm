@@ -236,26 +236,31 @@ en:
     saved: "Settings saved successfully."
     integrations: "Integrations"
     inbound_email:
-      title: "Email Forwarding"
-      description: "Auto-magically create contacts and tasks by forwarding emails here."
-      enabled: "Enable email forwarding"
-      enabled_hint: "When disabled, forwarded emails will be silently discarded."
-      disabled_hint: "Enable to get your unique forwarding address."
-      your_address: "Your unique forwarding address"
+      title: "Email Integration"
+      description: "Auto-magically create contacts and tasks from your emails. Capture both emails you receive and emails you send."
+      enabled: "Enable email integration"
+      enabled_hint: "When disabled, emails will be silently discarded."
+      disabled_hint: "Enable to get your unique email address."
+      your_address: "Your unique email address"
       copy: "Copy"
       copied: "Copied!"
       instructions: "How to set up"
       active: "Active"
       inactive: "Inactive"
+      received_emails: "For emails you receive"
+      sent_emails: "For emails you send"
+      sent_steps:
+        - "When composing an email, add <strong>your address above</strong> to the <strong>BCC</strong> field"
+        - "Tip: Create a contact for your address so it auto-completes"
       instructions_outlook:
         title: "Outlook"
-        steps:
+        received_steps:
           - "Go to <strong>Settings</strong> › <strong>Mail</strong> › <strong>Rules</strong>"
           - "Create a new rule for <strong>all incoming messages</strong>"
           - "Add action: <strong>Forward to</strong> and paste <strong>your address above</strong>"
       instructions_gmail:
         title: "Gmail"
-        steps:
+        received_steps:
           - "Go to <strong>Settings</strong> › <strong>See all settings</strong> › <strong>Forwarding</strong>"
           - "Click <strong>Add a forwarding address</strong> and paste <strong>your address above</strong>"
           - "Verify the address, then set <strong>Forward a copy</strong>"

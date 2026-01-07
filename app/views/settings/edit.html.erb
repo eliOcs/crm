@@ -99,20 +99,31 @@
       </div>
 
       <div class="forwarding-setup__content" data-tabs-target="panel" data-tab="outlook">
+        <h4 class="forwarding-setup__section-title"><%= t("settings.inbound_email.received_emails") %></h4>
         <ol class="forwarding-setup__steps">
-          <% t("settings.inbound_email.instructions_outlook.steps").each do |step| %>
+          <% t("settings.inbound_email.instructions_outlook.received_steps").each do |step| %>
             <li><%= step.html_safe %></li>
           <% end %>
         </ol>
       </div>
 
       <div class="forwarding-setup__content hidden" data-tabs-target="panel" data-tab="gmail">
+        <h4 class="forwarding-setup__section-title"><%= t("settings.inbound_email.received_emails") %></h4>
         <ol class="forwarding-setup__steps">
-          <% t("settings.inbound_email.instructions_gmail.steps").each do |step| %>
+          <% t("settings.inbound_email.instructions_gmail.received_steps").each do |step| %>
             <li><%= step.html_safe %></li>
           <% end %>
         </ol>
       </div>
+    </div>
+
+    <div class="forwarding-setup__section">
+      <h4 class="forwarding-setup__section-title"><%= t("settings.inbound_email.sent_emails") %></h4>
+      <ol class="forwarding-setup__steps">
+        <% t("settings.inbound_email.sent_steps").each do |step| %>
+          <li><%= step.html_safe %></li>
+        <% end %>
+      </ol>
     </div>
   <% else %>
     <p class="forwarding-disabled-hint"><%= t("settings.inbound_email.disabled_hint") %></p>

@@ -12,10 +12,13 @@ class FetchMicrosoftEmailJob < ApplicationJob
     user = User.find(user_id)
     return unless user.microsoft_connected?
 
-    service = MicrosoftEmailImportService.new(user)
-    email = service.import_by_graph_id(graph_id)
+    # Import email via Graph API
+    import_service = MicrosoftEmailImportService.new(user)
+    email = import_service.import_by_graph_id(graph_id)
+    return unless email
 
-    # Queue enrichment job to extract contacts, companies, and tasks via LLM
-    EnrichEmailJob.perform_later(email_id: email.id) if email
+    # Use unified service for enrichment
+    processing_service = EmailProcessingService.new(user)
+    processing_service.process_record(email, enrich: :async)
   end
 end

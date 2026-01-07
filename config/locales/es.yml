@@ -236,26 +236,31 @@ es:
     saved: "Configuración guardada correctamente."
     integrations: "Integraciones"
     inbound_email:
-      title: "Reenvío de Correos"
-      description: "Crea contactos y tareas automáticamente reenviando correos aquí."
-      enabled: "Activar reenvío de correos"
-      enabled_hint: "Cuando está desactivado, los correos reenviados se descartarán."
-      disabled_hint: "Activa para obtener tu dirección de reenvío única."
-      your_address: "Tu dirección de reenvío única"
+      title: "Integración de Correo"
+      description: "Crea contactos y tareas automáticamente desde tus correos. Captura tanto los correos que recibes como los que envías."
+      enabled: "Activar integración de correo"
+      enabled_hint: "Cuando está desactivado, los correos se descartarán."
+      disabled_hint: "Activa para obtener tu dirección de correo única."
+      your_address: "Tu dirección de correo única"
       copy: "Copiar"
       copied: "¡Copiado!"
       instructions: "Cómo configurar"
       active: "Activado"
       inactive: "Desactivado"
+      received_emails: "Para correos que recibes"
+      sent_emails: "Para correos que envías"
+      sent_steps:
+        - "Al redactar un correo, añade <strong>la dirección de arriba</strong> en el campo <strong>CCO</strong>"
+        - "Consejo: Crea un contacto con esta dirección para que se autocomplete"
       instructions_outlook:
         title: "Outlook"
-        steps:
+        received_steps:
           - "Ve a <strong>Configuración</strong> › <strong>Correo</strong> › <strong>Reglas</strong>"
           - "Crea una nueva regla para <strong>todos los mensajes entrantes</strong>"
           - "Añade acción: <strong>Reenviar a</strong> y pega <strong>la dirección de arriba</strong>"
       instructions_gmail:
         title: "Gmail"
-        steps:
+        received_steps:
           - "Ve a <strong>Configuración</strong> › <strong>Ver todos los ajustes</strong> › <strong>Reenvío</strong>"
           - "Haz clic en <strong>Añadir dirección de reenvío</strong> y pega <strong>la dirección de arriba</strong>"
           - "Verifica la dirección, luego configura <strong>Reenviar una copia</strong>"

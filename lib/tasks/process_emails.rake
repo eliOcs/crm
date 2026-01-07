@@ -56,24 +56,28 @@ namespace :import do
     logger.info "Using Claude 3.5 Haiku for extraction"
     logger.info ""
 
-    import_service = EmailImportService.new(user, logger: logger)
-    enrichment_service = EmailEnrichmentService.new(user, logger: logger)
+    # Use unified service for import + enrichment
+    processing_service = EmailProcessingService.new(user, logger: logger)
+    import_service = EmailImportService.new(user, logger: logger)  # For stats tracking
+    enrichment_service = EmailEnrichmentService.new(user, logger: logger)  # For stats tracking
 
     eml_files.each.with_index(1) do |eml_path, index|
       eml_relative = eml_path.sub("#{eml_dir}/", "")
       logger.info "[#{index}/#{eml_files.count}] #{eml_relative}"
 
       begin
-        # Step 1: Import email to database
-        db_email = import_service.import_from_eml(eml_path)
+        # Import and enrich in a single call (sync enrichment for correct ordering)
+        result = processing_service.process_eml(eml_path, enrich: :sync)
 
-        # Step 2: Run LLM enrichment (creates contacts, companies, tasks)
-        # Process even if email was skipped (duplicate) - contacts may still need enrichment
-        enrichment_service.process_email(eml_path)
+        if result.created?
+          import_service.stats[:imported] += 1
+        elsif result.skipped?
+          import_service.stats[:skipped] += 1
+        end
 
         sleep(0.1) if index % 10 == 0  # Small delay to avoid rate limiting
       rescue => e
-        enrichment_service.stats[:errors] += 1
+        import_service.stats[:errors] += 1
         logger.error "  ERROR: #{e.message}"
         logger.debug "  #{e.backtrace.first}"
       end

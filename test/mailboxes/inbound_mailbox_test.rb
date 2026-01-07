@@ -1,8 +1,24 @@
 require "test_helper"
 
 class InboundMailboxTest < ActionMailbox::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @user = users(:one)
+  end
+
+  test "receives email and queues enrichment job" do
+    assert_enqueued_with(job: EnrichEmailJob) do
+      receive_inbound_email_from_mail(
+        to: @user.inbound_email_address,
+        from: "sender@example.com",
+        subject: "Test email for enrichment",
+        body: "This email should trigger enrichment"
+      )
+    end
+
+    email = @user.emails.last
+    assert_not_nil email
   end
 
   test "receives email and creates email record for user" do
@@ -110,5 +126,45 @@ class InboundMailboxTest < ActionMailbox::TestCase
         body: "This email should not be saved"
       )
     end
+  end
+
+  test "receives BCC email via Delivered-To header" do
+    # When user BCCs their inbound address, the To header contains the
+    # original recipient, not the user's inbound address. Postfix adds
+    # a Delivered-To header with the envelope recipient (the BCC address).
+    mail = Mail.new do
+      from "me@mycompany.com"
+      to "client@example.com"  # Original recipient, not the user's inbound address
+      subject "Sent email with BCC"
+      body "This is an email I sent to a client"
+    end
+    mail["Delivered-To"] = @user.inbound_email_address
+
+    assert_difference -> { @user.emails.count }, 1 do
+      receive_inbound_email_from_source(mail.to_s)
+    end
+
+    email = @user.emails.last
+    assert_equal "Sent email with BCC", email.subject
+    assert_equal "me@mycompany.com", email.from_address["email"]
+    assert_equal "client@example.com", email.to_addresses.first["email"]
+  end
+
+  test "receives BCC email via X-Original-To header" do
+    # Some mail servers use X-Original-To instead of Delivered-To
+    mail = Mail.new do
+      from "me@mycompany.com"
+      to "client@example.com"
+      subject "Sent email with BCC (X-Original-To)"
+      body "This is an email I sent to a client"
+    end
+    mail["X-Original-To"] = @user.inbound_email_address
+
+    assert_difference -> { @user.emails.count }, 1 do
+      receive_inbound_email_from_source(mail.to_s)
+    end
+
+    email = @user.emails.last
+    assert_equal "Sent email with BCC (X-Original-To)", email.subject
   end
 end

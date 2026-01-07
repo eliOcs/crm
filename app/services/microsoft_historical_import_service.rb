@@ -10,7 +10,7 @@ class MicrosoftHistoricalImportService
     @credential = user.microsoft_credential
     @logger = logger
     @email_import_service = MicrosoftEmailImportService.new(user, logger: logger)
-    @enrichment_service = EmailEnrichmentService.new(user, logger: logger)
+    @processing_service = EmailProcessingService.new(user, logger: logger)
   end
 
   # Count total emails across all folders matching the date filter
@@ -69,9 +69,9 @@ class MicrosoftHistoricalImportService
 
     email = @email_import_service.import_by_graph_id(graph_id)
     if email
-      # Process enrichment synchronously to ensure correct order
-      # (contacts, companies, tasks depend on processing emails chronologically)
-      @enrichment_service.process_email_record(email)
+      # Use unified service for enrichment (sync to ensure correct order -
+      # contacts, companies, tasks depend on processing emails chronologically)
+      @processing_service.process_record(email, enrich: :sync)
       :imported
     else
       :skipped
