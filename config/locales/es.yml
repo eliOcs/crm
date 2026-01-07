@@ -531,6 +531,53 @@ es:
       failed: "Fallido"
       cancelled: "Cancelado"
 
+  # PST Email Import
+  pst_import:
+    title: "Importar Copia de Seguridad de Correo"
+    description: "Importa correos desde un archivo de copia de seguridad de Outlook (.pst). Útil cuando la integración OAuth no está disponible."
+    start: "Iniciar Importación"
+    started: "Importación de copia de seguridad iniciada. Esto puede tardar según el tamaño del archivo."
+    cancelled: "Importación de copia de seguridad cancelada."
+    already_running: "Ya hay una importación de copia de seguridad en progreso."
+    no_file: "Por favor, selecciona un archivo PST para importar."
+    file_too_large: "El archivo es demasiado grande. El tamaño máximo es 5 GB."
+    cannot_cancel: "Esta importación no se puede cancelar."
+    cancel_confirm: "¿Estás seguro de que quieres cancelar esta importación?"
+    extracting: "Extrayendo correos del archivo PST..."
+    progress: "%{processed} de %{total} correos procesados"
+    skipped:
+      one: "%{count} omitido (duplicado)"
+      other: "%{count} omitidos (duplicados)"
+    failed:
+      one: "%{count} fallido"
+      other: "%{count} fallidos"
+    history: "Importaciones Recientes"
+    history_stats: "%{imported} importados, %{skipped} omitidos"
+    max_size: "Tamaño máximo de archivo: %{size}"
+    statuses:
+      pending: "Pendiente"
+      extracting: "Extrayendo"
+      importing: "Importando"
+      completed: "Completado"
+      failed: "Fallido"
+      cancelled: "Cancelado"
+    instructions:
+      title: "Cómo exportar desde Outlook"
+      steps:
+        - "Abre Outlook → <strong>Archivo</strong> → <strong>Abrir y Exportar</strong> → <strong>Importar o Exportar</strong>"
+        - "Selecciona <strong>\"Exportar a un archivo\"</strong> → Siguiente"
+        - "Elige <strong>\"Archivo de datos de Outlook (.pst)\"</strong> → Siguiente"
+        - "Selecciona la carpeta <strong>Bandeja de entrada</strong>, marca <strong>\"Incluir subcarpetas\"</strong>"
+        - "Haz clic en <strong>Filtro</strong> → pestaña <strong>Avanzado</strong> → <strong>Campo</strong> → <strong>Fecha/Hora</strong> → <strong>Recibido</strong>"
+        - "Establece la condición: <strong>\"A partir de\"</strong> con la fecha de hace 6 meses"
+        - "Elige la ubicación de guardado → Finalizar"
+        - "Repite para <strong>Elementos enviados</strong> si es necesario, luego sube ambos archivos"
+      tips_title: "Consejos:"
+      tips:
+        - "Exporta las carpetas <strong>Bandeja de entrada</strong> y <strong>Elementos enviados</strong> por separado para mejores resultados"
+        - "Usa el <strong>filtro de fecha</strong> para limitar la exportación solo a correos recientes"
+        - "Los archivos grandes pueden tardar varios minutos en procesarse"
+
   # Date/time formats
   date:
     formats:

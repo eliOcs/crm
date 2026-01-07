@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_04_171330) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_07_134244) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -204,6 +204,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_04_171330) do
     t.index ["user_id"], name: "index_microsoft_subscriptions_on_user_id"
   end
 
+  create_table "pst_email_imports", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.integer "current_index", default: 0
+    t.text "error_message"
+    t.string "extraction_dir"
+    t.integer "failed_emails", default: 0
+    t.bigint "file_size"
+    t.integer "imported_emails", default: 0
+    t.string "original_filename"
+    t.string "pst_file_path"
+    t.integer "skipped_emails", default: 0
+    t.datetime "started_at"
+    t.string "status", default: "pending", null: false
+    t.integer "total_emails", default: 0
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "status"], name: "index_pst_email_imports_on_user_id_and_status"
+    t.index ["user_id"], name: "index_pst_email_imports_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -256,6 +277,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_04_171330) do
   add_foreign_key "microsoft_credentials", "users"
   add_foreign_key "microsoft_email_imports", "users"
   add_foreign_key "microsoft_subscriptions", "users"
+  add_foreign_key "pst_email_imports", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "companies"
   add_foreign_key "tasks", "contacts"

@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_one :microsoft_credential, dependent: :destroy
   has_many :microsoft_subscriptions, dependent: :destroy
   has_many :microsoft_email_imports, dependent: :destroy
+  has_many :pst_email_imports, dependent: :destroy
 
   before_create :generate_inbound_email_token
 

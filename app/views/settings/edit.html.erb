@@ -166,3 +166,11 @@
     <%= render "microsoft_import_status" %>
   </div>
 <% end %>
+
+<div class="info-card">
+  <h2><%= t("pst_import.title") %></h2>
+  <p class="field__hint mar-b-md"><%= t("pst_import.description") %></p>
+
+  <%= turbo_stream_from Current.user, :pst_import %>
+  <%= render "pst_import_status" %>
+</div>

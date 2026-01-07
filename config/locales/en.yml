@@ -531,6 +531,52 @@ en:
       failed: "Failed"
       cancelled: "Cancelled"
 
+  # PST Email Backup Import
+  pst_import:
+    title: "Import Email Backup"
+    description: "Import emails from a PST backup file. Useful when Microsoft integration is not available."
+    start: "Start Import"
+    started: "PST import started. Extraction may take a few minutes."
+    cancelled: "PST import cancelled."
+    already_running: "An import is already in progress."
+    no_file: "Please select a PST file to upload."
+    file_too_large: "File is too large. Maximum size is 5 GB."
+    cannot_cancel: "This import cannot be cancelled."
+    cancel_confirm: "Are you sure you want to cancel this import?"
+    extracting: "Extracting emails from PST file..."
+    progress: "%{processed} of %{total} emails processed"
+    max_size: "Maximum file size: %{size}"
+    skipped:
+      one: "%{count} skipped (duplicate)"
+      other: "%{count} skipped (duplicates)"
+    failed:
+      one: "%{count} failed"
+      other: "%{count} failed"
+    history: "Recent Imports"
+    history_stats: "%{imported} imported, %{skipped} skipped"
+    instructions:
+      title: "How to create a PST backup in Outlook"
+      steps:
+        - "Open Outlook and go to <strong>File</strong> › <strong>Open & Export</strong> › <strong>Import/Export</strong>"
+        - "Select <strong>Export to a file</strong> and click Next"
+        - "Choose <strong>Outlook Data File (.pst)</strong> and click Next"
+        - "Select the <strong>Inbox</strong> folder, check <strong>Include subfolders</strong>"
+        - "Click <strong>Filter</strong> › <strong>Advanced</strong> to set a date range (recommended: last 6-12 months)"
+        - "Choose a location to save the file and click Finish"
+        - "Repeat for <strong>Sent Items</strong> folder if needed"
+      tips_title: "Tips:"
+      tips:
+        - "Smaller date ranges process faster"
+        - "PST files can be large - ensure stable internet for upload"
+        - "Export both Inbox and Sent Items for complete context"
+    statuses:
+      pending: "Pending"
+      extracting: "Extracting"
+      importing: "Importing"
+      completed: "Completed"
+      failed: "Failed"
+      cancelled: "Cancelled"
+
   # Due Date Component
   due_date:
     today: "Today"

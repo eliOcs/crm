@@ -5,6 +5,10 @@ Rails.application.routes.draw do
     post :start_microsoft_import
     delete "microsoft_import/:id", action: :cancel_microsoft_import, as: :cancel_microsoft_import
     get :microsoft_import_status
+
+    post :start_pst_import
+    delete "pst_import/:id", action: :cancel_pst_import, as: :cancel_pst_import
+    get :pst_import_status
   end
   resources :passwords, param: :token
 

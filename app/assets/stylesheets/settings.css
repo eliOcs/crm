@@ -319,4 +319,46 @@
   .hidden {
     display: none !important;
   }
+
+  /* -------------------------------------------------------------------------
+     PST Import instructions
+     ------------------------------------------------------------------------- */
+  .pst-instructions {
+    margin-block-end: var(--block-space);
+    padding: var(--block-space);
+    background-color: var(--color-canvas-alt);
+    border-radius: var(--input-radius);
+  }
+
+  .pst-instructions__title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-ink);
+    margin: 0 0 0.75rem;
+  }
+
+  .pst-instructions__tips {
+    margin-block-start: var(--block-space);
+    padding-block-start: var(--block-space);
+    border-block-start: 1px dashed var(--color-border);
+  }
+
+  /* -------------------------------------------------------------------------
+     PST Upload Form
+     ------------------------------------------------------------------------- */
+  .pst-upload-form__row {
+    display: flex;
+    align-items: center;
+    gap: var(--inline-space);
+    flex-wrap: wrap;
+  }
+
+  .pst-upload-form__hint {
+    margin-block-start: 0.5rem;
+  }
+
+  .file-input {
+    flex: 1;
+    min-inline-size: 200px;
+  }
 }
