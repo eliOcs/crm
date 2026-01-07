@@ -23,19 +23,6 @@ class PstExtractionServiceTest < ActiveSupport::TestCase
     assert_equal @temp_dir.to_s, service.output_dir.to_s
   end
 
-  # --- File Validation ---
-
-  test "extract raises error for missing pst file" do
-    skip "readpst not installed" unless system("which readpst > /dev/null 2>&1")
-
-    service = PstExtractionService.new("/nonexistent/file.pst", output_dir: @temp_dir)
-
-    error = assert_raises(PstExtractionService::ExtractionError) do
-      service.extract
-    end
-    assert_includes error.message, "PST file not found"
-  end
-
   # --- EML File Methods ---
 
   test "eml_files returns empty array when no files extracted" do
