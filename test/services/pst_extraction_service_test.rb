@@ -26,6 +26,8 @@ class PstExtractionServiceTest < ActiveSupport::TestCase
   # --- File Validation ---
 
   test "extract raises error for missing pst file" do
+    skip "readpst not installed" unless system("which readpst > /dev/null 2>&1")
+
     service = PstExtractionService.new("/nonexistent/file.pst", output_dir: @temp_dir)
 
     error = assert_raises(PstExtractionService::ExtractionError) do
