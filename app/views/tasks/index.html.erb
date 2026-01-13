@@ -32,7 +32,7 @@
                   date: task.due_date,
                   id: dom_id(task, :due_date) %>
             </td>
-            <td class="txt-sm txt-muted"><%= task.contact&.name || task.contact&.email %></td>
+            <td class="txt-sm txt-muted"><%= task.contacts.map { |c| c.name || c.email }.join(", ") %></td>
             <td class="txt-sm txt-muted"><%= t("tasks.updated_ago", time: time_ago_in_words(task.updated_at)) %></td>
           </tr>
         <% end %>

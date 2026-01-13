@@ -144,6 +144,7 @@ es:
       description: "Descripción"
       due_date: "Fecha límite"
       contact: "Contacto"
+      contacts: "Contactos"
       company: "Empresa"
       created: "Creado"
       last_updated: "Última actualización"

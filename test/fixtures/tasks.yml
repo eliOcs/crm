@@ -2,7 +2,6 @@ one:
   user: one
   name: Follow up with client
   status: todo
-  contact: one
   company: one
 
 two:

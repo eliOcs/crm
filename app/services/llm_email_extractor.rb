@@ -1,6 +1,7 @@
 class LlmEmailExtractor
   MODEL = "claude-haiku-4-5-20251001"
   MAX_IMAGES = 10
+  EXTRACTABLE_STATUSES = %w[incoming todo blocked done].freeze
 
   # Initialize from EML file path
   def initialize(eml_path = nil, email: nil)
@@ -26,7 +27,7 @@ class LlmEmailExtractor
     empty_result
   end
 
-  def extract_tasks(email_date:, existing_tasks: [], locale: "en")
+  def extract_tasks(email_date:, user_email:, existing_tasks: [], locale: "en")
     @email_text ||= if @email_record
       @image_data = extract_images_from_email_record
       build_email_text_from_record(@email_record)
@@ -41,7 +42,7 @@ class LlmEmailExtractor
       max_tokens: 1024,
       temperature: 0,
       messages: [ { role: "user", content: @email_text } ],
-      system: tasks_system_prompt(email_date: email_date, existing_tasks: existing_tasks, locale: locale)
+      system: tasks_system_prompt(email_date: email_date, existing_tasks: existing_tasks, locale: locale, user_email: user_email)
     )
     parse_tasks_response(response)
   rescue Anthropic::Error => e
@@ -135,7 +136,7 @@ class LlmEmailExtractor
 
   # === TASKS EXTRACTION ===
 
-  def tasks_system_prompt(email_date:, existing_tasks:, locale: "en")
+  def tasks_system_prompt(email_date:, user_email:, existing_tasks:, locale: "en")
     formatted_tasks = if existing_tasks.empty?
       "No existing active tasks."
     else
@@ -165,6 +166,14 @@ class LlmEmailExtractor
       5. Emails that are just forwarding information without asking for action
       </instructions>
 
+      <user_context>
+      The CRM user's email is: #{user_email}
+      Use this to determine perspective:
+      - If user is in "From": User SENT this email. If they requested something and are waiting for a response, the task is "blocked" (waiting on recipient).
+      - If user is in "To/Cc": User RECEIVED this email. Action requests directed at them are "todo".
+      - Tasks are always from the user's perspective (what THEY need to do or wait for).
+      </user_context>
+
       <date_context>
       Email date: #{email_date.strftime("%Y-%m-%d")} (#{email_date.strftime("%A")})
       Use this date to resolve relative deadlines:
@@ -186,6 +195,7 @@ class LlmEmailExtractor
           "id": null,
           "name": "Send updated proposal",
           "description": "Client requested revised pricing for Q2",
+          "status": "todo",
           "due_date": "2025-01-20",
           "sender_email": "client@example.com"
         }
@@ -197,6 +207,7 @@ class LlmEmailExtractor
           "id": 42,
           "name": "Send updated proposal",
           "description": "Follow-up: client needs it by Friday",
+          "status": "blocked",
           "due_date": "2025-01-17",
           "sender_email": "client@example.com"
         }
@@ -204,6 +215,17 @@ class LlmEmailExtractor
 
       If no actionable tasks found, return: []
       </output_format>
+
+      <status_guidelines>
+      Status must be one of: incoming, todo, blocked, done
+
+      - "incoming" (default): Use when the request needs user review or triage
+      - "todo": Clear, specific, actionable request ready to work on
+      - "blocked": Email indicates waiting on external input, approval, or third party
+      - "done": Email confirms the task was completed (e.g., "I've sent the report you requested")
+
+      When unsure, default to "incoming".
+      </status_guidelines>
 
       <guidelines>
       - Extract the MINIMUM number of tasks (prefer one clear task over multiple vague ones)
@@ -226,6 +248,7 @@ class LlmEmailExtractor
         id: task["id"],
         name: task["name"]&.strip.presence,
         description: task["description"]&.strip.presence,
+        status: validated_status(task["status"]),
         due_date: parse_date(task["due_date"]),
         sender_email: task["sender_email"]&.strip&.downcase.presence
       }
@@ -240,6 +263,11 @@ class LlmEmailExtractor
     Date.parse(date_str)
   rescue Date::Error
     nil
+  end
+
+  def validated_status(status)
+    s = status&.strip&.downcase
+    EXTRACTABLE_STATUSES.include?(s) ? s : "incoming"
   end
 
   # === COMPANIES EXTRACTION ===

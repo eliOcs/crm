@@ -5,14 +5,14 @@ class TasksController < ApplicationController
   inline_editable :name, :status, :due_date
 
   def index
-    @tasks = Current.user.tasks.includes(:contact, :company).order(created_at: :desc)
+    @tasks = Current.user.tasks.includes(:contacts, :company).order(created_at: :desc)
     @tasks_by_status = @tasks.group_by(&:status)
     fresh_when @tasks
   end
 
   def show
-    @task = Current.user.tasks.includes(:contact, :company).find(params[:id])
-    fresh_when [ @task, @task.contact, @task.company ].compact
+    @task = Current.user.tasks.includes(:contacts, :company).find(params[:id])
+    fresh_when [ @task, @task.contacts, @task.company ].flatten.compact
   end
 
   def edit_description

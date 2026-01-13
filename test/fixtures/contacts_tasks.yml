@@ -1,0 +1,3 @@
+one:
+  contact_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  task_id: <%= ActiveRecord::FixtureSet.identify(:one) %>

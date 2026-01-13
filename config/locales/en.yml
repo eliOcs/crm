@@ -144,6 +144,7 @@ en:
       description: "Description"
       due_date: "Due Date"
       contact: "Contact"
+      contacts: "Contacts"
       company: "Company"
       created: "Created"
       last_updated: "Last updated"

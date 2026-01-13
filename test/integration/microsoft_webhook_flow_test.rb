@@ -87,7 +87,7 @@ class MicrosoftWebhookFlowTest < ActionDispatch::IntegrationTest
 
     assert_not_nil task, "Task should be created"
     assert_includes task.description.to_plain_text, "financiero"
-    assert_equal sender_contact, task.contact
+    assert_includes task.contacts, sender_contact
   end
 
   test "webhook validation token response" do

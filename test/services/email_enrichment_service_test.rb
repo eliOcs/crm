@@ -132,11 +132,12 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
 
     task = @user.tasks.first
     assert_not_nil task.name, "Task should have a name"
-    assert_equal "incoming", task.status, "New tasks should have incoming status"
+    assert_includes LlmEmailExtractor::EXTRACTABLE_STATUSES, task.status,
+                    "Task status should be one of: #{LlmEmailExtractor::EXTRACTABLE_STATUSES.join(', ')}"
 
-    # Task should be linked to contact/company if sender was extracted
-    if task.contact
-      assert_not_nil task.contact.email, "Linked contact should have email"
+    # Task should be linked to contacts if sender was extracted
+    if task.contacts.any?
+      assert_not_nil task.contacts.first.email, "Linked contact should have email"
     end
 
     # Audit log should be created with source email reference
@@ -172,5 +173,164 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
     assert_equal "Updated description with latest info", description_text
     assert_not_includes description_text, "Original description"
     assert_not_includes description_text, "---"  # No separator from old appending behavior
+  end
+
+  # === Multiple Contacts Tests ===
+
+  test "tasks are linked to multiple contacts from email" do
+    # Create contacts that would appear in an email
+    contact1 = @user.contacts.create!(email: "sender@example.com", name: "Sender")
+    contact2 = @user.contacts.create!(email: "recipient@example.com", name: "Recipient")
+    company = @user.companies.create!(legal_name: "Test Company", domain: "example.com")
+
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+
+    # Build contact_map as enrichment would
+    contact_map = {
+      "sender@example.com" => contact1,
+      "recipient@example.com" => contact2
+    }
+
+    task_data = {
+      name: "Test task",
+      status: "todo",
+      sender_email: "sender@example.com"
+    }
+
+    # Call create_new_task with multiple contacts
+    service.send(:create_new_task, task_data, contact_map.values, company, Time.current)
+
+    task = @user.tasks.last
+    assert_equal 2, task.contacts.count, "Task should be linked to both contacts"
+    assert_includes task.contacts, contact1
+    assert_includes task.contacts, contact2
+  end
+
+  test "updating task adds new contacts without removing existing" do
+    # Create initial task with one contact
+    contact1 = @user.contacts.create!(email: "first@example.com", name: "First")
+    task = @user.tasks.create!(name: "Test Task", status: "incoming")
+    task.contacts << contact1
+
+    # Create another contact to add
+    contact2 = @user.contacts.create!(email: "second@example.com", name: "Second")
+
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    task_data = { id: task.id, description: "Updated" }
+
+    service.send(:update_existing_task, task_data, [ contact2 ], nil, Time.current)
+
+    task.reload
+    assert_equal 2, task.contacts.count, "Task should have both contacts"
+    assert_includes task.contacts, contact1, "Original contact should still be linked"
+    assert_includes task.contacts, contact2, "New contact should be added"
+  end
+
+  # === Related Tasks Filtering Tests ===
+
+  test "find_related_tasks returns only tasks linked to given contacts" do
+    contact1 = @user.contacts.create!(email: "related@example.com", name: "Related")
+    contact2 = @user.contacts.create!(email: "other@example.com", name: "Other")
+
+    # Create related task
+    related_task = @user.tasks.create!(name: "Related task", status: "todo")
+    related_task.contacts << contact1
+
+    # Create unrelated task
+    unrelated_task = @user.tasks.create!(name: "Unrelated task", status: "todo")
+    unrelated_task.contacts << contact2
+
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    contact_map = { "related@example.com" => contact1 }
+    domain_map = {}
+
+    tasks = service.send(:find_related_tasks, contact_map, domain_map)
+
+    assert_includes tasks, related_task, "Should include task linked to contact"
+    assert_not_includes tasks, unrelated_task, "Should not include task linked to other contact"
+  end
+
+  test "find_related_tasks returns tasks linked to given companies" do
+    company1 = @user.companies.create!(legal_name: "Related Co", domain: "related.com")
+    company2 = @user.companies.create!(legal_name: "Other Co", domain: "other.com")
+
+    related_task = @user.tasks.create!(name: "Related task", status: "todo", company: company1)
+    unrelated_task = @user.tasks.create!(name: "Unrelated task", status: "todo", company: company2)
+
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    contact_map = {}
+    domain_map = { "related.com" => company1 }
+
+    tasks = service.send(:find_related_tasks, contact_map, domain_map)
+
+    assert_includes tasks, related_task, "Should include task linked to company"
+    assert_not_includes tasks, unrelated_task, "Should not include task linked to other company"
+  end
+
+  test "find_related_tasks returns empty array when no contacts or companies" do
+    @user.tasks.create!(name: "Some task", status: "todo")
+
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    tasks = service.send(:find_related_tasks, {}, {})
+
+    assert_empty tasks, "Should return empty when no contacts or companies"
+  end
+
+  # === Status Update Tests ===
+
+  test "should_update_status allows done from any status" do
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+
+    %w[incoming todo in_progress blocked].each do |status|
+      task = @user.tasks.create!(name: "Task", status: status)
+      assert service.send(:should_update_status?, task, "done"),
+             "Should allow updating to done from #{status}"
+    end
+  end
+
+  test "should_update_status allows any status from incoming" do
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    task = @user.tasks.create!(name: "Task", status: "incoming")
+
+    %w[todo blocked done].each do |new_status|
+      assert service.send(:should_update_status?, task, new_status),
+             "Should allow updating from incoming to #{new_status}"
+    end
+  end
+
+  test "should_update_status allows blocked from todo" do
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    task = @user.tasks.create!(name: "Task", status: "todo")
+
+    assert service.send(:should_update_status?, task, "blocked"),
+           "Should allow updating from todo to blocked"
+  end
+
+  test "should_update_status rejects regression from in_progress to todo" do
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    task = @user.tasks.create!(name: "Task", status: "in_progress")
+
+    assert_not service.send(:should_update_status?, task, "todo"),
+               "Should not allow updating from in_progress to todo"
+  end
+
+  test "create_new_task uses extracted status" do
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+
+    task_data = { name: "Urgent task", status: "todo" }
+    service.send(:create_new_task, task_data, [], nil, Time.current)
+
+    task = @user.tasks.last
+    assert_equal "todo", task.status, "Should use extracted status, not default"
+  end
+
+  test "create_new_task defaults to incoming when no status" do
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+
+    task_data = { name: "Task without status" }
+    service.send(:create_new_task, task_data, [], nil, Time.current)
+
+    task = @user.tasks.last
+    assert_equal "incoming", task.status, "Should default to incoming"
   end
 end

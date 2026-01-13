@@ -2,8 +2,8 @@ class Task < ApplicationRecord
   STATUSES = %w[incoming not_now todo in_progress blocked done].freeze
 
   belongs_to :user
-  belongs_to :contact, optional: true
   belongs_to :company, optional: true
+  has_and_belongs_to_many :contacts
 
   has_many :audit_logs, as: :auditable, dependent: :destroy
   has_rich_text :description

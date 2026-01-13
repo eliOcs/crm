@@ -41,11 +41,13 @@
     </span>
   </div>
 
-  <% if @task.contact %>
+  <% if @task.contacts.any? %>
     <div class="info-card__row">
-      <span class="info-card__label"><%= t("tasks.fields.contact") %></span>
+      <span class="info-card__label"><%= t("tasks.fields.contacts") %></span>
       <span class="info-card__value">
-        <%= link_to @task.contact.name || @task.contact.email, contact_path(@task.contact) %>
+        <% @task.contacts.each_with_index do |contact, i| %>
+          <%= link_to contact.name || contact.email, contact_path(contact) %><%= ", " unless i == @task.contacts.size - 1 %>
+        <% end %>
       </span>
     </div>
   <% end %>

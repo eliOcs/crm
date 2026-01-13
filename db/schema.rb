@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_07_134244) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_13_100841) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -109,6 +109,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_134244) do
     t.integer "user_id", null: false
     t.index ["user_id", "email"], name: "index_contacts_on_user_id_and_email", unique: true
     t.index ["user_id"], name: "index_contacts_on_user_id"
+  end
+
+  create_table "contacts_tasks", id: false, force: :cascade do |t|
+    t.integer "contact_id", null: false
+    t.integer "task_id", null: false
+    t.index ["contact_id", "task_id"], name: "index_contacts_tasks_on_contact_id_and_task_id", unique: true
+    t.index ["contact_id"], name: "index_contacts_tasks_on_contact_id"
+    t.index ["task_id"], name: "index_contacts_tasks_on_task_id"
   end
 
   create_table "email_attachments", force: :cascade do |t|
@@ -236,7 +244,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_134244) do
 
   create_table "tasks", force: :cascade do |t|
     t.integer "company_id"
-    t.integer "contact_id"
     t.datetime "created_at", null: false
     t.text "description"
     t.date "due_date"
@@ -245,7 +252,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_134244) do
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["company_id"], name: "index_tasks_on_company_id"
-    t.index ["contact_id"], name: "index_tasks_on_contact_id"
     t.index ["due_date"], name: "index_tasks_on_due_date"
     t.index ["status"], name: "index_tasks_on_status"
     t.index ["user_id"], name: "index_tasks_on_user_id"
@@ -271,6 +277,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_134244) do
   add_foreign_key "companies_contacts", "companies"
   add_foreign_key "companies_contacts", "contacts"
   add_foreign_key "contacts", "users"
+  add_foreign_key "contacts_tasks", "contacts"
+  add_foreign_key "contacts_tasks", "tasks"
   add_foreign_key "email_attachments", "emails"
   add_foreign_key "emails", "contacts"
   add_foreign_key "emails", "users"
@@ -280,6 +288,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_134244) do
   add_foreign_key "pst_email_imports", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "companies"
-  add_foreign_key "tasks", "contacts"
   add_foreign_key "tasks", "users"
 end

@@ -1,0 +1,258 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.anthropic.com/v1/messages
+    body:
+      encoding: UTF-8
+      string: '{"model":"claude-haiku-4-5-20251001","max_tokens":1024,"temperature":0,"messages":[{"role":"user","content":"From:
+        Anna Puchal <APuchal@itpsa.com>\nTo: Ana Alcaraz <AAlcaraz@itpsa.com>, ITPSA
+        Lab Desenvolupament <LabDesenvolupament@itpsa.com>, Javier Estevez Medina
+        <JEstevez@itpsa.com>, Maria Moreno <mmoreno@itpsa.com>\nSubject: RE: Validació
+        mostres T25\nDate: 2025-01-22T14:45:10+00:00\n\n--- Email Body (Markdown)
+        ---\nBona tarda, Ana,\n\nDoncs no ho sé, tot i que crec que em varen dir que
+        augmentarien la dosi d’antioxidant. Jo enviaria els resultats i guardeu mostra
+        per si s’ha de repetir.\n\nGràcies,\n\n| ![Icono Descripción generada automáticamente](cid:image002.png)
+        |   | Anna Puchal *Food Division Manager * |    |\n| --- | --- | --- | ---
+        |\n|   |  ![Imagen que contiene Icono Descripción generada automáticamente](cid:image003.png)
+        | [+34 93 452 03 30 ](tel:+34934520330) |    |   |\n|  ![Icono Descripción
+        generada automáticamente](cid:image004.png) | apuchal@itpsa.com  |    |  
+        |\n|   |   |  ![Icono Descripción generada automáticamente](cid:image005.png)
+        | [www.itpsa.com ](https://itpsa.com/) |   |   |\n|    |    |  ![Icono Descripción
+        generada automáticamente](cid:image006.png) | Avda. Roma 157 – 7ª Planta 08011,
+        Barcelona (Spain)  |   |  |\n\n**AVISO LEGAL**\n\nDe conformidad con lo establecido
+        en la normativa vigente en Protección de Datos de Carácter Personal, le informamos
+        que INDUSTRIAL TECNICA PECUARIA, S.A. con C.I.F. A08219511 y domicilio social
+        sito Av. de Roma 157, 7, 08011 Barcelona, cuenta con los protocolos de seguridad
+        establecidos por el RGPD. De acuerdo con los derechos que le confiere la normativa
+        vigente en protección de datos, usted puede ejercer los derechos de acceso,
+        rectificación, limitación de tratamiento, supresión, portabilidad y oposición
+        al tratamiento de sus datos de carácter personal, así como del consentimiento
+        prestado para el tratamiento de estos, dirigiendo su petición a la dirección
+        postal indicada más arriba o al correo electrónico itpsa@itpsa.com. Este mensaje
+        está dirigido únicamente a su destinatario y es confidencial. Si lo ha recibido
+        por error, INDUSTRIAL TECNICA PECUARIA, S.A. le informa que su contenido es
+        reservado y su lectura, copia y uso no está autorizado, INDUSTRIAL TECNICA
+        PECUARIA, S.A. no garantiza la confidencialidad de los mensajes transmitidos
+        vía Internet y se reserva el derecho a ejercer las acciones legales que le
+        correspondan contra todo tercero que acceda de forma ilegítima al contenido
+        de este mensaje y al de los ficheros contenidos en el mismo.\n\nQ Por favor,
+        considere el medio ambiente antes de imprimir este correo.\n\n**LEGAL NOTICE**\n\nIn
+        accordance with the provisions of current regulations on the Protection of
+        Personal Data, we inform you that INDUSTRIAL TECNICA PECUARIA, S.A. with C.I.F.
+        A08219511 and registered office at Av. De Roma 157, 7, 08011 Barcelona, ​​has
+        the security protocols established by the GDPR. In accordance with the rights
+        conferred by current regulations on data protection, you can exercise the
+        rights of access, rectification, limitation of treatment, deletion, portability,
+        and opposition to the processing of your personal data       as well as the
+        consent given for the treatment of the same, directing your request to the
+        postal address indicated above or to the email itpsa@itpsa.com. This message
+        is intended for the intended recipient only and is confidential. If you have
+        received it by      mistake, INDUSTRIAL TECNICA PECUARIA, S.A. informs you
+        that its content is reserved, and its reading, copying and use is not authorized,
+        INDUSTRIAL TECNICA PECUARIA, S.A. does not guarantee the confidentiality of
+        the messages transmitted via the Internet    and reserves the right to exercise
+        the corresponding legal actions against any third party who illegitimately
+        accesses the content of this message and the files contained therein.\n\nQ
+        Please consider the environment before printing this e-mail.\n\n**De:** Ana
+        Alcaraz <AAlcaraz@itpsa.com> \n**Enviat:** miércoles, 22 de enero de 2025
+        14:00\n**Per a:** Anna Puchal <APuchal@itpsa.com>; ITPSA Lab Desenvolupament
+        <LabDesenvolupament@itpsa.com>; Javier Estevez Medina <JEstevez@itpsa.com>;
+        Maria Moreno <mmoreno@itpsa.com>\n**Tema:** RE: Validació mostres T25\n\nBona
+        tarda Anna,\n\nSaps quina dosis de ROSPHEROL T25 porten aquestes mostres?
+        Hem trobat un residual de tocoferols excessivament alt en comparació amb altres
+        mostres de Royal i era per saber si la cosa bé de la mostra o de l’anàlisi.
+        Ja ens diràs per tal de fer l’informe o repetir les analítiques abans de passar
+        els resultats.\n\nSalutacions,\n\n| ![Icono Descripción generada automáticamente](cid:image002.png)
+        |   | **Ana Alcaraz García** *R+D+s Laboratory Technician * |    |\n| ---
+        | --- | --- | --- |\n|   |  ![Imagen que contiene Icono Descripción generada
+        automáticamente](cid:image003.png) | + 34 977 600 027 / 608 472 518 |    |
+          |\n|  ![Icono Descripción generada automáticamente](cid:image004.png) |
+        aalcaraz@itpsa.com  <xxxxxxxx@itpsa.com > |    |   |\n|   |   |  ![Icono Descripción
+        generada automáticamente](cid:image005.png) | [www.itpsa.com ](https://itpsa.com/)
+        |   |   |\n|    |    |  ![Icono Descripción generada automáticamente](cid:image006.png)
+        | Polígon Industrial de Valls, C/Artesans 61 43800 Valls, Tarragona (Spain) 
+        |   |  |\n\n**AVISO LEGAL**\n\nDe conformidad con lo establecido en la normativa
+        vigente en Protección de Datos de Carácter Personal, le informamos que INDUSTRIAL
+        TECNICA PECUARIA, S.A. con C.I.F. A08219511 y domicilio social sito Av. de
+        Roma 157, 7, 08011 Barcelona, cuenta con los protocolos de seguridad establecidos
+        por el RGPD. De acuerdo con los derechos que le confiere la normativa vigente
+        en protección de datos, usted puede ejercer los derechos de acceso, rectificación,
+        limitación de tratamiento, supresión, portabilidad y oposición al tratamiento
+        de sus datos de carácter personal, así como del consentimiento prestado para
+        el tratamiento de estos, dirigiendo su petición a la dirección postal indicada
+        más arriba o al correo electrónico itpsa@itpsa.com. Este mensaje está dirigido
+        únicamente a su destinatario y es confidencial. Si lo ha recibido por error,
+        INDUSTRIAL TECNICA PECUARIA, S.A. le informa que su contenido es reservado
+        y su lectura, copia y uso no está autorizado, INDUSTRIAL TECNICA PECUARIA,
+        S.A. no garantiza la confidencialidad de los mensajes transmitidos vía Internet
+        y se reserva el derecho a ejercer las acciones legales que le correspondan
+        contra todo tercero que acceda de forma ilegítima al contenido de este mensaje
+        y al de los ficheros contenidos en el mismo.\n\nQ Por favor, considere el
+        medio ambiente antes de imprimir este correo.\n\n**LEGAL NOTICE**\n\nIn accordance
+        with the provisions of current regulations on the Protection of Personal Data,
+        we inform you that INDUSTRIAL TECNICA PECUARIA, S.A. with C.I.F. A08219511
+        and registered office at Av. De Roma 157, 7, 08011 Barcelona, ​​has the security
+        protocols established by the GDPR. In accordance with the rights conferred
+        by current regulations on data protection, you can exercise the rights of
+        access, rectification, limitation of treatment, deletion, portability, and
+        opposition to the processing of your personal data       as well as the consent
+        given for the treatment of the same, directing your request to the postal
+        address indicated above or to the email itpsa@itpsa.com. This message is intended
+        for the intended recipient only and is confidential. If you have received
+        it by      mistake, INDUSTRIAL TECNICA PECUARIA, S.A. informs you that its
+        content is reserved, and its reading, copying and use is not authorized, INDUSTRIAL
+        TECNICA PECUARIA, S.A. does not guarantee the confidentiality of the messages
+        transmitted via the Internet    and reserves the right to exercise the corresponding
+        legal actions against any third party who illegitimately accesses the content
+        of this message and the files contained therein.\n\nQ Please consider the
+        environment before printing this e-mail.\n\n**De:** Anna Puchal <APuchal@itpsa.com>
+        \n**Enviado el:** miércoles, 15 de enero de 2025 15:57\n**Para:** ITPSA Lab
+        Desenvolupament <LabDesenvolupament@itpsa.com>; Javier Estevez Medina <JEstevez@itpsa.com>;
+        Ana Alcaraz <AAlcaraz@itpsa.com>; Maria Moreno <mmoreno@itpsa.com>\n**Asunto:**
+        RV: Validació mostres T25\n\n**De:** Irene <irene@royalprotein.com> \n**Enviado
+        el:** miércoles, 15 de enero de 2025 15:52\n**Para:** Anna Puchal <APuchal@itpsa.com>\n**CC:**
+        Gloria <gloria@royalprotein.com>\n**Asunto:** Validació mostres T25\n\nBona
+        tarda Anna,\n\nUs farem arribar unes mostres per validar el romanent d’antioxidant
+        (validació anual).\n\n| **Item** | **Sampling point** | **Batch n°** | **Product
+        name** | **Quantity (g)** | **Production date*** | **AOX applied*** | **Dosage**
+        | **Process level (AOX application)*** |\n| --- | --- | --- | --- | --- |
+        --- | --- | --- | --- |\n| **(ppm)*** |\n| 1 | PCD | 080125PCD/01 |   |  
+        | 08/01/2025 | T25 |   |   |\n| 2 | PCD | 090125PCD/04 |   |   | 09/01/2025
+        | T25 |   |   |\n\nGràcies per endavant,\n\n| ![](cid:image008.jpg) | Irene
+        Taberner i Felip *R & D Department* **RP ROYAL DISTRIBUTION, S.L** C/ Sant
+        Andreu, 85 · 17834 Porqueres (GIRONA) - SPAIN Phone : **+34 972 57 14 04**
+        Direct Phone:**  +34 972 78 95 68**irene@royalprotein.com · [www.royalprotein.com](http://www.royalprotein.com/)
+          RP Royal Distribution, S.L. [Privacy policy](http://www.royalprotein.com/index.php/en/privacy-policy.html)
+        |"}],"system":"You are a task extractor for a CRM system. Extract follow-up
+        tasks ONLY when the email explicitly requests action from the recipient.\n\n\n<instructions>\nONLY
+        extract tasks when:\n1. The sender explicitly asks the recipient to do something\n2.
+        There''s a clear action item with an expected response or deliverable\n3.
+        The email requests a reply, document, decision, or meeting scheduling\n\nDO
+        NOT extract tasks for:\n1. Informational emails (newsletters, announcements,
+        status updates)\n2. Auto-generated emails (receipts, confirmations, notifications)\n3.
+        Emails where the sender is completing a task (delivering something, not requesting)\n4.
+        Simple acknowledgments or thank you emails\n5. Emails that are just forwarding
+        information without asking for action\n</instructions>\n\n<user_context>\nThe
+        CRM user''s email is: mmoreno@itpsa.com\nUse this to determine perspective:\n-
+        If user is in \"From\": User SENT this email. If they requested something
+        and are waiting for a response, the task is \"blocked\" (waiting on recipient).\n-
+        If user is in \"To/Cc\": User RECEIVED this email. Action requests directed
+        at them are \"todo\".\n- Tasks are always from the user''s perspective (what
+        THEY need to do or wait for).\n</user_context>\n\n<date_context>\nEmail date:
+        2024-01-15 (Monday)\nUse this date to resolve relative deadlines:\n- \"by
+        Friday\" -> next Friday from email date\n- \"by end of week\" -> Friday of
+        email''s week\n- \"by end of month\" -> last day of email''s month\n- \"ASAP\"
+        / \"urgent\" -> email date\n- \"next week\" -> Monday of following week\n</date_context>\n\n<existing_tasks>\nNo
+        existing active tasks.\n</existing_tasks>\n\n<output_format>\nReturn ONLY
+        a JSON array of tasks:\n[\n  {\n    \"id\": null,\n    \"name\": \"Send updated
+        proposal\",\n    \"description\": \"Client requested revised pricing for Q2\",\n    \"status\":
+        \"todo\",\n    \"due_date\": \"2025-01-20\",\n    \"sender_email\": \"client@example.com\"\n  }\n]\n\nIf
+        updating an existing task (same topic from same sender), include the task
+        id:\n[\n  {\n    \"id\": 42,\n    \"name\": \"Send updated proposal\",\n    \"description\":
+        \"Follow-up: client needs it by Friday\",\n    \"status\": \"blocked\",\n    \"due_date\":
+        \"2025-01-17\",\n    \"sender_email\": \"client@example.com\"\n  }\n]\n\nIf
+        no actionable tasks found, return: []\n</output_format>\n\n<status_guidelines>\nStatus
+        must be one of: incoming, todo, blocked, done\n\n- \"incoming\" (default):
+        Use when the request needs user review or triage\n- \"todo\": Clear, specific,
+        actionable request ready to work on\n- \"blocked\": Email indicates waiting
+        on external input, approval, or third party\n- \"done\": Email confirms the
+        task was completed (e.g., \"I''ve sent the report you requested\")\n\nWhen
+        unsure, default to \"incoming\".\n</status_guidelines>\n\n<guidelines>\n-
+        Extract the MINIMUM number of tasks (prefer one clear task over multiple vague
+        ones)\n- Use imperative verb form: \"Send...\", \"Review...\", \"Schedule...\",
+        \"Reply to...\"\n- Keep task names under 60 characters\n- Only set id if the
+        email clearly relates to an existing task\n- When unsure between update vs
+        new task, prefer creating new task\n- Use null for unknown fields, never hallucinate\n</guidelines>\n"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Anthropic::Client/Ruby 1.16.2
+      Host:
+      - api.anthropic.com
+      X-Stainless-Arch:
+      - x64
+      X-Stainless-Lang:
+      - ruby
+      X-Stainless-Os:
+      - Linux
+      X-Stainless-Package-Version:
+      - 1.16.2
+      X-Stainless-Runtime:
+      - ruby
+      X-Stainless-Runtime-Version:
+      - 3.4.7
+      Content-Type:
+      - application/json
+      Anthropic-Version:
+      - '2023-06-01'
+      X-Api-Key:
+      - "<ANTHROPIC_API_KEY>"
+      X-Stainless-Retry-Count:
+      - '0'
+      X-Stainless-Timeout:
+      - '600.0'
+      Content-Length:
+      - '12930'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 13 Jan 2026 10:27:29 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Anthropic-Ratelimit-Input-Tokens-Limit:
+      - '450000'
+      Anthropic-Ratelimit-Input-Tokens-Remaining:
+      - '448000'
+      Anthropic-Ratelimit-Input-Tokens-Reset:
+      - '2026-01-13T10:27:26Z'
+      Anthropic-Ratelimit-Output-Tokens-Limit:
+      - '90000'
+      Anthropic-Ratelimit-Output-Tokens-Remaining:
+      - '90000'
+      Anthropic-Ratelimit-Output-Tokens-Reset:
+      - '2026-01-13T10:27:29Z'
+      Anthropic-Ratelimit-Requests-Limit:
+      - '1000'
+      Anthropic-Ratelimit-Requests-Remaining:
+      - '999'
+      Anthropic-Ratelimit-Requests-Reset:
+      - '2026-01-13T10:27:26Z'
+      Anthropic-Ratelimit-Tokens-Limit:
+      - '540000'
+      Anthropic-Ratelimit-Tokens-Remaining:
+      - '538000'
+      Anthropic-Ratelimit-Tokens-Reset:
+      - '2026-01-13T10:27:26Z'
+      Request-Id:
+      - req_011CX5DcBM6nZg75us1vf4K7
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Anthropic-Organization-Id:
+      - 36f27efe-3e16-4c65-95cd-f21d3225017e
+      Server:
+      - cloudflare
+      X-Envoy-Upstream-Service-Time:
+      - '3577'
+      Cf-Cache-Status:
+      - DYNAMIC
+      X-Robots-Tag:
+      - none
+      Cf-Ray:
+      - 9bd43376d951cfa6-MAD
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJtb2RlbCI6ImNsYXVkZS1oYWlrdS00LTUtMjAyNTEwMDEiLCJpZCI6Im1zZ18wMVdhS2prU1N3aVVjUjNhejRWd1R6WWEiLCJ0eXBlIjoibWVzc2FnZSIsInJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJgYGBqc29uXG5bXVxuYGBgXG5cbioqUmVhc29uaW5nOioqXG5cblRoaXMgZW1haWwgdGhyZWFkIGRvZXMgbm90IGNvbnRhaW4gYW4gZXhwbGljaXQgYWN0aW9uIHJlcXVlc3QgZGlyZWN0ZWQgYXQgbW1vcmVub0BpdHBzYS5jb20gKHRoZSBDUk0gdXNlcikuXG5cbi0gKipPcmlnaW5hbCBlbWFpbCAoSXJlbmUpKio6IEluZm9ybWF0aW9uYWwgLSBub3RpZmllcyB0aGF0IHNhbXBsZXMgd2lsbCBiZSBzZW50IGZvciB2YWxpZGF0aW9uLiBObyBhY3Rpb24gcmVxdWVzdGVkIGZyb20gdGhlIHJlY2lwaWVudC5cblxuLSAqKkFuYSdzIHJlcGx5Kio6IEFza3MgQW5uYSBQdWNoYWwgYSBxdWVzdGlvbiBhYm91dCBkb3NhZ2UgYW5kIHN1Z2dlc3RzIG5leHQgc3RlcHMgKFwiSmEgZW5zIGRpcsOgcyBwZXIgdGFsIGRlIGZlciBsJ2luZm9ybWUgbyByZXBldGlyIGxlcyBhbmFsw610aXF1ZXNcIikuIFRoZSBhY3Rpb24gcmVxdWVzdCBpcyBkaXJlY3RlZCBhdCBBbm5hLCBub3QgYXQgTWFyaWEgTW9yZW5vLlxuXG4tICoqQW5uYSdzIHJlcGx5Kio6IFByb3ZpZGVzIGhlciBvcGluaW9uL3Jlc3BvbnNlIHRvIEFuYSdzIHF1ZXN0aW9uLiBTaGUgc3VnZ2VzdHMgc2VuZGluZyByZXN1bHRzIGFuZCBrZWVwaW5nIHNhbXBsZXMsIGJ1dCB0aGlzIGlzIGFkdmljZS9ndWlkYW5jZSwgbm90IGEgdGFzayBhc3NpZ25tZW50IHRvIE1hcmlhIE1vcmVuby5cblxuTWFyaWEgTW9yZW5vIGlzIGluY2x1ZGVkIGluIHRoZSBDQy9yZWNpcGllbnQgbGlzdCBidXQgaXMgbm90IGV4cGxpY2l0bHkgYXNrZWQgdG8gcGVyZm9ybSBhbnkgYWN0aW9uLiBUaGUgY29udmVyc2F0aW9uIGlzIGJldHdlZW4gQW5uYSAoRm9vZCBEaXZpc2lvbiBNYW5hZ2VyKSBhbmQgQW5hIChMYWIgVGVjaG5pY2lhbikgcmVnYXJkaW5nIHNhbXBsZSB2YWxpZGF0aW9uIHByb2NlZHVyZXMuIn1dLCJzdG9wX3JlYXNvbiI6ImVuZF90dXJuIiwic3RvcF9zZXF1ZW5jZSI6bnVsbCwidXNhZ2UiOnsiaW5wdXRfdG9rZW5zIjozODUzLCJjYWNoZV9jcmVhdGlvbl9pbnB1dF90b2tlbnMiOjAsImNhY2hlX3JlYWRfaW5wdXRfdG9rZW5zIjowLCJjYWNoZV9jcmVhdGlvbiI6eyJlcGhlbWVyYWxfNW1faW5wdXRfdG9rZW5zIjowLCJlcGhlbWVyYWxfMWhfaW5wdXRfdG9rZW5zIjowfSwib3V0cHV0X3Rva2VucyI6MjI1LCJzZXJ2aWNlX3RpZXIiOiJzdGFuZGFyZCJ9fQ==
+  recorded_at: Tue, 13 Jan 2026 10:27:29 GMT
+recorded_with: VCR 6.4.0

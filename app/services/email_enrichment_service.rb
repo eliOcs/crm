@@ -144,8 +144,14 @@ class EmailEnrichmentService
     end
 
     # Extract and process tasks (separate LLM call)
-    existing_tasks = @user.tasks.active.includes(:contact, :company).to_a
-    tasks = extractor.extract_tasks(email_date: email_date, existing_tasks: existing_tasks, locale: @user.locale)
+    # Only pass tasks related to contacts/companies in this email
+    existing_tasks = find_related_tasks(contact_map, domain_map)
+    tasks = extractor.extract_tasks(
+      email_date: email_date,
+      existing_tasks: existing_tasks,
+      locale: @user.locale,
+      user_email: @user.email_address
+    )
     @logger.info "  LLM: #{tasks.count} tasks extracted"
 
     tasks.each do |task_data|
@@ -297,30 +303,30 @@ class EmailEnrichmentService
   end
 
   def process_task(task_data, contact_map, domain_map, email_date)
-    # Find associated contact from sender
-    contact = contact_map[task_data[:sender_email]]
-    contact ||= @user.contacts.find_by(email: task_data[:sender_email]) if task_data[:sender_email].present?
+    # Collect all contacts from this email
+    contacts = contact_map.values.compact.uniq
 
-    # Find associated company from contact or sender domain
-    company = contact&.companies&.first
-    if company.nil? && task_data[:sender_email].present?
+    # Find associated company from sender or first contact with a company
+    company = nil
+    if task_data[:sender_email].present?
       domain = task_data[:sender_email].split("@").last&.downcase
       company = domain_map[domain] || @user.companies.find_by(domain: domain) if domain.present?
     end
+    company ||= contacts.flat_map(&:companies).first
 
     if task_data[:id].present?
-      update_existing_task(task_data, contact, company, email_date)
+      update_existing_task(task_data, contacts, company, email_date)
     else
-      create_new_task(task_data, contact, company, email_date)
+      create_new_task(task_data, contacts, company, email_date)
     end
   end
 
-  def update_existing_task(task_data, contact, company, email_date)
+  def update_existing_task(task_data, contacts, company, email_date)
     task = @user.tasks.find_by(id: task_data[:id])
 
     unless task
       @logger.warn "  Task id=#{task_data[:id]} not found, creating new"
-      create_new_task(task_data.merge(id: nil), contact, company, email_date)
+      create_new_task(task_data.merge(id: nil), contacts, company, email_date)
       return
     end
 
@@ -339,17 +345,25 @@ class EmailEnrichmentService
       end
     end
 
-    # Link to contact/company if not already linked
-    updates[:contact_id] = contact.id if contact && task.contact_id.nil?
+    # Link to company if not already linked
     updates[:company_id] = company.id if company && task.company_id.nil?
 
-    if updates.any?
+    # Update status if appropriate
+    if task_data[:status].present? && should_update_status?(task, task_data[:status])
+      updates[:status] = task_data[:status]
+    end
+
+    # Add any new contacts not already linked
+    new_contacts = Array(contacts) - task.contacts.to_a
+    task.contacts << new_contacts if new_contacts.any?
+
+    if updates.any? || new_contacts.any?
       # Use email date as updated_at
       updates[:updated_at] = email_date if email_date
 
-      task.update!(updates)
+      task.update!(updates) if updates.any?
       @stats[:tasks_updated] += 1
-      @logger.info "  DB: UPDATE task id=#{task.id} #{updates.keys.join(', ')}"
+      @logger.info "  DB: UPDATE task id=#{task.id} #{(updates.keys + (new_contacts.any? ? [ :contacts ] : [])).join(', ')}"
 
       log_audit(
         record: task,
@@ -363,13 +377,12 @@ class EmailEnrichmentService
     end
   end
 
-  def create_new_task(task_data, contact, company, email_date)
+  def create_new_task(task_data, contacts, company, email_date)
     attrs = {
       name: task_data[:name],
       description: task_data[:description],
-      status: "incoming",
+      status: task_data[:status] || "incoming",
       due_date: task_data[:due_date],
-      contact_id: contact&.id,
       company_id: company&.id
     }
     # Use email date as created_at/updated_at
@@ -379,9 +392,10 @@ class EmailEnrichmentService
     end
 
     task = @user.tasks.create!(attrs)
+    task.contacts << contacts if contacts.any?
 
     @stats[:tasks_new] += 1
-    @logger.info "  DB: CREATE task id=#{task.id} name=#{task.name.truncate(40).inspect}"
+    @logger.info "  DB: CREATE task id=#{task.id} name=#{task.name.truncate(40).inspect} contacts=#{contacts.count}"
 
     log_audit(
       record: task,
@@ -390,6 +404,39 @@ class EmailEnrichmentService
       field_changes: build_field_changes(task),
       source_email: @source_email
     )
+  end
+
+  # Determine if status should be updated based on current and new status
+  # - Always allow completion (done)
+  # - Allow first triage (from incoming)
+  # - Allow blocking a todo task
+  def should_update_status?(task, new_status)
+    return true if new_status == "done"
+    return true if task.status == "incoming"
+    return true if task.status == "todo" && new_status == "blocked"
+    false
+  end
+
+  # Find active tasks related to contacts or companies in this email
+  def find_related_tasks(contact_map, domain_map)
+    contact_ids = contact_map.values.compact.map(&:id)
+    company_ids = domain_map.values.compact.map(&:id)
+
+    return [] if contact_ids.empty? && company_ids.empty?
+
+    # Tasks linked to any of these contacts OR companies
+    tasks = @user.tasks.active.includes(:contacts, :company).distinct
+
+    conditions = []
+    conditions << "contacts_tasks.contact_id IN (?)" if contact_ids.any?
+    conditions << "tasks.company_id IN (?)" if company_ids.any?
+
+    tasks = tasks.left_joins(:contacts)
+                 .where(conditions.join(" OR "), *[ contact_ids, company_ids ].reject(&:empty?))
+                 .to_a
+
+    @logger.info "  Found #{tasks.count} related tasks for #{contact_ids.count} contacts, #{company_ids.count} companies"
+    tasks
   end
 
   # Link the source email to the newly created contact if this contact is the sender
