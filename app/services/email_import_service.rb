@@ -33,7 +33,7 @@ class EmailImportService
       sent_at: email_data[:date] || Time.current,
       body_plain: email_data[:body],
       body_html: clean_html(email_data[:html_body]),
-      from_address: email_data[:from] || { "email" => "unknown@unknown", "name" => nil },
+      from_address: from_address_for(mail, email_data),
       to_addresses: email_data[:to] || [],
       cc_addresses: email_data[:cc] || [],
       message_id: message_id,
@@ -94,6 +94,19 @@ class EmailImportService
     # Just store the raw HTML - sanitization happens at render time
     # This preserves the original content and allows flexible cleanup later
     html
+  end
+
+  def from_address_for(mail, email_data)
+    from = email_data[:from]
+
+    if from.present?
+      { "email" => from[:email], "name" => from[:name] }
+    else
+      # EmlReader returned nil - likely MAILER-DAEMON from readpst extraction
+      # Use user's email but try to preserve the display name from raw headers
+      name = mail[:from]&.display_names&.first
+      { "email" => @user.email_address, "name" => name }
+    end
   end
 
   def relative_path(eml_path)

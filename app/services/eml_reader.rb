@@ -70,19 +70,33 @@ class EmlReader
 
   def extract_address(field)
     return nil unless field
+    return nil unless field.respond_to?(:addrs)
 
     addr = field.addrs.first
     return nil unless addr
+    return nil unless valid_email?(addr.address)
 
     { email: addr.address, name: addr.display_name || addr.name }
+  rescue => e
+    # Handle malformed address fields
+    nil
   end
 
   def extract_addresses(field)
     return [] unless field
+    return [] unless field.respond_to?(:addrs)
 
-    field.addrs.map do |addr|
+    field.addrs.filter_map do |addr|
+      next unless valid_email?(addr.address)
       { email: addr.address, name: addr.display_name || addr.name }
     end
+  rescue => e
+    # Handle malformed address fields
+    []
+  end
+
+  def valid_email?(email)
+    email.present? && email.include?("@")
   end
 
   def extract_body(mail)

@@ -136,4 +136,23 @@ class EmailImportServiceTest < ActiveSupport::TestCase
     assert_equal 0, @service.stats[:skipped]
     assert_equal 0, @service.stats[:errors]
   end
+
+  test "uses user email when From is MAILER-DAEMON" do
+    fixture_path = Rails.root.join("test/fixtures/files/emails/sent_malformed_headers.eml")
+
+    email = @service.import_from_eml(fixture_path)
+
+    # Should use importing user's email instead of MAILER-DAEMON
+    assert_equal @user.email_address, email.from_address["email"]
+    # Should preserve the display name from the original
+    assert_equal "Maria Moreno", email.from_address["name"]
+
+    # Should have empty To/Cc since the headers only contain names (no email addresses)
+    assert_equal [], email.to_addresses
+    assert_equal [], email.cc_addresses
+
+    # Other fields should still be extracted correctly
+    assert_equal "RE: Stock Request", email.subject
+    assert_equal "sent-test-123@example.com", email.message_id
+  end
 end

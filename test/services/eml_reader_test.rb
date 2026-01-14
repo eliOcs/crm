@@ -27,4 +27,26 @@ class EmlReaderTest < ActiveSupport::TestCase
       assert_equal exp[:content_type], file_attachments[i][:content_type], "Content-type mismatch at index #{i}"
     end
   end
+
+  test "handles malformed To and Cc headers without email addresses" do
+    path = Rails.root.join("test/fixtures/files/emails/malformed_to_header.eml")
+    email = EmlReader.new(path).read
+
+    # Should not raise an error
+    assert_not_nil email
+
+    # From header is valid and should be extracted
+    assert_equal "sender@example.com", email[:from][:email]
+    assert_equal "Test Sender", email[:from][:name]
+
+    # To header contains only names (no email addresses), should return empty array
+    assert_equal [], email[:to]
+
+    # Cc header is also malformed, should return empty array
+    assert_equal [], email[:cc]
+
+    # Other fields should still be extracted
+    assert_equal "Test email with malformed To header", email[:subject]
+    assert_equal "test-malformed-123@example.com", Mail.read(path).message_id
+  end
 end

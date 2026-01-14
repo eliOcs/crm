@@ -49,6 +49,21 @@ class PstEmailImportTest < ActiveSupport::TestCase
     assert import.active?
   end
 
+  test "active? returns true for enriching status" do
+    import = @user.pst_email_imports.build(status: "enriching")
+    assert import.active?
+  end
+
+  test "enriching? returns true for enriching status" do
+    import = @user.pst_email_imports.build(status: "enriching")
+    assert import.enriching?
+  end
+
+  test "enriching? returns false for other statuses" do
+    import = @user.pst_email_imports.build(status: "importing")
+    assert_not import.enriching?
+  end
+
   test "active? returns false for completed status" do
     import = @user.pst_email_imports.build(status: "completed")
     assert_not import.active?
@@ -76,6 +91,11 @@ class PstEmailImportTest < ActiveSupport::TestCase
 
   test "can_cancel? returns true for importing status" do
     import = @user.pst_email_imports.build(status: "importing")
+    assert import.can_cancel?
+  end
+
+  test "can_cancel? returns true for enriching status" do
+    import = @user.pst_email_imports.build(status: "enriching")
     assert import.can_cancel?
   end
 
@@ -238,5 +258,78 @@ class PstEmailImportTest < ActiveSupport::TestCase
     assert_not Dir.exist?(extraction_dir)
   ensure
     FileUtils.rm_rf(temp_dir)
+  end
+
+  # --- Sent PST File Methods ---
+
+  test "cleanup_sent_pst_file removes file if exists" do
+    temp_dir = Rails.root.join("tmp", "test_sent_pst_cleanup")
+    FileUtils.mkdir_p(temp_dir)
+    sent_pst_path = temp_dir.join("sent.pst")
+    File.write(sent_pst_path, "dummy content")
+
+    import = @user.pst_email_imports.create!(
+      original_filename: "inbox.pst",
+      sent_pst_file_path: sent_pst_path.to_s,
+      sent_original_filename: "sent.pst"
+    )
+
+    assert File.exist?(sent_pst_path)
+    import.cleanup_sent_pst_file
+    assert_not File.exist?(sent_pst_path)
+  ensure
+    FileUtils.rm_rf(temp_dir)
+  end
+
+  test "cleanup_sent_pst_file handles missing file gracefully" do
+    import = @user.pst_email_imports.create!(
+      original_filename: "inbox.pst",
+      sent_pst_file_path: "/nonexistent/sent.pst"
+    )
+
+    assert_nothing_raised { import.cleanup_sent_pst_file }
+  end
+
+  test "cleanup_pst_files removes both inbox and sent pst files" do
+    temp_dir = Rails.root.join("tmp", "test_cleanup_both_pst")
+    FileUtils.mkdir_p(temp_dir)
+
+    inbox_path = temp_dir.join("inbox.pst")
+    sent_path = temp_dir.join("sent.pst")
+    File.write(inbox_path, "inbox content")
+    File.write(sent_path, "sent content")
+
+    import = @user.pst_email_imports.create!(
+      original_filename: "inbox.pst",
+      pst_file_path: inbox_path.to_s,
+      sent_original_filename: "sent.pst",
+      sent_pst_file_path: sent_path.to_s
+    )
+
+    import.cleanup_pst_files
+
+    assert_not File.exist?(inbox_path)
+    assert_not File.exist?(sent_path)
+  ensure
+    FileUtils.rm_rf(temp_dir)
+  end
+
+  # --- Display Filenames ---
+
+  test "display_filenames returns only inbox filename when no sent file" do
+    import = @user.pst_email_imports.build(
+      original_filename: "inbox.pst"
+    )
+
+    assert_equal "inbox.pst", import.display_filenames
+  end
+
+  test "display_filenames returns both filenames when sent file present" do
+    import = @user.pst_email_imports.build(
+      original_filename: "inbox.pst",
+      sent_original_filename: "sent.pst"
+    )
+
+    assert_equal "inbox.pst, sent.pst", import.display_filenames
   end
 end

@@ -9,7 +9,8 @@ class HtmlToMarkdown
   def convert
     return "" if @html.blank?
 
-    doc = Nokogiri::HTML.fragment(clean_html(@html))
+    doc = Nokogiri::HTML.fragment(@html)
+    clean_document(doc)
 
     # Process the document
     process_node(doc).strip.gsub(/\n{3,}/, "\n\n")
@@ -17,26 +18,18 @@ class HtmlToMarkdown
 
   private
 
-  def clean_html(html)
-    # Remove style tags and their content
-    html = html.gsub(/<style[^>]*>.*?<\/style>/mi, "")
-    # Remove script tags
-    html = html.gsub(/<script[^>]*>.*?<\/script>/mi, "")
-    # Remove VML conditional comments (keep their non-VML fallback content)
-    # Pattern: <!--[if gte vml 1]>VML content<![endif]--><![if !vml]>fallback<![endif]>
-    html = html.gsub(/<!--\[if[^\]]*vml[^\]]*\]>.*?<!\[endif\]-->/mi, "")
-    # Remove XML/VML namespace elements
-    html = html.gsub(/<v:[^>]*>.*?<\/v:[^>]*>/mi, "")
-    html = html.gsub(/<o:[^>]*>.*?<\/o:[^>]*>/mi, "")
-    html = html.gsub(/<w:[^>]*>.*?<\/w:[^>]*>/mi, "")
-    # Keep content inside non-VML conditionals: <![if !vml]>content<![endif]>
-    html = html.gsub(/<!\[if !vml\]>/i, "")
-    html = html.gsub(/<!\[endif\]>/i, "")
-    # Remove remaining HTML comments
-    html = html.gsub(/<!--.*?-->/m, "")
-    # Remove XML processing instructions
-    html = html.gsub(/<\?xml[^>]*\?>/i, "")
-    html
+  # Use Nokogiri to remove elements instead of regex to avoid catastrophic backtracking
+  def clean_document(doc)
+    # Remove style, script, and other non-content elements
+    doc.css("style, script, meta, link, title").each(&:remove)
+
+    # Remove XML/VML namespace elements (Microsoft Office)
+    doc.xpath("//*[starts-with(name(), 'v:') or starts-with(name(), 'o:') or starts-with(name(), 'w:')]").each(&:remove)
+
+    # Remove comments (including VML conditionals)
+    doc.xpath("//comment()").each(&:remove)
+
+    doc
   end
 
   def process_node(node)
@@ -124,8 +117,13 @@ class HtmlToMarkdown
   def process_table(table)
     rows = []
 
-    table.css("tr").each do |tr|
-      cells = tr.css("td, th").map do |cell|
+    # Only get direct child rows (not from nested tables)
+    # Account for tbody/thead/tfoot wrappers
+    direct_rows = table.xpath("./tr | ./tbody/tr | ./thead/tr | ./tfoot/tr")
+
+    direct_rows.each do |tr|
+      # Only get direct child cells (not from nested tables within cells)
+      cells = tr.xpath("./td | ./th").map do |cell|
         process_node(cell).strip.gsub(/\s+/, " ")
       end
       # Skip empty rows

@@ -1,4 +1,5 @@
 require "test_helper"
+require "benchmark"
 
 class HtmlToMarkdownTest < ActiveSupport::TestCase
   setup do
@@ -104,5 +105,34 @@ class HtmlToMarkdownTest < ActiveSupport::TestCase
     # Nil/blank (unchanged)
     assert_nil converter.send(:unwrap_url, nil)
     assert_equal "", converter.send(:unwrap_url, "")
+  end
+
+  test "handles complex booking confirmation HTML without timeout" do
+    # This 212KB HTML file caused a Regexp timeout with the old regex-based implementation
+    # Ruby 3.2+ has Regexp.timeout (default 1s) to prevent ReDoS attacks
+    html_path = Rails.root.join("test/fixtures/files/emails/complex_booking_confirmation.html")
+    html = File.read(html_path)
+
+    assert html.length > 200_000, "Test file should be large (>200KB)"
+
+    # Should complete without timeout (previously caused "regexp match timeout" error)
+    result = nil
+    elapsed = Benchmark.realtime do
+      result = HtmlToMarkdown.new(html).convert
+    end
+
+    assert result.present?, "Should produce output"
+    assert result.length < html.length, "Markdown should be smaller than HTML"
+    assert elapsed < 1.0, "Should complete in under 1 second (took #{elapsed.round(2)}s)"
+
+    # Verify key content is preserved
+    assert_includes result, "Maria Moreno"
+    assert_includes result, "mmoreno@itpsa.com"
+    assert_includes result, "H3PP0"  # Booking code
+    assert_includes result, "ANNA PUCHAL SABARTES"  # Passenger
+    assert_includes result, "IB0404"  # Flight number
+    assert_includes result, "1.003,19"  # Price
+    assert_includes result, "INDUSTRIAL TECNICA PECUARIA"  # Company
+    assert_match(/!\[.*\]\(cid:image001\.png\)/, result)  # CID image preserved
   end
 end

@@ -64,31 +64,47 @@ class SettingsController < ApplicationController
       return
     end
 
-    # Validate file presence
-    unless params[:pst_file].present?
-      redirect_to edit_settings_path, alert: t("pst_import.no_file")
+    # Inbox PST is required
+    inbox_file = params[:inbox_pst_file]
+    sent_file = params[:sent_pst_file]
+
+    unless inbox_file.present?
+      redirect_to edit_settings_path, alert: t("pst_import.no_inbox_file")
       return
     end
 
-    uploaded_file = params[:pst_file]
-
-    # Validate file size
-    if uploaded_file.size > PstEmailImport::MAX_FILE_SIZE
+    # Validate file sizes
+    if inbox_file.size > PstEmailImport::MAX_FILE_SIZE
       redirect_to edit_settings_path, alert: t("pst_import.file_too_large")
       return
     end
 
-    # Save file to temp directory (stream copy, not loading into memory)
+    if sent_file.present? && sent_file.size > PstEmailImport::MAX_FILE_SIZE
+      redirect_to edit_settings_path, alert: t("pst_import.file_too_large")
+      return
+    end
+
+    # Save files to temp directory
     pst_dir = Rails.root.join("tmp", "pst_uploads")
     FileUtils.mkdir_p(pst_dir)
-    pst_path = pst_dir.join("#{SecureRandom.uuid}.pst")
-    FileUtils.cp(uploaded_file.tempfile.path, pst_path)
+
+    inbox_path = pst_dir.join("#{SecureRandom.uuid}_inbox.pst")
+    FileUtils.cp(inbox_file.tempfile.path, inbox_path)
+
+    sent_path = nil
+    if sent_file.present?
+      sent_path = pst_dir.join("#{SecureRandom.uuid}_sent.pst")
+      FileUtils.cp(sent_file.tempfile.path, sent_path)
+    end
 
     # Create import record
     import = Current.user.pst_email_imports.create!(
-      original_filename: uploaded_file.original_filename,
-      file_size: uploaded_file.size,
-      pst_file_path: pst_path.to_s
+      original_filename: inbox_file.original_filename,
+      file_size: inbox_file.size,
+      pst_file_path: inbox_path.to_s,
+      sent_original_filename: sent_file&.original_filename,
+      sent_file_size: sent_file&.size,
+      sent_pst_file_path: sent_path&.to_s
     )
 
     PstEmailImportJob.perform_later(import_id: import.id)
@@ -106,6 +122,30 @@ class SettingsController < ApplicationController
     else
       redirect_to edit_settings_path, alert: t("pst_import.cannot_cancel")
     end
+  end
+
+  def retry_pst_import
+    import = Current.user.pst_email_imports.find(params[:id])
+
+    unless import.failed?
+      redirect_to edit_settings_path, alert: t("pst_import.cannot_retry")
+      return
+    end
+
+    # Reset to enrichment phase (emails are already imported)
+    import.update!(
+      status: "enriching",
+      error_message: nil,
+      completed_at: nil,
+      current_index: 0,
+      total_emails: Current.user.emails.count,
+      imported_emails: 0,
+      skipped_emails: 0,
+      failed_emails: 0
+    )
+
+    PstEmailImportJob.perform_later(import_id: import.id)
+    redirect_to edit_settings_path, notice: t("pst_import.retrying")
   end
 
   def pst_import_status

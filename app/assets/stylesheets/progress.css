@@ -18,6 +18,21 @@
     transition: inline-size 0.3s ease-out;
   }
 
+  /* Indeterminate progress bar animation */
+  .progress-bar--indeterminate .progress-bar__fill {
+    inline-size: 30%;
+    animation: indeterminate 1.5s ease-in-out infinite;
+  }
+
+  @keyframes indeterminate {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(400%);
+    }
+  }
+
   /* ==========================================================================
      Import Progress Component
      ========================================================================== */

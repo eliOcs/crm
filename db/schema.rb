@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_13_100841) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_13_145348) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -223,6 +223,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_13_100841) do
     t.integer "imported_emails", default: 0
     t.string "original_filename"
     t.string "pst_file_path"
+    t.bigint "sent_file_size"
+    t.string "sent_original_filename"
+    t.string "sent_pst_file_path"
     t.integer "skipped_emails", default: 0
     t.datetime "started_at"
     t.string "status", default: "pending", null: false

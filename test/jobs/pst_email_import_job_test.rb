@@ -169,6 +169,69 @@ class PstEmailImportJobTest < ActiveSupport::TestCase
     assert import.error_message.length <= 500
   end
 
+  # --- Enrichment Phase ---
+
+  test "enriching status enqueues next job when emails remain" do
+    # Create emails for the user to enrich
+    @user.emails.create!(
+      subject: "Test email",
+      sent_at: Time.current,
+      from_address: { "email" => "test@example.com", "name" => "Test" }
+    )
+
+    import = @user.pst_email_imports.create!(
+      status: "enriching",
+      original_filename: "test.pst",
+      total_emails: 100,  # More than batch size
+      current_index: 0
+    )
+
+    # Should enqueue next job since there are more emails
+    assert_enqueued_with(job: PstEmailImportJob) do
+      VCR.use_cassette("pst_import_enrichment_batch") do
+        PstEmailImportJob.perform_now(import_id: import.id)
+      end
+    end
+
+    import.reload
+    assert_equal "enriching", import.status
+    assert import.current_index > 0, "Should have processed some emails"
+  end
+
+  test "enriching status completes immediately when no emails to process" do
+    import = @user.pst_email_imports.create!(
+      status: "enriching",
+      original_filename: "test.pst",
+      total_emails: 0,
+      current_index: 0
+    )
+
+    PstEmailImportJob.perform_now(import_id: import.id)
+
+    import.reload
+    assert_equal "completed", import.status
+  end
+
+  # --- Sent PST Support ---
+
+  test "extraction creates inbox subdirectory" do
+    extraction_dir = @temp_dir.join("extraction", "inbox")
+    FileUtils.mkdir_p(extraction_dir)
+
+    import = @user.pst_email_imports.create!(
+      status: "importing",
+      original_filename: "inbox.pst",
+      extraction_dir: @temp_dir.join("extraction").to_s,
+      total_emails: 0,
+      current_index: 0
+    )
+
+    PstEmailImportJob.perform_now(import_id: import.id)
+
+    import.reload
+    assert_equal "completed", import.status
+  end
+
   private
 
   def create_test_eml(path, date_str)

@@ -1,0 +1,12 @@
+Status: RO
+From: "Test Sender" <sender@example.com>
+Subject: Test email with malformed To header
+To: =?utf-8?B?QWluaG9hIFBsYTsgQWFyb24gTWFydMOtbmV6?=
+Cc: =?utf-8?Q?Just_a_name_no_email?=
+Date: Tue, 11 Nov 2025 14:14:33 +0000
+Message-Id: <test-malformed-123@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+This is a test email with a malformed To header that contains
+only names without email addresses.

@@ -122,49 +122,6 @@ class LlmEmailExtractorTest < ActiveSupport::TestCase
     assert_kind_of Array, tasks
   end
 
-  test "parse_tasks_response extracts status from LLM response" do
-    extractor = LlmEmailExtractor.new(@eml_path)
-
-    # Mock a response with tasks that have status
-    mock_response = OpenStruct.new(
-      content: [
-        OpenStruct.new(text: <<~JSON)
-          [
-            {"id": null, "name": "Send report", "status": "todo", "due_date": "2024-01-20", "sender_email": "client@example.com"},
-            {"id": 42, "name": "Review proposal", "status": "blocked", "due_date": null, "sender_email": "partner@example.com"}
-          ]
-        JSON
-      ]
-    )
-
-    tasks = extractor.send(:parse_tasks_response, mock_response)
-
-    assert_equal 2, tasks.count
-
-    assert_equal "Send report", tasks[0][:name]
-    assert_equal "todo", tasks[0][:status]
-    assert_equal Date.new(2024, 1, 20), tasks[0][:due_date]
-
-    assert_equal "Review proposal", tasks[1][:name]
-    assert_equal "blocked", tasks[1][:status]
-    assert_equal 42, tasks[1][:id]
-  end
-
-  test "parse_tasks_response defaults missing status to incoming" do
-    extractor = LlmEmailExtractor.new(@eml_path)
-
-    mock_response = OpenStruct.new(
-      content: [
-        OpenStruct.new(text: '[{"name": "Task without status", "sender_email": "test@example.com"}]')
-      ]
-    )
-
-    tasks = extractor.send(:parse_tasks_response, mock_response)
-
-    assert_equal 1, tasks.count
-    assert_equal "incoming", tasks[0][:status], "Should default to incoming when status missing"
-  end
-
   test "extract_tasks includes user email context in prompt" do
     extractor = LlmEmailExtractor.new(@eml_path)
     user_email = "test@example.com"

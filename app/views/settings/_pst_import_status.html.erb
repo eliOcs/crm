@@ -9,26 +9,36 @@
       <span class="import-progress__status badge badge--<%= import.status %>">
         <%= import.status_label %>
       </span>
-      <span class="import-progress__range"><%= import.original_filename %></span>
+      <span class="import-progress__range"><%= import.display_filenames %></span>
     </div>
 
     <% if import.status == "extracting" %>
       <div class="import-progress__counting">
         <%= t("pst_import.extracting") %>
       </div>
-    <% elsif import.total_emails > 0 %>
+      <div class="progress-bar progress-bar--indeterminate">
+        <div class="progress-bar__fill"></div>
+      </div>
+    <% else %>
+      <% if import.status == "enriching" %>
+        <div class="import-progress__counting">
+          <%= t("pst_import.enriching") %>
+        </div>
+      <% end %>
       <div class="progress-bar">
         <div class="progress-bar__fill" style="width: <%= import.progress_percentage %>%"></div>
       </div>
-      <div class="import-progress__stats">
-        <span><%= t("pst_import.progress", processed: import.processed_emails, total: import.total_emails) %></span>
-        <span>
-          <%= import.progress_percentage %>%
-          <% if import.time_remaining_text %>
-            (<%= import.time_remaining_text %>)
-          <% end %>
-        </span>
-      </div>
+      <% if import.total_emails > 0 %>
+        <div class="import-progress__stats">
+          <span><%= t("pst_import.progress", processed: import.processed_emails, total: import.total_emails) %></span>
+          <span>
+            <%= import.progress_percentage %>%
+            <% if import.time_remaining_text %>
+              (<%= import.time_remaining_text %>)
+            <% end %>
+          </span>
+        </div>
+      <% end %>
     <% end %>
 
     <% if import.skipped_emails > 0 || import.failed_emails > 0 %>
@@ -72,8 +82,19 @@
   </div>
 
   <%= form_with url: start_pst_import_settings_path, method: :post, class: "pst-upload-form", multipart: true do |form| %>
-    <div class="pst-upload-form__row">
-      <%= form.file_field :pst_file, accept: ".pst", class: "file-input" %>
+    <div class="pst-upload-form__field">
+      <%= form.label :inbox_pst_file, t("pst_import.inbox_file"), class: "pst-upload-form__label" %>
+      <%= form.file_field :inbox_pst_file, accept: ".pst", class: "file-input" %>
+      <p class="field__hint"><%= t("pst_import.inbox_hint") %></p>
+    </div>
+
+    <div class="pst-upload-form__field">
+      <%= form.label :sent_pst_file, t("pst_import.sent_file"), class: "pst-upload-form__label" %>
+      <%= form.file_field :sent_pst_file, accept: ".pst", class: "file-input" %>
+      <p class="field__hint"><%= t("pst_import.sent_hint") %></p>
+    </div>
+
+    <div class="pst-upload-form__actions">
       <%= form.submit t("pst_import.start"), class: "btn btn--primary" %>
     </div>
     <p class="pst-upload-form__hint txt-sm txt-subtle">
@@ -88,7 +109,7 @@
         <% imports_history.each do |hist_import| %>
           <li class="import-history__item">
             <span class="badge badge--<%= hist_import.status %>"><%= hist_import.status_label %></span>
-            <span class="import-history__range"><%= hist_import.original_filename %></span>
+            <span class="import-history__range"><%= hist_import.display_filenames %></span>
             <span class="import-history__stats txt-subtle">
               <%= t("pst_import.history_stats",
                     imported: hist_import.imported_emails,
@@ -97,6 +118,12 @@
             <span class="import-history__date txt-subtle">
               <%= time_ago_in_words(hist_import.completed_at || hist_import.created_at) %> <%= t("common.ago") %>
             </span>
+            <% if hist_import.failed? %>
+              <%= button_to t("pst_import.retry"),
+                    retry_pst_import_settings_path(id: hist_import.id),
+                    method: :post,
+                    class: "btn btn--secondary btn--xs" %>
+            <% end %>
           </li>
         <% end %>
       </ul>

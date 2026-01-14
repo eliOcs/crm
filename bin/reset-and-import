@@ -6,6 +6,10 @@ USER_EMAIL=${USER_EMAIL:-test@example.com}
 USER_PASSWORD=${USER_PASSWORD:-password123}
 USER_LOCALE=${USER_LOCALE:-es}
 
+# PST file paths (default to common backup filenames)
+INBOX_PST=${INBOX_PST:-db/seeds/backup-inbox-20260107.pst}
+SENT_PST=${SENT_PST:-db/seeds/backup-sent-20260107.pst}
+
 echo "==> Resetting database..."
 bin/rails db:reset
 
@@ -15,7 +19,20 @@ bin/rails db:migrate
 echo "==> Creating user: $USER_EMAIL (locale: $USER_LOCALE)..."
 bin/rails runner "User.create(email_address: '$USER_EMAIL', password: '$USER_PASSWORD', locale: '$USER_LOCALE').tap { |u| raise u.errors.full_messages.join unless u.persisted? }"
 
-echo "==> Processing $LIMIT emails..."
-echo "$USER_EMAIL" | LIMIT=$LIMIT bin/rails import:process_emails
+# Check if PST files exist
+if [[ -f "$INBOX_PST" ]]; then
+  echo "==> Importing from PST files (two-phase processing)..."
+  echo "    Inbox: $INBOX_PST"
+  if [[ -f "$SENT_PST" ]]; then
+    echo "    Sent:  $SENT_PST"
+    echo "$USER_EMAIL" | INBOX_PST=$INBOX_PST SENT_PST=$SENT_PST LIMIT=$LIMIT bin/rails import:pst
+  else
+    echo "    Sent:  (not found, skipping)"
+    echo "$USER_EMAIL" | INBOX_PST=$INBOX_PST LIMIT=$LIMIT bin/rails import:pst
+  fi
+else
+  echo "==> No PST files found, using legacy EML import..."
+  echo "$USER_EMAIL" | LIMIT=$LIMIT bin/rails import:process_emails
+fi
 
 echo "==> Done!"

@@ -30,7 +30,7 @@ class EmailEnrichmentService
     email_data = EmlReader.new(eml_path).read
     return unless email_data
 
-    email_date = email_data[:date] || Date.current
+    email_date = email_data[:date] || Time.current
 
     # Check if email has meaningful content for LLM processing
     if @source_email && !@source_email.has_meaningful_content?
@@ -48,7 +48,7 @@ class EmailEnrichmentService
   # Process an Email record directly (for Graph-imported emails)
   def process_email_record(email)
     @source_email = email
-    email_date = email.sent_at&.to_date || Date.current
+    email_date = email.sent_at || Time.current
 
     # Check if email has meaningful content for LLM processing
     unless email.has_meaningful_content?

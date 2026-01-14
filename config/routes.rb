@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
     post :start_pst_import
     delete "pst_import/:id", action: :cancel_pst_import, as: :cancel_pst_import
+    post "pst_import/:id/retry", action: :retry_pst_import, as: :retry_pst_import
     get :pst_import_status
   end
   resources :passwords, param: :token

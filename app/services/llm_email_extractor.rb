@@ -37,6 +37,7 @@ class LlmEmailExtractor
       build_email_text(email_data)
     end
 
+    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     response = @client.messages.create(
       model: MODEL,
       max_tokens: 1024,
@@ -44,6 +45,9 @@ class LlmEmailExtractor
       messages: [ { role: "user", content: @email_text } ],
       system: tasks_system_prompt(email_date: email_date, existing_tasks: existing_tasks, locale: locale, user_email: user_email)
     )
+    duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+    log_llm_usage("extract_tasks", response, duration:)
+
     parse_tasks_response(response)
   rescue Anthropic::Error => e
     Rails.logger.error("Task extraction failed: #{e.message}")
@@ -56,9 +60,27 @@ class LlmEmailExtractor
     { contacts: [], companies: [], image_data: {} }
   end
 
+  # Log LLM token usage for debugging expensive calls
+  def log_llm_usage(operation, response, duration: nil)
+    usage = response.usage
+    input_tokens = usage.input_tokens
+    output_tokens = usage.output_tokens
+    total_tokens = input_tokens + output_tokens
+
+    context = @email_record&.id || @eml_path&.to_s&.split("/")&.last || "unknown"
+
+    Rails.logger.info(
+      "[LLM] #{operation} | " \
+      "#{total_tokens} tokens (#{input_tokens} in + #{output_tokens} out) | " \
+      "#{duration ? "#{'%.2f' % duration}s | " : ""}" \
+      "#{context}"
+    )
+  end
+
   # === CONTACTS EXTRACTION ===
 
   def extract_contacts
+    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     response = @client.messages.create(
       model: MODEL,
       max_tokens: 2048,
@@ -66,6 +88,9 @@ class LlmEmailExtractor
       messages: [ { role: "user", content: @email_text } ],
       system: contacts_system_prompt
     )
+    duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+    log_llm_usage("extract_contacts", response, duration:)
+
     parse_contacts_response(response)
   rescue Anthropic::Error => e
     Rails.logger.error("Contact extraction failed: #{e.message}")
@@ -288,6 +313,7 @@ class LlmEmailExtractor
       }
     end
 
+    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     response = @client.messages.create(
       model: MODEL,
       max_tokens: 2048,
@@ -295,6 +321,9 @@ class LlmEmailExtractor
       messages: [ { role: "user", content: content } ],
       system: companies_system_prompt
     )
+    duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+    log_llm_usage("extract_companies", response, duration:)
+
     parse_companies_response(response)
   rescue Anthropic::Error => e
     Rails.logger.error("Company extraction failed: #{e.message}")
