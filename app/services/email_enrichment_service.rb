@@ -355,13 +355,17 @@ class EmailEnrichmentService
 
     # Add any new contacts not already linked
     new_contacts = Array(contacts) - task.contacts.to_a
-    task.contacts << new_contacts if new_contacts.any?
 
     if updates.any? || new_contacts.any?
-      # Use email date as updated_at
+      # Use email date for updated_at
       updates[:updated_at] = email_date if email_date
 
-      task.update!(updates) if updates.any?
+      # Disable touch callbacks to prevent Action Text from overwriting timestamps
+      Task.no_touching do
+        task.contacts << new_contacts if new_contacts.any?
+        task.update!(updates) if updates.any?
+      end
+
       @stats[:tasks_updated] += 1
       @logger.info "  DB: UPDATE task id=#{task.id} #{(updates.keys + (new_contacts.any? ? [ :contacts ] : [])).join(', ')}"
 
@@ -385,14 +389,19 @@ class EmailEnrichmentService
       due_date: task_data[:due_date],
       company_id: company&.id
     }
-    # Use email date as created_at/updated_at
+
+    # Use email date for timestamps
     if email_date
       attrs[:created_at] = email_date
       attrs[:updated_at] = email_date
     end
 
-    task = @user.tasks.create!(attrs)
-    task.contacts << contacts if contacts.any?
+    # Disable touch callbacks to prevent Action Text from overwriting timestamps
+    task = nil
+    Task.no_touching do
+      task = @user.tasks.create!(attrs)
+      task.contacts << contacts if contacts.any?
+    end
 
     @stats[:tasks_new] += 1
     @logger.info "  DB: CREATE task id=#{task.id} name=#{task.name.truncate(40).inspect} contacts=#{contacts.count}"

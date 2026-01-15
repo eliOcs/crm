@@ -333,4 +333,67 @@ class EmailEnrichmentServiceTest < ActiveSupport::TestCase
     task = @user.tasks.last
     assert_equal "incoming", task.status, "Should default to incoming"
   end
+
+  # === Task Timestamp Tests ===
+
+  test "create_new_task sets timestamps from email_date" do
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    email_date = Time.parse("2024-06-15 10:30:00 UTC")
+
+    task_data = { name: "Task with email date", status: "todo" }
+    service.send(:create_new_task, task_data, [], nil, email_date)
+
+    task = @user.tasks.last
+    assert_equal email_date, task.created_at, "created_at should match email_date"
+    assert_equal email_date, task.updated_at, "updated_at should match email_date"
+  end
+
+  test "create_new_task preserves timestamps even with rich text description" do
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    email_date = Time.parse("2024-06-15 10:30:00 UTC")
+
+    task_data = {
+      name: "Task with description",
+      description: "This is rich text content that would normally trigger Action Text touch",
+      status: "todo"
+    }
+    service.send(:create_new_task, task_data, [], nil, email_date)
+
+    task = @user.tasks.last
+    assert_equal email_date, task.created_at, "created_at should match email_date despite rich text"
+    assert_equal email_date, task.updated_at, "updated_at should match email_date despite rich text"
+    assert_equal "This is rich text content that would normally trigger Action Text touch",
+                 task.description.to_plain_text
+  end
+
+  test "update_existing_task sets updated_at from email_date" do
+    task = @user.tasks.create!(name: "Original task", status: "incoming")
+    original_created_at = task.created_at
+
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    email_date = Time.parse("2024-07-20 14:00:00 UTC")
+
+    task_data = { id: task.id, description: "Updated content" }
+    service.send(:update_existing_task, task_data, [], nil, email_date)
+
+    task.reload
+    assert_equal original_created_at, task.created_at, "created_at should not change on update"
+    assert_equal email_date, task.updated_at, "updated_at should match email_date"
+  end
+
+  test "update_existing_task preserves updated_at even with rich text description" do
+    task = @user.tasks.create!(name: "Original task", status: "incoming")
+
+    service = EmailEnrichmentService.new(@user, logger: @logger)
+    email_date = Time.parse("2024-07-20 14:00:00 UTC")
+
+    task_data = {
+      id: task.id,
+      description: "Rich text that would normally trigger touch"
+    }
+    service.send(:update_existing_task, task_data, [], nil, email_date)
+
+    task.reload
+    assert_equal email_date, task.updated_at, "updated_at should match email_date despite rich text update"
+  end
 end
