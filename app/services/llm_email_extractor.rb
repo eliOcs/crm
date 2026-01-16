@@ -22,7 +22,7 @@ class LlmEmailExtractor
     else
       extract_from_eml
     end
-  rescue Anthropic::Error => e
+  rescue Anthropic::Errors::Error => e
     Rails.logger.error("LLM extraction failed: #{e.message}")
     empty_result
   end
@@ -49,7 +49,7 @@ class LlmEmailExtractor
     log_llm_usage("extract_tasks", response, duration:)
 
     parse_tasks_response(response)
-  rescue Anthropic::Error => e
+  rescue Anthropic::Errors::Error => e
     Rails.logger.error("Task extraction failed: #{e.message}")
     []
   end
@@ -92,7 +92,7 @@ class LlmEmailExtractor
     log_llm_usage("extract_contacts", response, duration:)
 
     parse_contacts_response(response)
-  rescue Anthropic::Error => e
+  rescue Anthropic::Errors::Error => e
     Rails.logger.error("Contact extraction failed: #{e.message}")
     []
   end
@@ -325,7 +325,7 @@ class LlmEmailExtractor
     log_llm_usage("extract_companies", response, duration:)
 
     parse_companies_response(response)
-  rescue Anthropic::Error => e
+  rescue Anthropic::Errors::Error => e
     Rails.logger.error("Company extraction failed: #{e.message}")
     []
   end

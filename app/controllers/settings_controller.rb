@@ -132,16 +132,15 @@ class SettingsController < ApplicationController
       return
     end
 
-    # Reset to enrichment phase (emails are already imported)
+    # Resume enrichment from where it left off
+    # imported_emails represents successfully processed count before failure
     import.update!(
       status: "enriching",
       error_message: nil,
       completed_at: nil,
-      current_index: 0,
-      total_emails: Current.user.emails.count,
-      imported_emails: 0,
-      skipped_emails: 0,
-      failed_emails: 0
+      current_index: import.imported_emails,
+      total_emails: Current.user.emails.count
+      # Keep imported_emails, skipped_emails, failed_emails counts to resume progress
     )
 
     PstEmailImportJob.perform_later(import_id: import.id)
