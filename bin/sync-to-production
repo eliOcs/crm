@@ -32,7 +32,7 @@ echo ""
 echo "==> Syncing Active Storage files..."
 BLOB_COUNT=$(find storage -type f -not -name "*.sqlite3*" 2>/dev/null | wc -l | tr -d ' ')
 echo "   Found $BLOB_COUNT Active Storage blobs"
-rsync -avz --progress $DRY_RUN \
+rsync -avz --progress --delete $DRY_RUN \
   --exclude='*.sqlite3' \
   --exclude='*.sqlite3-*' \
   storage/ \
