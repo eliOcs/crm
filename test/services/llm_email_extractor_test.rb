@@ -122,21 +122,38 @@ class LlmEmailExtractorTest < ActiveSupport::TestCase
     assert_kind_of Array, tasks
   end
 
-  test "extract_tasks includes user email context in prompt" do
+  test "extract_tasks prompt includes outbound context when user sent email" do
     extractor = LlmEmailExtractor.new(@eml_path)
-    user_email = "test@example.com"
 
-    # Generate the prompt and verify it includes user context
     prompt = extractor.send(:tasks_system_prompt,
       email_date: Date.current,
-      user_email: user_email,
+      user_email: "test@example.com",
       existing_tasks: [],
-      locale: "en"
+      locale: "en",
+      outbound: true
     )
 
-    assert_includes prompt, user_email, "Prompt should include user email"
-    assert_includes prompt, "user is in \"From\"", "Prompt should explain sent email perspective"
-    assert_includes prompt, "user is in \"To/Cc\"", "Prompt should explain received email perspective"
+    assert_includes prompt, "OUTBOUND email", "Prompt should indicate outbound"
+    assert_includes prompt, "user SENT this email", "Prompt should explain user sent the email"
+    assert_includes prompt, '"blocked"', "Prompt should mention blocked status for outbound"
+    assert_not_includes prompt, "INBOUND email", "Prompt should not include inbound context"
+  end
+
+  test "extract_tasks prompt includes inbound context when user received email" do
+    extractor = LlmEmailExtractor.new(@eml_path)
+
+    prompt = extractor.send(:tasks_system_prompt,
+      email_date: Date.current,
+      user_email: "test@example.com",
+      existing_tasks: [],
+      locale: "en",
+      outbound: false
+    )
+
+    assert_includes prompt, "INBOUND email", "Prompt should indicate inbound"
+    assert_includes prompt, "user RECEIVED this email", "Prompt should explain user received the email"
+    assert_includes prompt, '"todo"', "Prompt should mention todo status for inbound"
+    assert_not_includes prompt, "OUTBOUND email", "Prompt should not include outbound context"
   end
 
   test "extract_tasks requires user_email parameter" do
@@ -145,5 +162,38 @@ class LlmEmailExtractorTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) do
       extractor.extract_tasks(email_date: Date.current)
     end
+  end
+
+  test "extract_tasks detects outbound email when from address matches user email" do
+    # Use a real outbound email fixture (user is the sender asking for delivery date)
+    # This mirrors the task 61 scenario: user sends email asking about order 57036
+    outbound_eml = Rails.root.join("test/fixtures/files/emails/outbound_request.eml").to_s
+    user_email = "mmoreno@itpsa.com"
+
+    # Verify the email is correctly parsed as outbound
+    email_data = EmlReader.new(outbound_eml).read
+    from_email = email_data[:from][:email].downcase
+
+    assert_equal "mmoreno@itpsa.com", from_email, "Email should be from mmoreno@itpsa.com"
+    assert_equal from_email, user_email.downcase, "From email should match user email (outbound)"
+
+    # Verify the outbound detection logic
+    is_outbound = from_email == user_email.downcase
+    assert is_outbound, "Email should be detected as outbound"
+
+    # Verify the prompt includes outbound-specific instructions
+    extractor = LlmEmailExtractor.new(outbound_eml)
+    prompt = extractor.send(:tasks_system_prompt,
+      email_date: Date.current,
+      user_email: user_email,
+      existing_tasks: [],
+      locale: "en",
+      outbound: is_outbound
+    )
+
+    assert_includes prompt, "OUTBOUND email", "Prompt should indicate outbound"
+    assert_includes prompt, "user SENT this email", "Prompt should explain user sent the email"
+    assert_includes prompt, '"blocked"', "Outbound prompt should default to blocked status"
+    assert_not_includes prompt, "INBOUND email", "Should not include inbound instructions"
   end
 end

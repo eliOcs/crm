@@ -28,14 +28,18 @@ class LlmEmailExtractor
   end
 
   def extract_tasks(email_date:, user_email:, existing_tasks: [], locale: "en")
-    @email_text ||= if @email_record
+    from_email = if @email_record
       @image_data = extract_images_from_email_record
-      build_email_text_from_record(@email_record)
+      @email_text = build_email_text_from_record(@email_record)
+      @email_record.from_address&.dig("email")&.downcase
     else
       email_data = EmlReader.new(@eml_path).read
       return [] unless email_data
-      build_email_text(email_data)
+      @email_text = build_email_text(email_data)
+      email_data[:from]&.dig(:email)&.downcase
     end
+
+    outbound = from_email.present? && from_email == user_email.downcase
 
     start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     response = @client.messages.create(
@@ -43,7 +47,7 @@ class LlmEmailExtractor
       max_tokens: 1024,
       temperature: 0,
       messages: [ { role: "user", content: @email_text } ],
-      system: tasks_system_prompt(email_date: email_date, existing_tasks: existing_tasks, locale: locale, user_email: user_email)
+      system: tasks_system_prompt(email_date: email_date, existing_tasks: existing_tasks, locale: locale, user_email: user_email, outbound: outbound)
     )
     duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
     log_llm_usage("extract_tasks", response, duration:)
@@ -161,7 +165,7 @@ class LlmEmailExtractor
 
   # === TASKS EXTRACTION ===
 
-  def tasks_system_prompt(email_date:, user_email:, existing_tasks:, locale: "en")
+  def tasks_system_prompt(email_date:, user_email:, existing_tasks:, locale: "en", outbound: nil)
     formatted_tasks = if existing_tasks.empty?
       "No existing active tasks."
     else
@@ -173,8 +177,57 @@ class LlmEmailExtractor
     else ""
     end
 
+    direction_context = if outbound
+      <<~DIRECTION
+        <email_direction>
+        This is an OUTBOUND email - the user SENT this email.
+        If the email asks a question or requests something from recipients, the task status MUST be "blocked"
+        because the user is waiting for a response.
+        If the email delivers something that completes a task, status is "done".
+        Default status for outbound requests: "blocked"
+        </email_direction>
+      DIRECTION
+    else
+      <<~DIRECTION
+        <email_direction>
+        This is an INBOUND email - the user RECEIVED this email.
+        Action requests directed at the user should have status "todo" (clear and actionable) or "incoming" (needs triage).
+        If the email confirms something the user was waiting for is complete, status is "done".
+        Default status for inbound requests: "todo"
+        </email_direction>
+      DIRECTION
+    end
+
+    example = if outbound
+      <<~EXAMPLE
+        [
+          {
+            "id": null,
+            "name": "Get delivery date for order 12345",
+            "description": "Asked supplier for expected delivery date",
+            "status": "blocked",
+            "due_date": null,
+            "sender_email": "#{user_email}"
+          }
+        ]
+      EXAMPLE
+    else
+      <<~EXAMPLE
+        [
+          {
+            "id": null,
+            "name": "Send updated proposal",
+            "description": "Client requested revised pricing for Q2",
+            "status": "todo",
+            "due_date": "2025-01-20",
+            "sender_email": "client@example.com"
+          }
+        ]
+      EXAMPLE
+    end
+
     <<~PROMPT
-      You are a task extractor for a CRM system. Extract follow-up tasks ONLY when the email explicitly requests action from the recipient.
+      You are a task extractor for a CRM system. Extract follow-up tasks ONLY when the email explicitly requests action.
       #{language_instruction}
 
       <instructions>
@@ -191,13 +244,7 @@ class LlmEmailExtractor
       5. Emails that are just forwarding information without asking for action
       </instructions>
 
-      <user_context>
-      The CRM user's email is: #{user_email}
-      Use this to determine perspective:
-      - If user is in "From": User SENT this email. If they requested something and are waiting for a response, the task is "blocked" (waiting on recipient).
-      - If user is in "To/Cc": User RECEIVED this email. Action requests directed at them are "todo".
-      - Tasks are always from the user's perspective (what THEY need to do or wait for).
-      </user_context>
+      #{direction_context.strip}
 
       <date_context>
       Email date: #{email_date.strftime("%Y-%m-%d")} (#{email_date.strftime("%A")})
@@ -214,43 +261,22 @@ class LlmEmailExtractor
       </existing_tasks>
 
       <output_format>
-      Return ONLY a JSON array of tasks:
-      [
-        {
-          "id": null,
-          "name": "Send updated proposal",
-          "description": "Client requested revised pricing for Q2",
-          "status": "todo",
-          "due_date": "2025-01-20",
-          "sender_email": "client@example.com"
-        }
-      ]
+      Return ONLY a JSON array of tasks. Example:
+      #{example.strip}
 
-      If updating an existing task (same topic from same sender), include the task id:
-      [
-        {
-          "id": 42,
-          "name": "Send updated proposal",
-          "description": "Follow-up: client needs it by Friday",
-          "status": "blocked",
-          "due_date": "2025-01-17",
-          "sender_email": "client@example.com"
-        }
-      ]
+      To update an existing task, include its id:
+      [{"id": 42, "name": "...", "description": "...", "status": "...", "due_date": "...", "sender_email": "..."}]
 
       If no actionable tasks found, return: []
       </output_format>
 
-      <status_guidelines>
-      Status must be one of: incoming, todo, blocked, done
-
-      - "incoming" (default): Use when the request needs user review or triage
-      - "todo": Clear, specific, actionable request ready to work on
-      - "blocked": Email indicates waiting on external input, approval, or third party
-      - "done": Email confirms the task was completed (e.g., "I've sent the report you requested")
-
-      When unsure, default to "incoming".
-      </status_guidelines>
+      <status_values>
+      Valid status values: incoming, todo, blocked, done
+      - "incoming": Needs user review or triage
+      - "todo": Clear, actionable request for the user
+      - "blocked": Waiting on external response
+      - "done": Task completed
+      </status_values>
 
       <guidelines>
       - Extract the MINIMUM number of tasks (prefer one clear task over multiple vague ones)
