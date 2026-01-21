@@ -34,6 +34,9 @@ env:
     - MICROSOFT_CLIENT_SECRET
     - RAILS_INBOUND_EMAIL_PASSWORD
   clear:
+    # Application host (used for canonical URLs, mailer links, etc.)
+    APP_HOST: mercuriocrm.es
+
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
     SOLID_QUEUE_IN_PUMA: true

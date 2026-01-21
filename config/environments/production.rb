@@ -59,8 +59,10 @@ Rails.application.configure do
   # Set this to true to raise delivery errors in production
   config.action_mailer.raise_delivery_errors = true
 
-  # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "mercuriocrm.es" }
+  # Set host to be used by links generated in mailer templates and URL helpers.
+  # APP_HOST is set in config/deploy.yml
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "mercuriocrm.es"), protocol: "https" }
+  Rails.application.routes.default_url_options = { host: ENV.fetch("APP_HOST", "mercuriocrm.es"), protocol: "https" }
 
   # Send via local Postfix container (with DKIM signing)
   config.action_mailer.delivery_method = :smtp
