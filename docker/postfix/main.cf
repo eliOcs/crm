@@ -15,8 +15,8 @@ mydestination =
 virtual_mailbox_domains = inbox.mercuriocrm.es
 virtual_transport = rails
 
-# Security: only accept mail, never relay
-mynetworks = 127.0.0.0/8
+# Security: allow relay ONLY from localhost and Kamal Docker network
+mynetworks = 127.0.0.0/8 172.18.0.0/16
 smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination
 relay_domains =
 
@@ -36,10 +36,39 @@ mailbox_size_limit = 0
 
 # Require proper HELO
 smtpd_helo_required = yes
-smtpd_helo_restrictions = reject_invalid_helo_hostname
+smtpd_helo_restrictions =
+    permit_mynetworks,
+    reject_invalid_helo_hostname,
+    reject_non_fqdn_helo_hostname,
+    reject_unknown_helo_hostname
+
+# Sender restrictions (external senders must have valid domains)
+smtpd_sender_restrictions =
+    permit_mynetworks,
+    reject_non_fqdn_sender,
+    reject_unknown_sender_domain
+
+# Additional anti-spam measures
+smtpd_data_restrictions = reject_unauth_pipelining
+disable_vrfy_command = yes
+strict_rfc821_envelopes = yes
+
+# Limit outbound rate (prevents abuse if compromised)
+default_destination_rate_delay = 1s
+default_destination_concurrency_limit = 2
+
+# Outbound TLS (opportunistic - use if available)
+smtp_tls_security_level = may
+smtp_tls_loglevel = 1
 
 # Logging
 maillog_file = /dev/stdout
 
 # Accept all mail for our virtual domain and pipe to Rails
 virtual_alias_maps =
+
+# OpenDKIM milter for signing outgoing mail
+milter_protocol = 6
+milter_default_action = accept
+smtpd_milters = inet:localhost:8891
+non_smtpd_milters = inet:localhost:8891

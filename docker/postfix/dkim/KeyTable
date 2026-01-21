@@ -1,0 +1,2 @@
+# Key table for DKIM signing
+mail._domainkey.mercuriocrm.es mercuriocrm.es:mail:/etc/opendkim/keys/dkim-private.pem

@@ -1,4 +1,5 @@
 # Plan
-1. [Blocked: 14/1/2026] Get verified → Now you have a real-looking app to back it up
-2. Verified email badge: https://bimigroup.org/, TLS for email
+
+1. [Waiting for response] Microsoft Application Partner verification
+2. [Requires VMC Certificate, expensive yearly fee] Verified email badge: https://bimigroup.org/
 3. Approach company IT → Come with a polished, verified app

@@ -43,4 +43,5 @@
 /coverage/
 .playwright-mcp/
 .kamal/secrets
+.kamal/secrets.d/
 node_modules

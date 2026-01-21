@@ -88,6 +88,8 @@ accessories:
     image: 225656797743.dkr.ecr.eu-west-1.amazonaws.com/crm-postfix
     host: 52.30.167.17
     port: "25:25"
+    options:
+      network-alias: crm-postfix
     env:
       clear:
         RAILS_INBOUND_HOST: crm-web:3000
@@ -95,3 +97,5 @@ accessories:
         - RAILS_INBOUND_EMAIL_PASSWORD
     directories:
       - postfix_spool:/var/spool/postfix
+    files:
+      - .kamal/secrets.d/dkim-private.pem:/etc/opendkim/keys/dkim-private.pem

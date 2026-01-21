@@ -1,0 +1,7 @@
+# Hosts that are allowed to send mail through this server
+127.0.0.1
+localhost
+mercuriocrm.es
+*.mercuriocrm.es
+# Kamal Docker network only
+172.18.0.0/16
