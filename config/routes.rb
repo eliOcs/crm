@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   end
 
   root "dashboard#show"
-  get "home" => "pages#home", as: :landing
+  get "home" => redirect("/", status: 301)  # Legacy URL, redirect for SEO
   get "privacy" => "pages#privacy", as: :privacy_policy
   get "terms" => "pages#terms", as: :terms_of_service
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
