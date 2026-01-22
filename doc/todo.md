@@ -1,10 +1,9 @@
 # Plan
 
 1. [Waiting for response] Microsoft Application Partner verification
-2. [Requires VMC Certificate, expensive yearly fee] Verified email badge: https://bimigroup.org/
-3. Approach company IT → Come with a polished, verified app
+2. [Requires VMC Certificate, expensive yearly fee] Verified email badge (BIMI already implemented)
 
-4. The "Vertical" Twist: Build the "[Job Title] OS"
+3. The "Vertical" Twist: Build the "[Job Title] OS"
    Do not build a CRM. "CRM" is a crowded, generic word. Microsoft Copilot will always win at "general tasks." But it will likely fail at nuanced, industry-specific workflows.
 
 The Strategy: Look at your wife's specific job title and industry. Hard-code the "unwritten rules" of her profession into the AI.
