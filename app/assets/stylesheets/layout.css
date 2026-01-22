@@ -121,7 +121,7 @@
 
   .auth-layout__logo {
     display: block;
-    block-size: 3rem;
+    block-size: 5rem;
     margin-inline: auto;
     margin-block-end: var(--block-space-double);
   }
